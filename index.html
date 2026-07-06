@@ -120,36 +120,6 @@ body {
   animation: heroFadeIn 1.2s ease-out .1s forwards;
 }
 @keyframes heroFadeIn { to { opacity: 1; } }
-.hero::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: rgba(2, 6, 23, 0.35);
-  z-index: 1; pointer-events: none;
-}
-
-/* Vertical light beams */
-.hero-beams {
-  position: absolute; top: 0; right: 0; bottom: 0;
-  width: 55%; pointer-events: none; z-index: 2;
-  mix-blend-mode: screen; opacity: 0.6;
-  -webkit-mask-image: radial-gradient(circle at 85% 85%, black 10%, transparent 80%);
-  mask-image: radial-gradient(circle at 85% 85%, black 10%, transparent 80%);
-}
-.hero-beams::before {
-  content: ''; position: absolute; inset: 0;
-  background: repeating-linear-gradient(
-    90deg, transparent, transparent 45px,
-    rgba(29, 161, 242, 0.06) 45px, rgba(29, 161, 242, 0.06) 90px,
-    rgba(16, 185, 129, 0.09) 90px, rgba(16, 185, 129, 0.09) 135px);
-  filter: blur(6px);
-}
-
-/* Grain texture */
-.hero-grain {
-  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  opacity: 0.065; pointer-events: none; z-index: 2;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
 
 .hero-inner {
   max-width: var(--max); margin: 0 auto; width: 100%;
@@ -652,8 +622,6 @@ footer {
 ══════════════════════════════════════════ -->
 <section class="hero" id="hero">
   <div class="hero-bg-img"></div>
-  <div class="hero-beams"></div>
-  <div class="hero-grain"></div>
 
   <div class="hero-inner">
     <h1 class="hero-title">
