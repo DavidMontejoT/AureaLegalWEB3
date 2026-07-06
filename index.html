@@ -159,7 +159,18 @@ body {
   visibility: hidden;
 }
 
-.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; visibility: hidden; }
+/* Hero image */
+.hero-img-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-img {
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  border-radius: 20px;
+}
 
 /* Motion graphic agent flow */
 .mg-wrap {
@@ -1169,48 +1180,11 @@ footer {
         <span class="line"><span class="line-inner"><i>decide.</i></span></span>
       </h1>
       <p class="hero-desc">Construimos agentes que no opinan: citan su fuente, se detienen ante el humano, y dejan un rastro que resiste una auditoria. No es una promesa — son dos productos que ya corren asi.</p>
-      <div class="hero-actions">
-        <a href="#agente" class="btn-primary mag-btn">
-          Habla con el agente
-          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-        <a href="#productos" class="btn-ghost">Ver los productos</a>
-      </div>
     </div>
 
-    <!-- Right: Agent flow motion graphic -->
-    <div class="mg-wrap">
-      <svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="grad-aml" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#1e3c72" />
-            <stop offset="100%" stop-color="#1da1f2" />
-          </linearGradient>
-          <linearGradient id="grad-legal" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#2c3e50" />
-            <stop offset="100%" stop-color="#b2deff" />
-          </linearGradient>
-          <linearGradient id="grad-human" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#11998e" />
-            <stop offset="100%" stop-color="#10b981" />
-          </linearGradient>
-          <filter id="glow-effect" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="5" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
-        </defs>
-        <path class="mg-glow" id="path-aml-glow" d="M60 100 Q120 80 150 140" filter="url(#glow-effect)"/>
-        <path class="mg-glow" id="path-legal-glow" d="M240 100 Q180 80 150 140" filter="url(#glow-effect)"/>
-        <path class="mg-glow" id="path-human-glow" d="M150 140 L150 200" filter="url(#glow-effect)"/>
-        <line x1="60" y1="100" x2="150" y2="140" stroke="rgba(255,255,255,.06)" stroke-width="1.5"/>
-        <line x1="240" y1="100" x2="150" y2="140" stroke="rgba(255,255,255,.06)" stroke-width="1.5"/>
-        <line x1="150" y1="140" x2="150" y2="200" stroke="rgba(255,255,255,.06)" stroke-width="1.5"/>
-        <g class="mg-node node-aml"><circle cx="60" cy="100" r="36" fill="url(#grad-aml)"/><text x="60" y="96" text-anchor="middle">AML</text><text x="60" y="110" text-anchor="middle" font-size="8" fill="rgba(255,255,255,.6)">CENTINELA</text></g>
-        <g class="mg-node node-legal"><circle cx="240" cy="100" r="36" fill="url(#grad-legal)"/><text x="240" y="96" text-anchor="middle">LEGAL</text><text x="240" y="110" text-anchor="middle" font-size="8" fill="rgba(255,255,255,.6)">PRECEDENTES</text></g>
-        <g class="mg-node node-human"><circle cx="150" cy="200" r="36" fill="url(#grad-human)"/><text x="150" y="196" text-anchor="middle">HUMANO</text><text x="150" y="210" text-anchor="middle" font-size="8" fill="rgba(255,255,255,.6)">APROBACIÓN</text></g>
-        <g id="mgFile" transform="translate(125,116)"><rect width="50" height="50" rx="6" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.1)"/><text x="25" y="27" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="7">EXP.</text><text x="25" y="39" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6">0047</text></g>
-      </svg>
-      <div id="mgStatus">Esperando agentes...</div>
+    <!-- Right: Hero image -->
+    <div class="hero-img-wrap">
+      <img src="/hero.png" alt="Aurea Legal" class="hero-img">
     </div>
 
   </div>
@@ -1904,8 +1878,7 @@ window.addEventListener('DOMContentLoaded', () => {
         y: '110%', duration: 1, stagger: 0.14, ease: 'power4.out'
       }, '-=0.3')
     .from('.hero-desc', { autoAlpha: 0, duration: 0.7 }, '-=0.35')
-    .from('.hero-actions', { autoAlpha: 0, y: 18, duration: 0.6 }, '-=0.4')
-    .from('.mg-wrap', { autoAlpha: 0, x: 60, duration: 1.1, ease: 'power4.out' }, '-=0.75')
+    .from('.hero-img-wrap', { autoAlpha: 0, x: 60, duration: 1.1, ease: 'power4.out' }, '-=0.75')
 
   /* —— Section headings: scroll reveal —— */
   gsap.utils.toArray('.section-heading').forEach(el => {
