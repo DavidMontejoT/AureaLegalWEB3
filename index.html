@@ -378,156 +378,39 @@ body {
 .arch-inner { max-width: var(--max); margin: 0 auto; position: relative; }
 .arch-inner .section-heading { color: var(--white); margin-bottom: 16px; }
 .arch-inner .section-heading i { font-style: italic; font-weight: 500; color: var(--blue-sky); }
+.section-eyebrow.light { display: block; text-align: center; }
+.arch-inner .section-heading { text-align: center; }
 
-/* Differentiator statement */
-.arch-statement { margin-bottom: 64px; max-width: 700px; }
+/* Differentiator statement — centerpiece */
+.arch-statement {
+  text-align: center; max-width: 720px;
+  margin: 60px auto 0; padding: 64px 48px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(29,161,242,.06) 0%, transparent 70%);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 24px;
+}
 .arch-statement-badge {
   display: inline-block;
-  background: rgba(29,161,242,.1); border: 1px solid rgba(29,161,242,.22);
-  color: var(--blue-sky); font-size: 10px; font-weight: 700;
-  letter-spacing: 2px; text-transform: uppercase;
-  padding: 4px 14px; border-radius: 20px; margin-bottom: 20px;
+  background: rgba(29,161,242,.12); border: 1px solid rgba(29,161,242,.25);
+  color: var(--blue-sky); font-size: 11px; font-weight: 700;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  padding: 6px 18px; border-radius: 20px; margin-bottom: 28px;
 }
 .arch-statement-text {
   font-family: 'Playfair Display', serif;
-  font-size: 30px; font-weight: 500; color: var(--white); line-height: 1.4;
+  font-size: 36px; font-weight: 500; color: var(--white); line-height: 1.35;
+  margin-bottom: 24px;
 }
-.arch-statement-text strong { color: var(--blue-sky); font-weight: 600; }
+.arch-statement-claim {
+  font-size: 18px; font-weight: 600; color: var(--blue-sky);
+  letter-spacing: .3px;
+}
+.arch-statement-claim i { font-style: italic; font-weight: 500; }
 
-/* Pipeline visual */
-.arch-pipeline {
-  display: flex; align-items: center; justify-content: center;
-  padding: 36px 48px; margin-bottom: 72px;
-  background: rgba(255,255,255,.025);
-  border: 1px solid rgba(255,255,255,.06);
-  border-radius: 20px; position: relative; overflow: hidden;
-  gap: 0;
-}
-.arch-pipeline::after {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent 0%, var(--blue) 50%, transparent 100%);
-  animation: pipe-shimmer 3s ease-in-out infinite;
-}
-@keyframes pipe-shimmer {
-  0%, 100% { opacity: .2; }
-  50% { opacity: .8; }
-}
-.arch-node {
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
-  flex-shrink: 0;
-}
-.arch-node-icon {
-  width: 52px; height: 52px; border-radius: 14px;
-  display: flex; align-items: center; justify-content: center;
-}
-.arch-node-icon.ai { background: rgba(29,161,242,.12); border: 1px solid rgba(29,161,242,.28); }
-.arch-node-icon.ai svg { stroke: var(--blue); }
-.arch-node-icon.gate {
-  width: 44px; height: 44px; border-radius: 50%;
-  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
-}
-.arch-node-icon.gate svg { stroke: rgba(255,255,255,.45); }
-.arch-node-icon.human { background: rgba(178,222,255,.08); border: 1px solid rgba(178,222,255,.22); }
-.arch-node-icon.human svg { stroke: var(--blue-sky); }
-.arch-node-icon.execute { background: rgba(16,185,129,.1); border: 1px solid rgba(16,185,129,.28); }
-.arch-node-icon.execute svg { stroke: var(--emerald); }
-.arch-node-icon.audit { background: rgba(29,161,242,.06); border: 1px solid rgba(29,161,242,.14); }
-.arch-node-icon.audit svg { stroke: rgba(178,222,255,.7); }
-.arch-node-label {
-  font-size: 11px; font-weight: 600; letter-spacing: .4px;
-  color: rgba(255,255,255,.55); white-space: nowrap; text-align: center;
-}
-.arch-connector {
-  flex: 1; min-width: 48px; display: flex;
-  align-items: center; justify-content: center;
-  position: relative;
-}
-.arch-connector-line {
-  width: 100%; height: 1px; position: relative; overflow: visible;
-  background: rgba(29,161,242,.18);
-}
-.arch-connector-line::after {
-  content: '';
-  position: absolute; top: -3px; left: -20%;
-  width: 30%; height: 7px;
-  background: radial-gradient(ellipse at center, rgba(29,161,242,.9), transparent 70%);
-  animation: data-flow 2.4s ease-in-out infinite;
-}
-.arch-connector:nth-child(2) .arch-connector-line::after { animation-delay: 0s; }
-.arch-connector:nth-child(4) .arch-connector-line::after { animation-delay: .8s; }
-.arch-connector:nth-child(6) .arch-connector-line::after { animation-delay: 1.6s; }
-@keyframes data-flow {
-  0% { left: -30%; }
-  100% { left: 110%; }
-}
-.arch-gate-badge {
-  position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
-  background: rgba(29,161,242,.12); border: 1px solid rgba(29,161,242,.3);
-  color: var(--blue-sky); font-size: 8.5px; font-weight: 800;
-  letter-spacing: 1.5px; text-transform: uppercase;
-  padding: 2px 8px; border-radius: 4px; white-space: nowrap;
-}
-
-/* Phase cards */
-.arch-phases { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
-.arch-phase-card {
-  background: rgba(255,255,255,.025);
-  border: 1px solid rgba(255,255,255,.07);
-  border-radius: 18px; padding: 30px 24px;
-  position: relative; overflow: hidden;
-  opacity: 0; transform: translateY(24px);
-  transition: opacity .55s ease, transform .55s ease, border-color .3s, background .3s;
-}
-.arch-phase-card.visible { opacity: 1; transform: translateY(0); }
-.arch-phase-card:nth-child(2) { transition-delay: .1s; }
-.arch-phase-card:nth-child(3) { transition-delay: .2s; }
-.arch-phase-card:nth-child(4) { transition-delay: .3s; }
-.arch-phase-card:hover {
-  border-color: rgba(29,161,242,.22);
-  background: rgba(29,161,242,.03);
-  transform: translateY(-4px);
-}
-.arch-phase-card::before {
-  content: ''; position: absolute;
-  top: 0; left: 0; right: 0; height: 2px; border-radius: 18px 18px 0 0;
-}
-.arch-phase-card[data-phase="grounding"]::before { background: var(--blue); }
-.arch-phase-card[data-phase="hitl"]::before { background: var(--blue-sky); }
-.arch-phase-card[data-phase="trazabilidad"]::before { background: var(--emerald); }
-.arch-phase-card[data-phase="escalada"]::before { background: #f59e0b; }
-
-.arch-phase-num {
-  font-size: 10px; font-weight: 800; letter-spacing: 2px;
-  text-transform: uppercase; margin-bottom: 6px;
-}
-.arch-phase-card[data-phase="grounding"] .arch-phase-num { color: var(--blue); }
-.arch-phase-card[data-phase="hitl"] .arch-phase-num { color: var(--blue-sky); }
-.arch-phase-card[data-phase="trazabilidad"] .arch-phase-num { color: var(--emerald); }
-.arch-phase-card[data-phase="escalada"] .arch-phase-num { color: #f59e0b; }
-
-.arch-phase-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 20px; font-weight: 600; color: var(--white);
-  margin-bottom: 22px; line-height: 1.2;
-}
-.arch-step-list { display: flex; flex-direction: column; gap: 14px; }
-.arch-step-item { display: flex; gap: 10px; align-items: flex-start; }
-.arch-step-dot {
-  width: 5px; height: 5px; border-radius: 50%;
-  margin-top: 7px; flex-shrink: 0;
-}
-.arch-phase-card[data-phase="grounding"] .arch-step-dot { background: var(--blue); }
-.arch-phase-card[data-phase="hitl"] .arch-step-dot { background: var(--blue-sky); }
-.arch-phase-card[data-phase="trazabilidad"] .arch-step-dot { background: var(--emerald); }
-.arch-phase-card[data-phase="escalada"] .arch-step-dot { background: #f59e0b; }
-
-.arch-step-name { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 3px; }
-.arch-step-text { font-size: 11.5px; color: rgba(255,255,255,.52); line-height: 1.6; }
 @media (max-width: 600px) {
-  .arch-phases { grid-template-columns: 1fr; }
-  .arch-pipeline { display: none; }
-  .arch-statement-text { font-size: 20px; }
+  .arch-statement { padding: 40px 24px; }
+  .arch-statement-text { font-size: 24px; }
+  .arch-statement-claim { font-size: 15px; }
 }
 
 /* ══════════════════════════════════════════
@@ -992,54 +875,8 @@ body {
 
     <div class="arch-statement">
       <span class="arch-statement-badge">El factor diferencial</span>
-      <p class="arch-statement-text">Ninguna accion se ejecuta sin la firma de un humano autorizado.<br><strong>La IA analiza. El equipo juridico decide. Siempre.</strong></p>
-    </div>
-
-    <!-- Visual Pipeline -->
-    <div class="arch-pipeline">
-      <div class="arch-node">
-        <div class="arch-node-icon ai">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><circle cx="12" cy="10" r="3"/><path d="M8 21h8M12 17v4"/></svg>
-        </div>
-        <span class="arch-node-label">IA analiza</span>
-      </div>
-      <div class="arch-connector">
-        <div class="arch-connector-line"></div>
-      </div>
-      <div class="arch-node">
-        <div class="arch-node-icon gate">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        </div>
-      </div>
-      <div class="arch-connector">
-        <div class="arch-connector-line"></div>
-        <span class="arch-gate-badge">CHECKPOINT</span>
-      </div>
-      <div class="arch-node">
-        <div class="arch-node-icon human">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        </div>
-        <span class="arch-node-label">Humano decide</span>
-      </div>
-      <div class="arch-connector">
-        <div class="arch-connector-line"></div>
-        <span class="arch-gate-badge">FIRMA DIGITAL</span>
-      </div>
-      <div class="arch-node">
-        <div class="arch-node-icon execute">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <span class="arch-node-label">Accion ejecutada</span>
-      </div>
-      <div class="arch-connector">
-        <div class="arch-connector-line"></div>
-      </div>
-      <div class="arch-node">
-        <div class="arch-node-icon audit">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <span class="arch-node-label">Expediente sellado</span>
-      </div>
+      <p class="arch-statement-text">Ninguna accion se ejecuta sin la firma de un humano autorizado.</p>
+      <p class="arch-statement-claim">La IA analiza. El equipo juridico decide. <i>Siempre.</i></p>
     </div>
 
 
@@ -1289,13 +1126,21 @@ window.addEventListener('DOMContentLoaded', () => {
     ScrollTrigger.create({ trigger: el, start: 'top 88%', once: true, onEnter: () => { gsap.to(obj, { val: target, duration: 2.2, ease: 'power3.inOut', onUpdate: () => { el.textContent = Math.round(obj.val) + suffix; } }); } });
   });
 
-  /* ── ARCHITECTURE: card reveal via IntersectionObserver ── */
-  const archCards = document.querySelectorAll('.arch-phase-card');
-  if (archCards.length) {
-    const archObs = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); } });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-    archCards.forEach(card => archObs.observe(card));
+  /* ── ARCHITECTURE: statement fade-in ── */
+  const archStmt = document.querySelector('.arch-statement');
+  if (archStmt) {
+    archStmt.style.opacity = '0';
+    archStmt.style.transform = 'translateY(24px)';
+    archStmt.style.transition = 'opacity .7s ease, transform .7s ease';
+    const stmtObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    stmtObs.observe(archStmt);
   }
 
   gsap.from('#chatBox', { autoAlpha: 0, y: 56, duration: 1, ease: 'power4.out', scrollTrigger: { trigger: '#chatBox', start: 'top 85%', once: true } });
