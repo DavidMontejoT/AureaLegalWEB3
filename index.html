@@ -100,149 +100,76 @@ body {
 .btn-nav:hover { transform: scale(1.05); }
 
 /* ══════════════════════════════════════════
-   HERO (LUMERA STYLE)
+   HERO (STONEHAVEN STYLE)
 ══════════════════════════════════════════ */
 .hero {
-  min-height: 105vh;
-  background: radial-gradient(circle at 80% 20%, rgba(29, 161, 242, 0.12) 0%, rgba(7, 13, 25, 1) 70%),
-              radial-gradient(circle at 15% 80%, rgba(16, 185, 129, 0.06) 0%, rgba(7, 13, 25, 1) 60%);
-  display: flex; align-items: center;
-  padding: 120px 48px 60px 48px;
-  position: relative; overflow: hidden;
-}
-.hero-grid {
-  position: absolute; inset: 0; pointer-events: none;
+  min-height: 100vh;
+  position: relative;
+  background-color: #020617;
   background-image:
-    linear-gradient(rgba(255,255,255,.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.015) 1px, transparent 1px);
-  background-size: 64px 64px;
-  opacity: 0.6;
+    radial-gradient(circle at 85% 90%, rgba(29, 161, 242, 0.45) 0%, rgba(16, 185, 129, 0.18) 35%, rgba(2, 6, 23, 1) 75%),
+    radial-gradient(circle at 60% 80%, rgba(29, 161, 242, 0.22) 0%, transparent 60%);
+  display: flex; flex-direction: column;
+  overflow: hidden;
 }
+
+/* Vertical light beams */
+.hero-beams {
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: 55%; pointer-events: none; z-index: 1;
+  mix-blend-mode: screen; opacity: 0.85;
+  -webkit-mask-image: radial-gradient(circle at 85% 85%, black 10%, transparent 80%);
+  mask-image: radial-gradient(circle at 85% 85%, black 10%, transparent 80%);
+}
+.hero-beams::before {
+  content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    90deg, transparent, transparent 45px,
+    rgba(29, 161, 242, 0.06) 45px, rgba(29, 161, 242, 0.06) 90px,
+    rgba(16, 185, 129, 0.09) 90px, rgba(16, 185, 129, 0.09) 135px);
+  filter: blur(6px);
+}
+
+/* Grain texture */
+.hero-grain {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  opacity: 0.065; pointer-events: none; z-index: 2;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
 .hero-inner {
   max-width: var(--max); margin: 0 auto; width: 100%;
-  display: flex; flex-direction: column; gap: 60px;
-  position: relative; z-index: 2;
+  padding: 180px 48px 120px 48px;
+  position: relative; z-index: 3;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  flex: 1;
 }
-.hero-top-row {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 60px;
-  align-items: center;
-}
-@media (max-width: 960px) {
-  .hero-top-row { grid-template-columns: 1fr; gap: 40px; }
-}
-.hero-eyebrow {
-  font-size: 11px; text-transform: uppercase; letter-spacing: 2.5px;
-  color: var(--blue); font-weight: 700; margin-bottom: 28px; display: block;
-}
+
 .hero-title {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(2.8rem, 4.8vw, 4.2rem);
-  font-weight: 700; line-height: 1.1; letter-spacing: -2px;
-  color: var(--white); margin-bottom: 28px;
+  font-size: clamp(2.8rem, 4.8vw, 4.6rem);
+  font-weight: 700; line-height: 1.08; letter-spacing: -2px;
+  color: var(--white); max-width: 750px; margin-bottom: 24px;
 }
 .hero-title .line { overflow: hidden; display: block; }
 .hero-title .line-inner { display: block; }
 .hero-title i { font-style: italic; font-weight: 500; color: var(--blue-sky); }
+
 .hero-desc {
-  font-size: 16px; line-height: 1.8; color: rgba(255,255,255,.65);
-  max-width: 480px; margin-bottom: 40px;
-}
-.hero-img-wrap {
-  display: flex; align-items: center; justify-content: center;
-}
-.hero-img {
-  width: 100%; height: auto;
-  border-radius: 20px;
+  font-size: 15px; line-height: 1.75; color: rgba(255,255,255,.55);
+  max-width: 480px; margin-bottom: 36px;
 }
 
-/* ── GLASS WIDGETS ── */
-.hero-widgets-row {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr 1.1fr;
-  gap: 24px;
-  width: 100%;
+.hero-cta {
+  display: inline-block;
+  background: var(--white); color: var(--dark);
+  font-size: 13px; font-weight: 600;
+  padding: 16px 32px; border-radius: 0;
+  text-decoration: none; cursor: pointer;
+  transition: background .25s, transform .25s;
 }
-@media (max-width: 960px) {
-  .hero-widgets-row { grid-template-columns: 1fr; gap: 16px; }
-}
-.glass-widget {
-  background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 24px;
-  padding: 24px;
-  color: var(--white);
-  position: relative;
-  overflow: hidden;
-}
-.glass-widget-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 17px; font-weight: 600;
-  margin-bottom: 4px; letter-spacing: -0.2px;
-}
-.glass-widget-subtitle {
-  font-size: 11px; color: rgba(255, 255, 255, 0.4);
-  margin-bottom: 20px;
-}
-.trend-chart-container {
-  height: 100px; position: relative; width: 100%;
-}
-.chart-grid-line {
-  position: absolute; left: 0; width: 100%;
-  height: 1px; border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
-}
-.chart-curve-svg {
-  position: absolute; top: 0; left: 0;
-  width: 100%; height: 100%;
-}
-.chart-point-indicator {
-  position: absolute; right: 15%; top: 15%;
-  background: var(--emerald);
-  padding: 4px 10px; border-radius: 20px;
-  font-size: 9px; font-weight: 700; color: #fff;
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
-}
-.score-circle-container {
-  display: flex; align-items: center; justify-content: center;
-  height: 100px; position: relative;
-}
-.score-svg {
-  width: 90px; height: 90px; transform: rotate(-90deg);
-}
-.score-bg-circle {
-  fill: none; stroke: rgba(255, 255, 255, 0.03); stroke-width: 6;
-}
-.score-active-circle {
-  fill: none; stroke: var(--blue); stroke-width: 6;
-  stroke-dasharray: 251.2; stroke-dashoffset: 12.5; stroke-linecap: round;
-}
-.score-center-text { position: absolute; text-align: center; }
-.score-num { font-size: 20px; font-weight: 700; line-height: 1; }
-.score-lbl { font-size: 9px; color: rgba(255, 255, 255, 0.4); margin-top: 2px; }
-.document-status-widget { display: flex; align-items: center; gap: 16px; }
-.document-thumbnail {
-  width: 80px; height: 100px; border-radius: 12px;
-  overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1);
-  position: relative; flex-shrink: 0;
-}
-.document-thumbnail img {
-  width: 100%; height: 100%; object-fit: cover;
-  filter: brightness(0.65) contrast(1.1);
-}
-.document-doc-badge {
-  position: absolute; top: 6px; left: 6px;
-  background: var(--blue); color: #fff;
-  font-size: 8px; font-weight: 700;
-  padding: 2px 6px; border-radius: 4px;
-}
-.document-info-content { flex: 1; }
-.document-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
-.document-meta-text {
-  font-size: 11px; color: rgba(255, 255, 255, 0.45); line-height: 1.4;
-}
+.hero-cta:hover { background: rgba(255,255,255,.9); transform: translateY(-1px); }
 
 /* ══════════════════════════════════════════
    TICKER
@@ -714,70 +641,17 @@ footer {
      HERO
 ══════════════════════════════════════════ -->
 <section class="hero" id="hero">
-  <div class="hero-grid"></div>
-  <div class="orb orb-a"></div>
-  <div class="orb orb-b"></div>
-  <div class="orb orb-c"></div>
+  <div class="hero-beams"></div>
+  <div class="hero-grain"></div>
 
   <div class="hero-inner">
-    <div class="hero-top-row">
-      <div>
-        <h1 class="hero-title">
-          <span class="line"><span class="line-inner">La IA asiste.</span></span>
-          <span class="line"><span class="line-inner">El equipo juridico</span></span>
-          <span class="line"><span class="line-inner"><i>decide.</i></span></span>
-        </h1>
-        <p class="hero-desc">Construimos agentes que no opinan: citan su fuente, se detienen ante el humano, y dejan un rastro que resiste una auditoria. No es una promesa — son dos productos que ya corren asi.</p>
-      </div>
-      <div class="hero-img-wrap">
-        <img src="/hero.png" alt="Aurea Legal" class="hero-img">
-      </div>
-    </div>
-
-    <!-- Glass widgets row -->
-    <div class="hero-widgets-row">
-      <div class="glass-widget">
-        <div class="glass-widget-title">Riesgo <i>Mitigado</i></div>
-        <div class="glass-widget-subtitle">Tendencia acumulada de falsos positivos</div>
-        <div class="trend-chart-container">
-          <div class="chart-grid-line" style="top:20%"></div>
-          <div class="chart-grid-line" style="top:50%"></div>
-          <div class="chart-grid-line" style="top:80%"></div>
-          <svg class="chart-curve-svg" viewBox="0 0 400 100" preserveAspectRatio="none">
-            <path d="M0 80 Q60 75 120 60 T240 20 T360 8 T400 10" fill="none" stroke="#1da1f2" stroke-width="2.5" stroke-linecap="round"/>
-          </svg>
-          <div class="chart-point-indicator">-82%</div>
-        </div>
-      </div>
-      <div class="glass-widget">
-        <div class="glass-widget-title">Grounding</div>
-        <div class="glass-widget-subtitle">Precision de citas</div>
-        <div class="score-circle-container">
-          <svg class="score-svg" viewBox="0 0 100 100">
-            <circle class="score-bg-circle" cx="50" cy="50" r="40"/>
-            <circle class="score-active-circle" cx="50" cy="50" r="40"/>
-          </svg>
-          <div class="score-center-text">
-            <div class="score-num">95%</div>
-            <div class="score-lbl">EXACTITUD</div>
-          </div>
-        </div>
-      </div>
-      <div class="glass-widget">
-        <div class="glass-widget-title">Expediente <i>Activo</i></div>
-        <div class="glass-widget-subtitle">Ultimo caso procesado</div>
-        <div class="document-status-widget">
-          <div class="document-thumbnail">
-            <img src="/contralitigador-2.png" alt="Expediente">
-            <div class="document-doc-badge">AML</div>
-          </div>
-          <div class="document-info-content">
-            <div class="document-title">Exp. 0047-2026</div>
-            <div class="document-meta-text">Verificacion completada<br>Hash: 3fa9c1d<br><span style="color:#10b981;">✓ Aprobado</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <h1 class="hero-title">
+      <span class="line"><span class="line-inner">La IA asiste.</span></span>
+      <span class="line"><span class="line-inner">El equipo juridico</span></span>
+      <span class="line"><span class="line-inner"><i>decide.</i></span></span>
+    </h1>
+    <p class="hero-desc">Construimos agentes que no opinan: citan su fuente, se detienen ante el humano, y dejan un rastro que resiste una auditoria. No es una promesa — son dos productos que ya corren asi.</p>
+    <a href="#productos" class="hero-cta">Conoce los productos</a>
   </div>
 </section>
 
@@ -1113,17 +987,12 @@ document.querySelectorAll('.mag-btn').forEach(btn => {
 
 /* ── MAIN ── */
 window.addEventListener('DOMContentLoaded', () => {
-  gsap.to('.orb', { opacity: 1, duration: 2.5, stagger: 0.35, ease: 'power2.out' });
-  gsap.to('.orb-a', { y: -50, x: 20, duration: 7, repeat: -1, yoyo: true, ease: 'sine.inOut' });
-  gsap.to('.orb-b', { y: 35, x: -18, duration: 9, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 1.2 });
-  gsap.to('.orb-c', { y: -25, x: 12, duration: 5.5, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 2.5 });
 
   const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
   tl.from('#mainNav', { y: -28, autoAlpha: 0, duration: 0.7 })
     .from('.hero-title .line-inner', { y: '110%', duration: 1, stagger: 0.14, ease: 'power4.out' }, '-=0.3')
     .from('.hero-desc', { autoAlpha: 0, duration: 0.7 }, '-=0.35')
-    .from('.hero-img-wrap', { autoAlpha: 0, x: 60, duration: 1.1, ease: 'power4.out' }, '-=0.75')
-    .from('.hero-widgets-row', { autoAlpha: 0, y: 30, duration: 0.9, ease: 'power3.out' }, '-=0.5');
+    .from('.hero-cta', { autoAlpha: 0, y: 18, duration: 0.6 }, '-=0.4');
 
   gsap.utils.toArray('.section-heading').forEach(el => {
     gsap.from(el, { autoAlpha: 0, y: 48, duration: 1, ease: 'power4.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
