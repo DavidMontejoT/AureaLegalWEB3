@@ -159,17 +159,25 @@ body {
   visibility: hidden;
 }
 
-/* Hero image */
+/* Hero image — full-height cover on right */
 .hero-img-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: absolute;
+  top: 0; right: 0;
+  width: 50%; height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero-img-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, var(--dark) 0%, transparent 40%);
+  z-index: 1;
 }
 .hero-img {
-  width: 100%;
-  max-width: 480px;
-  height: auto;
-  border-radius: 20px;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center right;
 }
 
 /* Motion graphic agent flow */
@@ -1118,6 +1126,7 @@ footer {
 
   .hero { padding: 0 24px; }
   .hero-inner { grid-template-columns: 1fr; padding-top: 130px; gap: 40px; }
+  .hero-img-wrap { width: 100%; opacity: .25; }
 
   .products, .architecture, .demo, .team { padding: 80px 24px; }
   .chat-dashboard { height: auto; flex-direction: column; }
@@ -1182,12 +1191,13 @@ footer {
       <p class="hero-desc">Construimos agentes que no opinan: citan su fuente, se detienen ante el humano, y dejan un rastro que resiste una auditoria. No es una promesa — son dos productos que ya corren asi.</p>
     </div>
 
-    <!-- Right: Hero image -->
-    <div class="hero-img-wrap">
-      <img src="/hero.png" alt="Aurea Legal" class="hero-img">
-    </div>
-
   </div>
+
+  <!-- Hero image: full-height cover on right -->
+  <picture class="hero-img-wrap">
+    <source srcset="/hero.png" media="(min-width: 768px)">
+    <img src="/hero.png" alt="Aurea Legal" class="hero-img">
+  </picture>
 </section>
 
 <!-- ══════════════════════════════════════════
