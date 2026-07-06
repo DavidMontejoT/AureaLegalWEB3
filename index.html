@@ -1042,52 +1042,7 @@ body {
       </div>
     </div>
 
-    <!-- 4 Pillar Cards -->
-    <div class="arch-phases">
-      <div class="arch-phase-card" data-phase="grounding">
-        <div class="arch-phase-num">Fase 01</div>
-        <h3 class="arch-phase-name">Grounding</h3>
-        <div class="arch-step-list">
-          <div class="arch-step-item"><div class="arch-step-dot"></div><div><div class="arch-step-name">Indexado de fuentes</div><div class="arch-step-text">El agente ingesta el manual de prevencion, la matriz de riesgo y criterios internos. Todo lo que dice, lo dice de ahi.</div></div></div>
-          <div class="arch-step-item"><div class="arch-step-dot"></div><div><div class="arch-step-name">Citacion estricta</div><div class="arch-step-text">Cada afirmacion incluye su fuente: parrafo, pagina y version. Sin cita, no hay output.</div></div></div>
-          <div class="arch-step-item"><div class="arch-step-dot"></div><div><div class="arch-step-name">Sin creatividad propia</div><div class="arch-step-text">Si la respuesta no esta en las fuentes, devuelve "no tengo certeza suficiente". No improvisa.</div></div></div>
-          <div class="arch-step-item"><div class="arch-step-dot"></div><div><div class="arch-step-name">Actualizacion controlada</div><div class="arch-step-text">Cada nueva version del manual requiere reindexado y aprobacion. Nada se actualiza sin supervision.</div></div></div>
-        </div>
-      </div>
 
-      <div class="arch-phase-card" data-phase="hitl">
-        <div class="arch-phase-num">Fase 02</div>
-        <h3 class="arch-phase-name">Control Humano</h3>
-        <div class="arch-step-list">
-          <div class="arch-step-item"><div class="arch-step-dot"></div><div><div class="arch-step-name">Checkpoints obligatorios</div><div class="arch-step-text">El agente no puede avanzar mas alla de ciertos puntos sin una señal explicita de un humano autorizado.</div></div></div>
-          <div class="arch-step-item"><div class="arch-step-dot"></div><div><div class="arch-step-name">Señal de aprobacion</div><div class="arch-step-text">El oficial o el abogado firma digitalmente cada decision. Sin ese registro, la accion no se ejecuta.</div></div></div>
-          <div class="arch-step-item"><div class="arch-step-dot"></div><div><div class="arch-step-name">Espera activa</div><div class="arch-step-text">El agente no sugiere, no reintenta, no escala solo. Espera la señal o el rechazo del humano.</div></div></div>
-          <div class="arch-step-item"><div class="arch-step-dot"></div><div><div class="arch-step-name">Delegacion controlada</div><div class="arch-step-text">Los permisos de cada rol estan definidos. El agente sabe quien puede aprobar que — y no acepta señales de roles no autorizados.</div></div></div>
-        </div>
-      </div>
-
-      <div class="arch-phase-card" data-phase="trazabilidad">
-        <div class="arch-phase-num">Fase 03</div>
-        <h3 class="arch-phase-name">Trazabilidad</h3>
-        <div class="arch-step-list">
-          <div class="arch-step-item"><div class="arch-step-dot"></div><div><div class="arch-step-name">Hash por decision</div><div class="arch-step-text">Cada output genera un hash SHA-256 con timestamp, usuario y version del modelo. Inmutable.</div></div></div>
-          <div class="arch-step-item"><div class="arch-step-dot"></div><div><div class="arch-step-name">Expediente completo</div><div class="arch-step-text">Toda la cadena: que pregunto el sistema, que respondio el agente, que decidio el humano. Disponible para auditoria.</div></div></div>
-          <div class="arch-step-item"><div class="arch-step-dot"></div><div><div class="arch-step-name">Log de falsos positivos</div><div class="arch-step-text">Cada match descartado queda documentado con el razonamiento. Si alguien pregunta por que no se bloqueo un caso, hay una respuesta.</div></div></div>
-          <div class="arch-step-item"><div class="arch-step-dot"></div><div><div class="arch-step-name">Exportacion a compliance</div><div class="arch-step-text">El expediente es exportable en formato estandar. Diseñado para resistir una inspeccion de la UIF.</div></div></div>
-        </div>
-      </div>
-
-      <div class="arch-phase-card" data-phase="escalada">
-        <div class="arch-phase-num">Fase 04</div>
-        <h3 class="arch-phase-name">Escalada</h3>
-        <div class="arch-step-list">
-          <div class="arch-step-item"><div class="arch-step-dot"></div><div><div class="arch-step-name">Umbrales automaticos</div><div class="arch-step-text">Si la confianza del match supera el umbral configurado, el agente bloquea y notifica al oficial de cumplimiento.</div></div></div>
-          <div class="arch-step-item"><div class="arch-step-dot"></div><div><div class="arch-step-name">Sin zona gris sin registro</div><div class="arch-step-text">Los casos ambiguos se documentan y escalan al siguiente nivel. No hay silencio operativo.</div></div></div>
-          <div class="arch-step-item"><div class="arch-step-dot"></div><div><div class="arch-step-name">Notificacion a medida</div><div class="arch-step-text">Canal de escalada (email, Slack, webhook) y destinatario son configurables por cliente.</div></div></div>
-          <div class="arch-step-item"><div class="arch-step-dot"></div><div><div class="arch-step-name">Deal breakers duros</div><div class="arch-step-text">Listas OFAC, sanciones activas, exposicion PEP de primer grado: siempre no, sin importar la confianza del modelo.</div></div></div>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
