@@ -108,16 +108,26 @@ body {
   background-color: #020617;
   background-image:
     radial-gradient(circle at 85% 90%, rgba(29, 161, 242, 0.45) 0%, rgba(16, 185, 129, 0.18) 35%, rgba(2, 6, 23, 1) 75%),
-    radial-gradient(circle at 60% 80%, rgba(29, 161, 242, 0.22) 0%, transparent 60%);
+    radial-gradient(circle at 60% 80%, rgba(29, 161, 242, 0.22) 0%, transparent 60%),
+    url('/hero.png');
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: overlay, normal, normal;
   display: flex; flex-direction: column;
   overflow: hidden;
+}
+.hero::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(2, 6, 23, 0.55);
+  z-index: 1; pointer-events: none;
 }
 
 /* Vertical light beams */
 .hero-beams {
   position: absolute; top: 0; right: 0; bottom: 0;
-  width: 55%; pointer-events: none; z-index: 1;
-  mix-blend-mode: screen; opacity: 0.85;
+  width: 55%; pointer-events: none; z-index: 2;
+  mix-blend-mode: screen; opacity: 0.6;
   -webkit-mask-image: radial-gradient(circle at 85% 85%, black 10%, transparent 80%);
   mask-image: radial-gradient(circle at 85% 85%, black 10%, transparent 80%);
 }
@@ -162,31 +172,27 @@ body {
 }
 
 .hero-cta {
-  display: inline-block;
-  background: var(--white); color: var(--dark);
-  font-size: 13px; font-weight: 600;
-  padding: 16px 32px; border-radius: 0;
+  display: inline-flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,.15);
+  color: var(--white);
+  font-size: 14px; font-weight: 600;
+  padding: 16px 32px; border-radius: 50px;
   text-decoration: none; cursor: pointer;
-  transition: background .25s, transform .25s;
+  transition: background .3s, border-color .3s, transform .3s;
+  width: fit-content;
 }
-.hero-cta:hover { background: rgba(255,255,255,.9); transform: translateY(-1px); }
-
-/* ══════════════════════════════════════════
-   TICKER
-══════════════════════════════════════════ */
-.ticker-wrap {
-  background: var(--blue);
-  padding: 14px 0; overflow: hidden; position: relative; z-index: 3;
+.hero-cta::after {
+  content: '→';
+  font-size: 16px;
 }
-.ticker-track { display: flex; white-space: nowrap; will-change: transform; }
-.ticker-item {
-  display: inline-flex; align-items: center; gap: 20px;
-  padding: 0 30px;
-  font-size: 11px; font-weight: 700; letter-spacing: 2px;
-  text-transform: uppercase; color: rgba(255,255,255,.88);
-  flex-shrink: 0;
+.hero-cta:hover {
+  background: rgba(255,255,255,.14);
+  border-color: rgba(255,255,255,.3);
+  transform: translateY(-2px);
 }
-.ticker-sep { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,.45); }
 
 /* ══════════════════════════════════════════
    SHARED
@@ -656,13 +662,6 @@ footer {
 </section>
 
 <!-- ══════════════════════════════════════════
-     TICKER
-══════════════════════════════════════════ -->
-<div class="ticker-wrap">
-  <div class="ticker-track" id="tickerTrack"></div>
-</div>
-
-<!-- ══════════════════════════════════════════
      PRODUCTS: CENTINELA
 ══════════════════════════════════════════ -->
 <section class="products" id="productos">
@@ -928,15 +927,6 @@ footer {
 
 <script>
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
-
-/* ── TICKER ── */
-const words = ['AML · KYC','Human-in-the-Loop','Trazabilidad','Grounding Estricto','Compliance','Litigacion','IA Juridica','Debida Diligencia','Auditoria'];
-const track = document.getElementById('tickerTrack');
-[...words, ...words, ...words].forEach(w => {
-  const s = document.createElement('span'); s.className = 'ticker-item';
-  s.innerHTML = `${w}<span class="ticker-sep"></span>`; track.appendChild(s);
-});
-gsap.to(track, { x: '-33.333%', duration: 22, ease: 'none', repeat: -1 });
 
 /* ── CHAT ── */
 const cvHistory = [], cvMsgsEl = document.getElementById('cvMsgs'), cvInputEl = document.getElementById('cvInput');
