@@ -945,7 +945,7 @@ footer {
           <button class="arch-tab" data-target="phase-trazabilidad">Trazabilidad</button>
           <button class="arch-tab" data-target="phase-escalada">Escalada</button>
         </div>
-        <a href="#agente" class="btn-primary">Proba el agente →</a>
+        <a href="#agente" class="btn-primary">Prueba el agente →</a>
       </div>
       <div class="arch-steps">
         <div class="arch-phase-group" id="phase-grounding">
@@ -982,7 +982,7 @@ footer {
 ══════════════════════════════════════════ -->
 <section class="demo" id="agente">
   <div class="demo-inner">
-    <span class="section-eyebrow">Probalo vos mismo</span>
+    <span class="section-eyebrow">Pruébalo tú mismo</span>
     <h2 class="section-heading">Habla con el agente de Aurea</h2>
     <div class="chat-dashboard" id="chatBox">
       <aside class="cv-sidebar">
@@ -1006,7 +1006,7 @@ footer {
           <button class="cv-chip" onclick="cvSend('Que pasa si el agente detecta un cliente de alto riesgo?')">¿Riesgo alto?</button>
           <button class="cv-chip" onclick="cvSend('Que queda registrado para una auditoria?')">¿Que se registra?</button>
         </div>
-        <div class="cv-input-row"><input class="cv-input" id="cvInput" type="text" placeholder="Escribi tu pregunta…"><button class="cv-send-btn" id="cvSendBtn"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div>
+        <div class="cv-input-row"><input class="cv-input" id="cvInput" type="text" placeholder="Escribe tu pregunta…"><button class="cv-send-btn" id="cvSendBtn"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div>
       </main>
       <section class="cv-voice">
         <div class="cv-voice-header"><span class="cv-voice-label">Modo de voz</span><button class="cv-icon-btn"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
@@ -1082,7 +1082,7 @@ async function cvSend(text) {
     const res = await fetch('/openai/v1/chat/completions', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ model: 'llama-3.3-70b-versatile', max_tokens: 800,
-        messages: [{ role: 'system', content: 'Sos el agente de Aurea Legal. Productos: Centinela (AML/KYC) y Contralitigador (estrategia de litigios). Responde en espanol rioplatense, 2-4 frases, remarcando que el agente cita fuentes, nunca decide solo, y deja registro auditable.' },
+        messages: [{ role: 'system', content: 'Eres el agente de Aurea Legal. Productos: Centinela (AML/KYC) y Contralitigador (estrategia de litigios). Responde en espanol neutral, 2-4 frases, remarcando que el agente cita fuentes, nunca decide solo, y deja registro auditable.' },
           ...cvHistory.map(m => ({ role: m.role, content: m.content }))] }) });
     const data = await res.json(); const reply = data.choices?.[0]?.message?.content || 'No pude generar respuesta.';
     typing.remove(); cvHistory.push({ role: 'assistant', content: reply }); cvAddMsg('bot', reply);
