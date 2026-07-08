@@ -319,6 +319,14 @@ body {
 .demo-cred-row:last-child { border-bottom: none; }
 .demo-cred-row span { color: rgba(255,255,255,.4); }
 .demo-cred-row strong { color: #fff; font-family: monospace; font-size: 13px; }
+.demo-copy-btn {
+  background: rgba(29,161,242,.15); border: 1px solid rgba(29,161,242,.3);
+  color: #1da1f2; font-size: 10px; padding: 3px 10px; border-radius: 4px;
+  cursor: pointer; font-weight: 600; text-transform: uppercase; letter-spacing: .5px;
+  transition: all .2s; margin-left: 8px;
+}
+.demo-copy-btn:hover { background: rgba(29,161,242,.25); }
+.demo-copy-btn.copied { background: rgba(16,185,129,.2); border-color: rgba(16,185,129,.3); color: #10b981; }
 .centinela-features { display: grid; grid-template-columns: 1fr; gap: 20px; align-items: start; }
 @media (min-width: 600px) {
   .centinela-features { grid-template-columns: 1fr 1.2fr 1.2fr; }
@@ -1312,7 +1320,7 @@ window.addEventListener('DOMContentLoaded', () => {
       <p class="demo-modal-sub">Tu acceso esta listo. <strong>Guarda tu contrasena ahora</strong> — no la veras de nuevo.</p>
       <div class="demo-credentials">
         <div class="demo-cred-row"><span>Usuario</span><strong id="demoCredUser"></strong></div>
-        <div class="demo-cred-row"><span>Contrasena</span><strong id="demoCredPass"></strong></div>
+        <div class="demo-cred-row"><span>Contrasena</span><strong id="demoCredPass"></strong><button class="demo-copy-btn" onclick="copyPassword()" title="Copiar contrasena">Copiar</button></div>
         <div class="demo-cred-row"><span>Producto</span><strong id="demoCredProd"></strong></div>
       </div>
       <p style="font-size:11px;color:rgba(255,255,255,.3);margin-bottom:20px">Expira en 2 dias · Accede en <a href="https://app.aurea.legal" target="_blank" style="color:#1da1f2">app.aurea.legal</a></p>
@@ -1363,5 +1371,23 @@ async function submitDemo(e) {
 document.getElementById('demoModalOverlay').addEventListener('click', function(e) {
   if (e.target === this) closeDemoModal();
 });
+function copyPassword() {
+  const pass = document.getElementById('demoCredPass').textContent;
+  const btn = document.querySelector('.demo-copy-btn');
+  navigator.clipboard.writeText(pass).then(() => {
+    btn.textContent = 'Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+  }).catch(() => {
+    // Fallback for older browsers
+    const ta = document.createElement('textarea');
+    ta.value = pass; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    btn.textContent = 'Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+  });
+}
 </script>
 </html>
