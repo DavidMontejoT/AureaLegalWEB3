@@ -267,6 +267,58 @@ body {
   transition: background .25s, border-color .25s;
 }
 .centinela-btn-info:hover { background: rgba(11,19,32,.04); border-color: rgba(11,19,32,.15); }
+
+/* Demo Modal */
+.demo-modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.75); z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity .3s;
+}
+.demo-modal-overlay.active { opacity: 1; pointer-events: all; }
+.demo-modal {
+  background: #111a28; border: 1px solid rgba(255,255,255,.1); border-radius: 20px;
+  padding: 40px 36px; max-width: 440px; width: 90%; position: relative;
+  color: #fff; box-shadow: 0 24px 80px rgba(0,0,0,.6);
+}
+.demo-modal-close {
+  position: absolute; top: 12px; right: 16px; background: none; border: none;
+  color: rgba(255,255,255,.4); font-size: 24px; cursor: pointer; line-height: 1;
+}
+.demo-modal-close:hover { color: #fff; }
+.demo-modal-title { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+.demo-modal-title span { color: #1da1f2; }
+.demo-modal-sub { font-size: 13px; color: rgba(255,255,255,.45); margin-bottom: 24px; line-height: 1.5; }
+.demo-modal-input {
+  width: 100%; padding: 12px 16px; background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12); border-radius: 8px; color: #fff;
+  font-size: 14px; margin-bottom: 12px; outline: none; font-family: 'Inter', sans-serif;
+  transition: border-color .2s;
+}
+.demo-modal-input:focus { border-color: #1da1f2; }
+.demo-modal-input::placeholder { color: rgba(255,255,255,.3); }
+.demo-modal-btn {
+  width: 100%; padding: 14px; background: #1da1f2; border: none; border-radius: 8px;
+  color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 8px;
+  transition: background .2s; font-family: 'Inter', sans-serif;
+}
+.demo-modal-btn:hover { background: #1a8cd4; }
+.demo-modal-btn:disabled { opacity: .5; cursor: not-allowed; }
+.demo-success-icon {
+  width: 56px; height: 56px; border-radius: 50%; background: rgba(16,185,129,.15);
+  border: 2px solid rgba(16,185,129,.3); display: flex; align-items: center;
+  justify-content: center; font-size: 24px; color: #10b981; margin: 0 auto 20px;
+}
+.demo-credentials {
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px; padding: 16px; margin-bottom: 20px;
+}
+.demo-cred-row {
+  display: flex; justify-content: space-between; padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,.05); font-size: 13px;
+}
+.demo-cred-row:last-child { border-bottom: none; }
+.demo-cred-row span { color: rgba(255,255,255,.4); }
+.demo-cred-row strong { color: #fff; font-family: monospace; font-size: 13px; }
 .centinela-features { display: grid; grid-template-columns: 1fr; gap: 20px; align-items: start; }
 @media (min-width: 600px) {
   .centinela-features { grid-template-columns: 1fr 1.2fr 1.2fr; }
@@ -827,7 +879,7 @@ select.demo-input option { background: #1a2332; color: #fff; }
         <h3 class="centinela-title">El agente que corre la <i>primera pasada</i> de tu compliance</h3>
         <p class="centinela-desc">Centinela cruza el expediente de cada cliente nuevo contra la Matriz de Riesgo y el Manual de Prevencion, revisa listas de PEP y sanciones, y no deja avanzar nada hacia la vinculacion sin aprobacion explicita del Oficial de Cumplimiento. Todo queda registrado con hash criptografico para auditoria.</p>
         <div class="centinela-actions">
-          <a href="#chatBox" class="centinela-btn-demo">Solicitar Demo</a>
+          <button class="centinela-btn-demo" onclick="openDemoModal('Centinela')">Solicitar Demo</button>
           <a href="#chatBox" class="centinela-btn-info">Más información</a>
         </div>
         <div class="centinela-features">
@@ -867,7 +919,7 @@ select.demo-input option { background: #1a2332; color: #fff; }
         <h3 class="centinela-title">El agente que cruza <i>precedentes</i> por vos</h3>
         <p class="centinela-desc">Contralitigador apoya al equipo legal en la evaluacion de un caso, cruzando los hechos contra precedentes y criterios internos del despacho. Ninguna estrategia se define sin el sign-off del abogado. Mismo esqueleto de control humano y trazabilidad que Centinela.</p>
         <div class="centinela-actions">
-          <a href="#chatBox" class="centinela-btn-demo">Solicitar Demo</a>
+          <button class="centinela-btn-demo" onclick="openDemoModal('Contralitigador')">Solicitar Demo</button>
           <a href="#chatBox" class="centinela-btn-info">Más información</a>
         </div>
         <div class="centinela-features">
@@ -1237,5 +1289,79 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 </script>
-</body>
+<!-- ═══ DEMO MODAL ═══ -->
+<div class="demo-modal-overlay" id="demoModalOverlay">
+  <div class="demo-modal" id="demoModal">
+    <button class="demo-modal-close" onclick="closeDemoModal()">&times;</button>
+    <!-- Step 1: Form -->
+    <div class="demo-step" id="demoStep1">
+      <h3 class="demo-modal-title">Solicita tu demo de <span id="demoProductName"></span></h3>
+      <p class="demo-modal-sub">Te creamos una cuenta automatica. Recibiras tu acceso al instante.</p>
+      <form id="demoModalForm" onsubmit="submitDemo(event)">
+        <input type="hidden" name="producto" id="demoProducto">
+        <input class="demo-modal-input" type="email" name="email" placeholder="Email corporativo" required>
+        <input class="demo-modal-input" type="tel" name="telefono" placeholder="Telefono" required>
+        <input class="demo-modal-input" type="url" name="linkedin" placeholder="LinkedIn (opcional)">
+        <button type="submit" class="demo-modal-btn">Crear cuenta demo</button>
+      </form>
+    </div>
+    <!-- Step 2: Success -->
+    <div class="demo-step" id="demoStep2" style="display:none">
+      <div class="demo-success-icon">&#10003;</div>
+      <h3 class="demo-modal-title">¡Cuenta creada!</h3>
+      <p class="demo-modal-sub">Tu acceso esta listo. <strong>Guarda tu contrasena ahora</strong> — no la veras de nuevo.</p>
+      <div class="demo-credentials">
+        <div class="demo-cred-row"><span>Usuario</span><strong id="demoCredUser"></strong></div>
+        <div class="demo-cred-row"><span>Contrasena</span><strong id="demoCredPass"></strong></div>
+        <div class="demo-cred-row"><span>Producto</span><strong id="demoCredProd"></strong></div>
+      </div>
+      <p style="font-size:11px;color:rgba(255,255,255,.3);margin-bottom:20px">Expira en 2 dias · Accede en <a href="https://app.aurea.legal" target="_blank" style="color:#1da1f2">app.aurea.legal</a></p>
+      <button class="demo-modal-btn" onclick="closeDemoModal()">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openDemoModal(producto) {
+  document.getElementById('demoProducto').value = producto;
+  document.getElementById('demoProductName').textContent = producto;
+  document.getElementById('demoStep1').style.display = 'block';
+  document.getElementById('demoStep2').style.display = 'none';
+  document.getElementById('demoModalOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeDemoModal() {
+  document.getElementById('demoModalOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+async function submitDemo(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button');
+  btn.disabled = true; btn.textContent = 'Creando…';
+  const fd = new FormData(e.target);
+  try {
+    const res = await fetch('/api/solicitar-demo', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(Object.fromEntries(fd)),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      document.getElementById('demoCredUser').textContent = data.usuario;
+      document.getElementById('demoCredPass').textContent = data.password;
+      document.getElementById('demoCredProd').textContent = data.producto;
+      document.getElementById('demoStep1').style.display = 'none';
+      document.getElementById('demoStep2').style.display = 'block';
+    } else {
+      alert(data.detail || 'Error al crear la demo');
+    }
+  } catch(err) {
+    alert('Error de conexion');
+  }
+  btn.disabled = false; btn.textContent = 'Crear cuenta demo';
+}
+// Close on overlay click
+document.getElementById('demoModalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeDemoModal();
+});
+</script>
 </html>
