@@ -461,7 +461,7 @@ body {
 .demo-copy-btn.copied { background: rgba(16,185,129,.2); border-color: rgba(16,185,129,.3); color: #10b981; }
 .centinela-features { display: grid; grid-template-columns: 1fr; gap: 20px; align-items: start; }
 @media (min-width: 600px) {
-  .centinela-features { grid-template-columns: 1fr 1.2fr 1.2fr; }
+  .centinela-features { grid-template-columns: 250px 1fr; gap: 40px; }
 }
 .centinela-stat { padding-top: 6px; }
 .centinela-stat-num {
@@ -1073,7 +1073,12 @@ select.demo-input option { background: #1a2332; color: #fff; }
   background: #10b981; animation: rePulse 2s infinite;
 }
 @keyframes rePulse { 0%,100%{opacity:1} 50%{opacity:.3} }
-.re-features { display: flex; flex-direction: column; gap: 12px; }
+.re-features { 
+  display: grid; 
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 12px;
+  width: 100%; /* Fuerza a expandirse */
+}
 .re-feat {
   display: flex; gap: 18px; align-items: flex-start;
   padding: 20px; border-radius: 14px;
