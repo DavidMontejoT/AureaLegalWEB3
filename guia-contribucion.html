@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de Contribución · Aurea Legal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --dark:       #040811;
+    --dark2:      #03060d;
+    --white:      #ffffff;
+    --off:        #f8fafc;
+    --blue-soft:  #eef5fb;
+    --sky:        #b2deff;
+    --accent:     #1da1f2;
+    --slate:      #5a6b7c;
+    --muted:      rgba(255,255,255,0.65);
+    --muted-soft: rgba(255,255,255,0.45);
+    --glass-blur: blur(28px) saturate(180%) brightness(1.06);
+    --glass-shadow: 0 24px 48px -12px rgba(0,0,0,0.6), 0 8px 20px rgba(0,0,0,0.3);
+    --glass-inset: inset 0 1px 1px rgba(255,255,255,0.2), inset 0 -1px 1px rgba(0,0,0,0.4);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--white);
+    background: var(--dark);
+    line-height: 1.7;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Ambient blobs */
+  .blob {
+    position: fixed; pointer-events: none; z-index: 0;
+    filter: blur(100px); border-radius: 50%;
+    animation: float 20s infinite alternate ease-in-out;
+  }
+  .blob-1 {
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(178,222,255,0.22) 0%, transparent 70%);
+    top: -10%; left: -8%;
+  }
+  .blob-2 {
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(29,161,242,0.18) 0%, transparent 70%);
+    bottom: -5%; right: -10%;
+    animation-delay: -7s;
+  }
+  .blob-3 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+    top: 50%; left: 40%;
+    animation-delay: -12s;
+  }
+  @keyframes float {
+    0%   { transform: translate(0,0) scale(1) rotate(0deg); }
+    50%  { transform: translate(60px,-60px) scale(1.05) rotate(8deg); }
+    100% { transform: translate(-40px,50px) scale(0.95) rotate(-8deg); }
+  }
+
+  /* Nav */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    background: rgba(4,8,17,0.75);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 0 40px;
+  }
+  .nav-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700; color: var(--white);
+    text-decoration: none;
+    background: linear-gradient(180deg, #fff 0%, var(--sky) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .nav-links { display: flex; gap: 28px; list-style: none; }
+  .nav-links a {
+    color: var(--muted-soft); text-decoration: none;
+    font-size: 13px; font-weight: 500; letter-spacing: 0.3px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  /* Hero */
+  .hero {
+    position: relative; z-index: 1;
+    padding: 160px 40px 100px; text-align: center;
+  }
+  .hero-eyebrow {
+    font-size: 13px; text-transform: uppercase; letter-spacing: 3px;
+    color: var(--sky); font-weight: 600; margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 8vw, 80px); font-weight: 700;
+    letter-spacing: -2px; line-height: 1.1;
+    background: linear-gradient(180deg, #ffffff 0%, #b2deff 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-shadow: 0 4px 24px rgba(178,222,255,0.25);
+    margin-bottom: 16px;
+  }
+  .hero h1 i { font-style: italic; font-weight: 600; }
+  .hero-sub {
+    font-size: 18px; color: var(--muted); font-weight: 300;
+    max-width: 560px; margin: 0 auto;
+  }
+
+  /* Container */
+  .container { max-width: 1000px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 1; }
+
+  /* Section */
+  .section { padding: 80px 0; }
+  .section-eyebrow {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 3px;
+    color: var(--sky); font-weight: 600; margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 44px); font-weight: 700;
+    letter-spacing: -1px; margin-bottom: 40px;
+    color: var(--white);
+  }
+
+  /* Glass card */
+  .glass-card {
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid transparent;
+    background:
+      linear-gradient(145deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 100%) padding-box,
+      linear-gradient(145deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.05) 30%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.05) 70%, rgba(255,255,255,0.2) 100%) border-box;
+    box-shadow: var(--glass-shadow), var(--glass-inset);
+    border-radius: 24px; padding: 48px;
+    position: relative; overflow: hidden;
+    margin-bottom: 32px;
+  }
+  .glass-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    opacity: 0.5;
+  }
+  .glass-card > * { position: relative; z-index: 1; }
+  .glass-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; font-weight: 700; margin-bottom: 16px;
+    color: var(--white);
+  }
+  .glass-card p, .glass-card li { color: var(--muted); font-size: 15px; line-height: 1.8; }
+  .glass-card ul, .glass-card ol { padding-left: 20px; margin: 12px 0; }
+  .glass-card li { margin-bottom: 6px; }
+
+  /* Tables */
+  .table-wrap {
+    overflow-x: auto; margin: 24px 0;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  table {
+    width: 100%; border-collapse: collapse;
+    font-size: 14px;
+  }
+  th {
+    text-align: left; padding: 14px 20px;
+    font-weight: 600; font-size: 12px; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--sky);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.03);
+  }
+  td {
+    padding: 14px 20px; color: var(--muted);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  tr:last-child td { border-bottom: none; }
+
+  /* Code blocks */
+  pre {
+    background: rgba(0,0,0,0.45);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px; padding: 24px;
+    font-family: 'SF Mono', 'Fira Code', 'Menlo', monospace;
+    font-size: 13px; line-height: 1.7;
+    overflow-x: auto; margin: 20px 0;
+    color: var(--muted);
+  }
+  code {
+    font-family: 'SF Mono', 'Fira Code', 'Menlo', monospace;
+    font-size: 13px;
+    background: rgba(29,161,242,0.12);
+    color: var(--sky);
+    padding: 2px 6px; border-radius: 4px;
+  }
+  pre code {
+    background: none; color: var(--muted); padding: 0;
+  }
+
+  /* Inline tags */
+  .tag {
+    display: inline-block;
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 1px; padding: 4px 10px; border-radius: 6px;
+    margin-right: 6px; margin-bottom: 6px;
+  }
+  .tag-feat    { background: rgba(29,161,242,0.18); color: var(--accent); }
+  .tag-fix     { background: rgba(239,68,68,0.18);  color: #ef4444; }
+  .tag-design  { background: rgba(178,222,255,0.15); color: var(--sky); }
+  .tag-chore   { background: rgba(255,255,255,0.08); color: var(--muted-soft); }
+  .tag-docs    { background: rgba(34,197,94,0.15);   color: #22c55e; }
+
+  /* Checklist */
+  .checklist { list-style: none; padding: 0; }
+  .checklist li {
+    padding: 6px 0; color: var(--muted); font-size: 14px;
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .checklist li::before {
+    content: '☐'; color: var(--slate); font-size: 16px; flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* Prompt card */
+  .prompt-card {
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(178,222,255,0.12);
+    border-left: 3px solid var(--sky);
+    border-radius: 12px; padding: 32px; margin: 28px 0;
+  }
+  .prompt-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700; margin-bottom: 8px;
+    color: var(--sky);
+  }
+  .prompt-card .prompt-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 2px;
+    color: var(--slate); margin-bottom: 16px;
+  }
+
+  /* Anti-pattern row highlight */
+  .anti-do {
+    color: #22c55e !important;
+    font-weight: 500;
+  }
+
+  /* Divider */
+  .divider {
+    height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    margin: 60px 0;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center; padding: 60px 40px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    position: relative; z-index: 1;
+  }
+  .footer p { color: var(--slate); font-size: 13px; }
+  .footer strong { color: var(--muted); }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 120px 24px 60px; }
+    .container { padding: 0 20px; }
+    .section { padding: 50px 0; }
+    .glass-card { padding: 28px; }
+    .prompt-card { padding: 24px; }
+    pre { padding: 16px; font-size: 12px; }
+    table { font-size: 12px; }
+    th, td { padding: 10px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Ambient blobs -->
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">Aurea Legal</a>
+    <ul class="nav-links">
+      <li><a href="#ramas">Ramas</a></li>
+      <li><a href="#commits">Commits</a></li>
+      <li><a href="#prs">Pull Requests</a></li>
+      <li><a href="#review">Code Review</a></li>
+      <li><a href="#prompts">AI Prompts</a></li>
+      <li><a href="#antipatrones">Anti-patrones</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="hero-eyebrow">Guía de Contribución</div>
+  <h1>Menos capas,<br><i>mismo rigor.</i></h1>
+  <p class="hero-sub">El estándar mínimo para que el equipo se mueva rápido y el código no se rompa.</p>
+</header>
+
+<div class="container">
+
+  <!-- ═══ SECCIÓN 1: RAMAS ═══ -->
+  <section class="section" id="ramas">
+    <div class="section-eyebrow">Sección 1</div>
+    <h2 class="section-title">Ramas</h2>
+
+    <div class="glass-card">
+      <p>Nombramos las ramas con prefijo + descripción corta en kebab-case. Una rama = un cambio atómico.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Prefijo</th><th>Cuándo usarlo</th><th>Ejemplo</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="tag tag-feat">feat/</span></td>
+              <td>Nueva funcionalidad</td>
+              <td><code>feat/demo-modal-per-user</code></td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-fix">fix/</span></td>
+              <td>Corrección de bug</td>
+              <td><code>fix/nav-link-playbooks</code></td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-chore">chore/</span></td>
+              <td>Mantenimiento, deps, limpieza</td>
+              <td><code>chore/cleanup-legacy-html</code></td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-docs">docs/</span></td>
+              <td>Documentación</td>
+              <td><code>docs/readme-deploy</code></td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-design">design/</span></td>
+              <td>Cambios visuales o de branding</td>
+              <td><code>design/liquid-glass-v3</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="margin-top:20px;"><strong>Reglas:</strong></p>
+      <ul>
+        <li>Las ramas salen de <code>master</code> y vuelven a <code>master</code>.</li>
+        <li>Si tu rama hace dos cosas no relacionadas, la partes en dos.</li>
+        <li>Borramos la rama después del merge.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SECCIÓN 2: COMMITS ═══ -->
+  <section class="section" id="commits">
+    <div class="section-eyebrow">Sección 2</div>
+    <h2 class="section-title">Commits</h2>
+
+    <div class="glass-card">
+      <p>Usamos <a href="https://www.conventionalcommits.org/" style="color:var(--accent);">Conventional Commits</a> en <strong>español</strong>. Formato:</p>
+      <pre><code>&lt;tipo&gt;(&lt;alcance&gt;): &lt;descripción en imperativo&gt;</code></pre>
+
+      <p style="margin-top:16px;">Tipos: <span class="tag tag-feat">feat</span> <span class="tag tag-fix">fix</span> <span class="tag tag-chore">chore</span> <span class="tag tag-docs">docs</span> <span class="tag tag-design">design</span> refactor perf</p>
+
+      <p style="margin-top:20px;"><strong>Ejemplos reales del proyecto:</strong></p>
+      <pre><code>feat(team): agrega a Giancarlo Vilcapoma como CTO
+fix(nav): corrige slug roto en link de Playbooks
+design(hero): migra hero section a Liquid Glass v3
+chore(repo): elimina archivos HTML legacy del root</code></pre>
+
+      <p style="margin-top:20px;"><strong>Reglas:</strong></p>
+      <ul>
+        <li><strong>Un commit = un cambio lógico.</strong> Si escribiste "y también", son dos commits.</li>
+        <li><strong>Imperativo presente.</strong> "agrega", no "agregué" ni "agregado".</li>
+        <li><strong>No commits WIP a master.</strong> Usa <code>git stash</code> o rama draft para trabajo parcial.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══ SECCIÓN 3: PULL REQUESTS ═══ -->
+  <section class="section" id="prs">
+    <div class="section-eyebrow">Sección 3</div>
+    <h2 class="section-title">Pull Requests</h2>
+
+    <div class="glass-card">
+      <h3>Antes de abrir el PR</h3>
+      <ul class="checklist">
+        <li>Hiciste rebase sobre <code>master</code> (no merge de master en tu rama)</li>
+        <li>Probaste el cambio manualmente — no asumas que "debería funcionar"</li>
+        <li>Si es HTML/CSS/JS, lo abriste en el navegador y verificaste visualmente</li>
+        <li>Si es infraestructura (DNS, Caddy, Docker), lo probaste en el VPS o documentaste por qué no</li>
+        <li>Hiciste squash de commits "wip", "typo", "test" en commits con sentido</li>
+        <li>El diff es limpio — sin archivos de prueba, backups, ni ruido</li>
+      </ul>
+    </div>
+
+    <div class="glass-card">
+      <h3>Estructura de la descripción</h3>
+      <p>Todo PR responde <strong>qué, por qué y cómo</strong>. No asumas que el revisor tiene contexto.</p>
+      <pre><code>## Qué
+Una o dos frases que describan el cambio.
+
+## Por qué
+El problema que resuelve, el issue que cierra, o la decisión de producto.
+Incluye screenshots del antes/después si es un cambio visual.
+
+## Cómo
+Decisiones técnicas: por qué esta solución, trade-offs, archivos clave.
+
+## Cómo probar
+1. Ir a /ruta
+2. Hacer clic en X
+3. Verificar que Y
+
+## Screenshots
+| Antes | Después |
+|-------|---------|
+| (img) | (img)  |</code></pre>
+    </div>
+  </section>
+
+  <!-- ═══ SECCIÓN 4: CODE REVIEW ═══ -->
+  <section class="section" id="review">
+    <div class="section-eyebrow">Sección 4</div>
+    <h2 class="section-title">Code Review</h2>
+
+    <div class="glass-card">
+      <h3>Para el autor</h3>
+      <ul>
+        <li><strong>El PR es una conversación, no una entrega.</strong> El revisor es tu par. Su trabajo es encontrar problemas antes de producción.</li>
+        <li><strong>No te pongas a la defensiva.</strong> Si el revisor no entendió algo, el código no es suficientemente claro. Arregla el código, no discutas.</li>
+        <li><strong>Responde a todos los comentarios.</strong> Un "listo" o "hecho" basta.</li>
+        <li><strong>No hagas force-push después del review.</strong> Agrega commits nuevos. El squash se hace al final.</li>
+      </ul>
+    </div>
+
+    <div class="glass-card">
+      <h3>Para el revisor</h3>
+      <ul>
+        <li><strong>Revisa el diff, no la persona.</strong> "Este loop es O(n²)" — no "escribiste mal este loop".</li>
+        <li><strong>Distingue bloqueante de sugerencia.</strong> Usa <code>nit:</code> o <code>sugerencia:</code> para preferencias personales.</li>
+        <li><strong>No dejes pasar cosas rotas por ser amable.</strong> El código que mergeamos hoy es el incidente de mañana.</li>
+        <li><strong>Aprueba cuando esté listo.</strong> Nada de "LGTM pero…" — si hay peros, son comentarios, no aprobación.</li>
+      </ul>
+    </div>
+
+    <div class="glass-card">
+      <h3>Velocidad del review</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tamaño del PR</th><th>Expectativa</th></tr></thead>
+          <tbody>
+            <tr><td>&lt; 200 líneas</td><td>Menos de 4 horas</td></tr>
+            <tr><td>Grande</td><td>Menos de 24 horas</td></tr>
+            <tr><td>&gt; 48 horas sin review</td><td>Hacer ping en el chat del equipo</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECCIÓN 5: AI PROMPTS ═══ -->
+  <section class="section" id="prompts">
+    <div class="section-eyebrow">Sección 5</div>
+    <h2 class="section-title">AI Prompts para PRs</h2>
+    <p style="color:var(--muted); margin-bottom:32px;">
+      Copia el prompt completo según el tipo de PR, pega el diff al final, y dáselo a Claude, ChatGPT o tu herramienta preferida. Te devuelve la descripción lista para GitHub.
+    </p>
+
+    <!-- Feature -->
+    <div class="prompt-card">
+      <h4>PR de Feature</h4>
+      <div class="prompt-label">feat · Copia todo este bloque</div>
+      <pre><code>Eres un senior engineer en Aurea Legal, una legaltech AI-native. Revisa el
+siguiente diff y genera la descripción de un Pull Request en español con esta
+estructura exacta:
+
+## Qué
+[1-2 frases claras, sin jerga innecesaria. Alguien externo al proyecto debe
+entender qué se construyó.]
+
+## Por qué
+[El problema de usuario o técnico que motiva este cambio. Si cierra un issue,
+menciona "Closes #N". Contexto de producto si aplica.]
+
+## Cómo
+[Decisiones técnicas relevantes: por qué esta implementación y no otra,
+trade-offs, archivos clave modificados. Sé honesto si hay deuda técnica
+aceptada.]
+
+## Cómo probar
+[Pasos exactos, numerados, para que el revisor reproduzca el cambio. Incluye
+rutas, clics, datos de prueba.]
+
+## Screenshots
+[Si el cambio es visual, indica dónde irían los screenshots antes/después.]
+
+Reglas:
+- Usa Conventional Commits en español para el título: feat(scope): descripción
+- Lenguaje directo, sin adjetivos vacíos ("robusto", "escalable", "innovador")
+- Si hay trade-offs conocidos, dilo explícitamente
+- No inventes funcionalidad que no está en el diff
+
+Aquí está el diff:</code></pre>
+    </div>
+
+    <!-- Bugfix -->
+    <div class="prompt-card">
+      <h4>PR de Bugfix</h4>
+      <div class="prompt-label">fix · Copia todo este bloque</div>
+      <pre><code>Eres un senior engineer en Aurea Legal, una legaltech AI-native. Revisa el
+siguiente diff y genera la descripción de un Pull Request de **bugfix** en
+español con esta estructura exacta:
+
+## Qué
+[1-2 frases describiendo el bug y su corrección.]
+
+## Bug
+- **Comportamiento anterior:** [qué pasaba antes — sé específico]
+- **Comportamiento nuevo:** [qué pasa ahora]
+- **Cómo reproducir:** [pasos exactos para ver el bug sin el fix]
+
+## Causa raíz
+[Qué estaba mal realmente — no solo el síntoma. ¿Condición de carrera? ¿Valor
+nulo no manejado? ¿Selector CSS incorrecto?]
+
+## Cómo
+[Qué archivos se tocaron y por qué esta solución en particular.]
+
+## Cómo probar
+1. [pasos para confirmar que el bug ya no existe]
+2. [pasos para confirmar que no se rompió nada relacionado]
+
+Reglas:
+- Usa Conventional Commits en español: fix(scope): descripción
+- La causa raíz importa más que el síntoma
+- Si el fix introduce riesgo conocido, dilo
+
+Aquí está el diff:</code></pre>
+    </div>
+
+    <!-- Design -->
+    <div class="prompt-card">
+      <h4>PR de Diseño</h4>
+      <div class="prompt-label">design · Copia todo este bloque</div>
+      <pre><code>Eres un senior design-engineer en Aurea Legal. El sistema de diseño es "Liquid
+Glass" — fondo #040811, tipografía Playfair Display + Inter, glass cards con
+backdrop-filter blur(28px), acentos sky #B2DEFF y acento #1da1f2. Revisa el
+siguiente diff y genera la descripción de un PR de diseño en español:
+
+## Qué
+[1-2 frases describiendo el cambio visual.]
+
+## Antes / Después
+| Antes | Después |
+|-------|---------|
+| (screenshot) | (screenshot) |
+
+## Decisiones de diseño
+[Por qué este approach visual. Qué referencias usaste. Qué alternativas
+descartaste.]
+
+## Tokens afectados
+[Lista los tokens CSS o clases que cambian: colores, glass, tipografía, etc.]
+
+## Cómo probar
+1. Abrir [ruta] en [navegador/resolución]
+2. Verificar que [elemento] usa los tokens correctos
+3. Verificar en mobile y dark/light mode
+
+Reglas:
+- Usa Conventional Commits: design(scope): descripción
+- Todo cambio visual debe tener screenshots antes/después
+- Respeta los tokens del sistema Liquid Glass — no hardcodees colores
+
+Aquí está el diff:</code></pre>
+    </div>
+  </section>
+
+  <!-- ═══ SECCIÓN 6: ANTI-PATRONES ═══ -->
+  <section class="section" id="antipatrones">
+    <div class="section-eyebrow">Sección 6</div>
+    <h2 class="section-title">Anti-patrones</h2>
+
+    <div class="glass-card" style="padding:0; overflow:visible;">
+      <div class="table-wrap" style="margin:0; border:none;">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:30%">Anti-patrón</th>
+              <th style="width:30%">Por qué es dañino</th>
+              <th style="width:40%">Qué hacer en vez</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="color:#ef4444;">"Refactor mientras agrego feature"</td>
+              <td>Diff gigante, imposible de revisar</td>
+              <td class="anti-do">Rama separada de refactor, mergear primero</td>
+            </tr>
+            <tr>
+              <td style="color:#ef4444;">Commits "wip", "test", "asdf"</td>
+              <td>Historia del repo ilegible</td>
+              <td class="anti-do">Squash antes de pushear a remoto</td>
+            </tr>
+            <tr>
+              <td style="color:#ef4444;">PRs de 20+ archivos sin descripción</td>
+              <td>Nadie los revisa bien</td>
+              <td class="anti-do">Partir en PRs más chicos o documentar excepcionalmente</td>
+            </tr>
+            <tr>
+              <td style="color:#ef4444;">"Funciona en mi máquina"</td>
+              <td>El VPS no es tu máquina</td>
+              <td class="anti-do">Probar en entorno similar a prod</td>
+            </tr>
+            <tr>
+              <td style="color:#ef4444;">Mergear sin review porque "es chiquito"</td>
+              <td>Bugs más caros vienen de cambios de 1 línea</td>
+              <td class="anti-do">Todo PR lleva review, sin excepciones</td>
+            </tr>
+            <tr>
+              <td style="color:#ef4444;">Deploy a prod un viernes a las 6pm</td>
+              <td>Nadie quiere debuggear un sábado</td>
+              <td class="anti-do">Lunes a jueves, antes de las 4pm</td>
+            </tr>
+            <tr>
+              <td style="color:#ef4444;">Commits en inglés y español mezclados</td>
+              <td>Log inconsistente e ilegible</td>
+              <td class="anti-do">Todo en español, Conventional Commits</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SECCIÓN 7: HERRAMIENTAS + REFERENCIA ═══ -->
+  <section class="section">
+    <div class="section-eyebrow">Sección 7</div>
+    <h2 class="section-title">Herramientas &amp; Referencia rápida</h2>
+
+    <div class="glass-card">
+      <h3>Comandos esenciales</h3>
+      <pre><code>git checkout -b feat/mi-cambio          # crear rama
+git add -p                              # stage interactivo (recomendado)
+git commit -m "feat(scope): descripción" # commit con formato
+git rebase master                       # actualizar contra master
+git push origin feat/mi-cambio          # subir rama
+# Abrir PR en GitHub → pegar descripción generada por AI
+# Esperar review → responder comentarios → merge → borrar rama</code></pre>
+    </div>
+
+    <div class="glass-card">
+      <h3>Toolkit</h3>
+      <ul>
+        <li><strong>Git:</strong> <code>git push --force-with-lease</code> — nunca <code>--force</code> solo.</li>
+        <li><strong>AI:</strong> Usa los prompts de la Sección 5 con Claude, ChatGPT o Copilot.</li>
+        <li><strong>Screenshots:</strong> Cmd+Shift+4 en macOS, pegar directo en GitHub.</li>
+        <li><strong>Pre-commit:</strong> Revisión manual por ahora. Si el proyecto crece, agregaremos hooks.</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <p><strong>Aurea Legal</strong> · La IA asiste, el equipo jurídico decide.</p>
+  <p style="margin-top:4px;">Guía de contribución v1 · Julio 2026</p>
+</footer>
+
+</body>
+</html>
