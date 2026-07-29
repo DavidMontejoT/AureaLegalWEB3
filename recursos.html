@@ -225,6 +225,23 @@ body{
   flex-wrap: wrap;
 }
 .guide-badge-row img { height: 20px; }
+.skill-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 18px; border-radius: 8px;
+  font-size: 12px; font-weight: 600; text-decoration: none;
+  transition: transform .2s, box-shadow .2s;
+}
+.skill-btn:hover { transform: translateY(-1px); }
+.skill-btn-primary {
+  background: var(--blue); color: #fff;
+  box-shadow: 0 4px 16px rgba(29,161,242,.25);
+}
+.skill-btn-primary:hover { box-shadow: 0 6px 20px rgba(29,161,242,.4); }
+.skill-btn-gh {
+  background: rgba(255,255,255,.06); color: rgba(255,255,255,.7);
+  border: 1px solid rgba(255,255,255,.1);
+}
+.skill-btn-gh:hover { background: rgba(255,255,255,.1); }
 </style>
 </head>
 <body>
@@ -254,13 +271,16 @@ body{
       <span class="resource-arrow">Leer guía <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></span>
     </a>
 
-    <a href="https://github.com/DavidMontejoT/SkillVideoHermes" class="resource-card" target="_blank" rel="noopener">
+    <div class="resource-card">
       <div class="resource-icon">🎬</div>
       <span class="resource-tag">Skill · Hermes Agent</span>
       <h2 class="resource-title">Video Edit con IA</h2>
       <p class="resource-desc">Skill para agentes CLI que automatiza la edicion de video con Remotion: overlays Liquid Glass, subtitulos, key phrases, zooms y CTA. Arquitectura de composiciones reutilizables. Funciona en Hermes Agent, Claude Code, Codex, PI Agent y cualquier CLI con acceso al filesystem.</p>
-      <span class="resource-arrow">Descargar en GitHub <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></span>
-    </a>
+      <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+        <a href="https://github.com/DavidMontejoT/SkillVideoHermes/releases" target="_blank" rel="noopener" class="skill-btn skill-btn-primary">Descargar Skill</a>
+        <a href="https://github.com/DavidMontejoT/SkillVideoHermes" target="_blank" rel="noopener" class="skill-btn skill-btn-gh">Ver en GitHub</a>
+      </div>
+    </div>
 
   </div>
 
