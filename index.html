@@ -1096,8 +1096,8 @@ select.demo-input option { background: #1a2332; color: #fff; }
 @media (max-width: 960px) {
   .nav { padding: 18px 24px; }
   .nav-links { display: none; }
-  .hero { padding: 120px 24px 60px; }
-  .products, .architecture, .demo, .team { padding: 80px 24px; }
+  .hero-inner { padding: 140px 24px 80px; }
+  .insight, .products, .architecture, .demo, .team { padding: 80px 24px; }
   .chat-dashboard { height: auto; flex-direction: column; }
   .cv-sidebar { width: 100%; border-right: none; border-bottom: 1px solid rgba(255,255,255,.07); flex-direction: row; flex-wrap: wrap; gap: 12px; }
   .cv-logo { margin-bottom: 0; }
@@ -1106,13 +1106,36 @@ select.demo-input option { background: #1a2332; color: #fff; }
   .cv-voice { display: none; }
   .cv-main { min-height: 400px; }
   .cl-dashboard-wrapper { overflow-x: auto; }
-  .arch-phases { grid-template-columns: 1fr 1fr; }
-  .arch-pipeline { gap: 8px; padding: 24px 20px; }
-  .arch-connector { min-width: 20px; }
-  .arch-gate-badge { display: none; }
+  .arch-statement { padding: 40px 24px; }
   .arch-statement-text { font-size: 22px; }
+  .arch-statement-claim { font-size: 15px; }
+  .pillars { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .pillar-card { padding: 20px 16px; }
+  .centinela-grid, .centinela-grid.invert, .centinela-grid.re-grid { grid-template-columns: 1fr; gap: 40px; }
+  .centinela-features { grid-template-columns: 1fr; }
+  .centinela-feat-grid { grid-template-columns: 1fr 1fr; }
+  .centinela-stat-num { font-size: 2.8rem; }
+  .centinela-content { text-align: left !important; }
+  .centinela-grid:not(.invert) .centinela-actions,
+  .centinela-grid:not(.invert) .centinela-badge { justify-content: flex-start; align-self: flex-start; }
   .team-card { flex-direction: column; gap: 28px; padding: 36px; }
+  .end-cta { padding: 80px 24px 60px; }
+  .end-cta-title { font-size: clamp(1.6rem, 5vw, 2.4rem); }
+  .end-cta-btn, .demo-submit { padding: 14px 24px; font-size: 12px; }
+  .end-footer { padding: 48px 24px 40px; }
   .end-footer-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 500px) {
+  .hero-title { font-size: clamp(2rem, 9vw, 2.8rem); letter-spacing: -1px; }
+  .hero-desc { font-size: 13px; }
+  .hero-cta { padding: 14px 24px; font-size: 12px; }
+  .insight-card { padding: 24px 20px; }
+  .pillars { grid-template-columns: 1fr; }
+  .centinela-feat-grid { grid-template-columns: 1fr; }
+  .end-footer-grid { grid-template-columns: 1fr; }
+  .re-features { grid-template-columns: 1fr; }
+  .demo-form-row { flex-direction: column; }
 }
 
 /* ── Real Estate AI Section ── */
