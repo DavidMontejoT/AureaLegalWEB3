@@ -242,6 +242,36 @@ body{
   border: 1px solid rgba(255,255,255,.1);
 }
 .skill-btn-gh:hover { background: rgba(255,255,255,.1); }
+.skill-steps-inline {
+  display: grid; grid-template-columns: 1fr; gap: 14px;
+}
+@media (min-width: 700px) {
+  .skill-steps-inline { grid-template-columns: 1fr 1fr 1fr; }
+}
+.skill-step-inline {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.06);
+  border-radius: 10px; padding: 16px 14px;
+}
+.skill-step-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 700; color: var(--blue-sky);
+  opacity: .35; line-height: 1; flex-shrink: 0;
+}
+.skill-step-cli {
+  font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--blue); margin-bottom: 4px;
+}
+.skill-step-inline p {
+  font-size: 11px; color: rgba(255,255,255,.45); line-height: 1.55; margin-bottom: 6px;
+}
+.skill-step-inline code {
+  display: block; font-size: 10px; color: rgba(255,255,255,.5);
+  background: rgba(255,255,255,.04); padding: 6px 8px;
+  border-radius: 5px; word-break: break-all;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+.resource-card-expanded { padding: 36px 32px 32px !important; }
 </style>
 </head>
 <body>
@@ -271,12 +301,47 @@ body{
       <span class="resource-arrow">Leer guía <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></span>
     </a>
 
-    <div class="resource-card">
+    <div class="resource-card resource-card-expanded">
       <div class="resource-icon">🎬</div>
       <span class="resource-tag">Skill · Hermes Agent</span>
       <h2 class="resource-title">Video Edit con IA</h2>
       <p class="resource-desc">Skill para agentes CLI que automatiza la edicion de video con Remotion: overlays Liquid Glass, subtitulos, key phrases, zooms y CTA. Arquitectura de composiciones reutilizables. Funciona en Hermes Agent, Claude Code, Codex, PI Agent y cualquier CLI con acceso al filesystem.</p>
-      <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+
+      <div style="display:flex;align-items:center;gap:12px;margin:20px 0 24px;flex-wrap:wrap">
+        <img src="https://img.shields.io/github/stars/DavidMontejoT/SkillVideoHermes?style=flat&color=1da1f2" alt="GitHub stars" loading="lazy" style="height:20px">
+        <span style="font-size:11px;color:rgba(255,255,255,.25)">Descargas = clonar el repo o copiar la carpeta</span>
+      </div>
+
+      <h3 style="font-size:13px;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:.5px;text-transform:uppercase;margin-bottom:14px">Como instalar en cualquier CLI</h3>
+
+      <div class="skill-steps-inline">
+        <div class="skill-step-inline">
+          <div class="skill-step-num">01</div>
+          <div>
+            <div class="skill-step-cli">Hermes Agent</div>
+            <p>Copiar la carpeta a <code>~/.hermes/skills/creative/</code>. El agente la detecta automaticamente.</p>
+            <code>cp -r remotion-video-editing ~/.hermes/skills/creative/</code>
+          </div>
+        </div>
+        <div class="skill-step-inline">
+          <div class="skill-step-num">02</div>
+          <div>
+            <div class="skill-step-cli">Claude Code · Codex · PI Agent</div>
+            <p>Cargar <code>SKILL.md</code> como contexto inicial. El agente sigue las instrucciones del archivo paso a paso.</p>
+            <code>cat SKILL.md | claude --instructions -</code>
+          </div>
+        </div>
+        <div class="skill-step-inline">
+          <div class="skill-step-num">03</div>
+          <div>
+            <div class="skill-step-cli">Cualquier CLI</div>
+            <p>La skill es un prompt estructurado. Copiar el contenido de <code>SKILL.md</code> al inicio de tu conversacion con cualquier LLM.</p>
+            <code># Copiar SKILL.md y pegar como system prompt</code>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:24px;flex-wrap:wrap">
         <a href="https://github.com/DavidMontejoT/SkillVideoHermes/releases" target="_blank" rel="noopener" class="skill-btn skill-btn-primary">Descargar Skill</a>
         <a href="https://github.com/DavidMontejoT/SkillVideoHermes" target="_blank" rel="noopener" class="skill-btn skill-btn-gh">Ver en GitHub</a>
       </div>
@@ -284,36 +349,6 @@ body{
 
   </div>
 
-  <section class="guide-section">
-    <h2 class="guide-heading">Como instalar la skill <i>en cualquier CLI</i></h2>
-    <p class="guide-sub">SkillVideoHermes es una skill portable: un directorio con SKILL.md, templates y assets que cualquier agente CLI puede cargar. No depende de Hermes Agent — funciona en cualquier herramienta que lea skills en formato markdown.</p>
-
-    <div class="guide-badge-row">
-      <img src="https://img.shields.io/github/stars/DavidMontejoT/SkillVideoHermes?style=flat&color=1da1f2" alt="GitHub stars" loading="lazy">
-      <span style="font-size:11px;color:rgba(255,255,255,.3)">Descargas = clonar el repo o copiar la carpeta <code style="background:rgba(255,255,255,.05);padding:2px 6px;border-radius:4px">remotion-video-editing/</code></span>
-    </div>
-
-    <div class="guide-steps">
-      <div class="guide-step">
-        <div class="guide-step-num">01</div>
-        <div class="guide-step-cli">Hermes Agent</div>
-        <p style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.6">Copiar la carpeta <code>remotion-video-editing/</code> a <code>~/.hermes/skills/creative/</code>. El agente la detecta automaticamente.</p>
-        <code>cp -r remotion-video-editing ~/.hermes/skills/creative/</code>
-      </div>
-      <div class="guide-step">
-        <div class="guide-step-num">02</div>
-        <div class="guide-step-cli">Claude Code · Codex · PI Agent</div>
-        <p style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.6">Cargar <code>SKILL.md</code> como contexto inicial. El agente sigue las instrucciones del archivo paso a paso.</p>
-        <code>cat SKILL.md | claude --instructions -</code>
-      </div>
-      <div class="guide-step">
-        <div class="guide-step-num">03</div>
-        <div class="guide-step-cli">Cualquier CLI</div>
-        <p style="font-size:12px;color:rgba(255,255,255,.5);line-height:1.6">La skill es un prompt estructurado. Copiar el contenido de <code>SKILL.md</code> al inicio de tu conversacion con cualquier LLM.</p>
-        <code># Copiar SKILL.md y pegar como system prompt</code>
-      </div>
-    </div>
-  </section>
 
   <p class="coming-label">Próximamente</p>
 
