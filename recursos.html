@@ -305,36 +305,18 @@ body{
       <div class="resource-icon">🎬</div>
       <span class="resource-tag">Skill · Hermes Agent</span>
       <h2 class="resource-title">Video Edit con IA</h2>
-      <p class="resource-desc">Skill para agentes CLI que automatiza la edicion de video con Remotion: overlays Liquid Glass, subtitulos, key phrases, zooms y CTA. Arquitectura de composiciones reutilizables. Funciona en Hermes Agent, Claude Code, Codex, PI Agent y cualquier CLI con acceso al filesystem.</p>
+      <p class="resource-desc">Skill para agentes CLI que automatiza la edicion de video con Remotion: overlays Liquid Glass, subtitulos, key phrases, zooms y CTA. Arquitectura de composiciones reutilizables. Se instala como skill nativa de Hermes Agent.</p>
 
       
 
-      <h3 style="font-size:13px;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:.5px;text-transform:uppercase;margin-bottom:14px">Como instalar en cualquier CLI</h3>
+      <h3 style="font-size:13px;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:.5px;text-transform:uppercase;margin-bottom:14px">Como instalar</h3>
 
-      <div class="skill-steps-inline">
-        <div class="skill-step-inline">
-          <div class="skill-step-num">01</div>
-          <div>
-            <div class="skill-step-cli">Hermes Agent</div>
-            <p>Copiar la carpeta a <code>~/.hermes/skills/creative/</code>. El agente la detecta automaticamente.</p>
-            <code>cp -r remotion-video-editing ~/.hermes/skills/creative/</code>
-          </div>
-        </div>
-        <div class="skill-step-inline">
-          <div class="skill-step-num">02</div>
-          <div>
-            <div class="skill-step-cli">Claude Code · Codex · PI Agent</div>
-            <p>Cargar <code>SKILL.md</code> como contexto inicial. El agente sigue las instrucciones del archivo paso a paso.</p>
-            <code>cat SKILL.md | claude --instructions -</code>
-          </div>
-        </div>
-        <div class="skill-step-inline">
-          <div class="skill-step-num">03</div>
-          <div>
-            <div class="skill-step-cli">Cualquier CLI</div>
-            <p>La skill es un prompt estructurado. Copiar el contenido de <code>SKILL.md</code> al inicio de tu conversacion con cualquier LLM.</p>
-            <code># Copiar SKILL.md y pegar como system prompt</code>
-          </div>
+      <div class="skill-step-inline">
+        <div class="skill-step-num">01</div>
+        <div>
+          <div class="skill-step-cli">Hermes Agent</div>
+          <p>Copiar la carpeta <code>remotion-video-editing/</code> a <code>~/.hermes/skills/creative/</code>. El agente la detecta automaticamente y queda disponible como skill cargable.</p>
+          <code>cp -r remotion-video-editing ~/.hermes/skills/creative/</code>
         </div>
       </div>
 
