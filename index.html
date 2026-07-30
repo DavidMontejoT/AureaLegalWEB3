@@ -1111,7 +1111,7 @@ select.demo-input option { background: #1a2332; color: #fff; }
   .arch-statement-claim { font-size: 15px; }
   .pillars { grid-template-columns: 1fr 1fr; gap: 12px; }
   .pillar-card { padding: 20px 16px; }
-  .centinela-grid, .centinela-grid.invert, .centinela-grid.re-grid { grid-template-columns: 1fr; gap: 40px; }
+  .centinela-grid, .centinela-grid.invert { grid-template-columns: 1fr; gap: 40px; }
   .centinela-features { grid-template-columns: 1fr; }
   .centinela-feat-grid { grid-template-columns: 1fr 1fr; }
   .centinela-stat-num { font-size: 2.8rem; }
@@ -1134,17 +1134,19 @@ select.demo-input option { background: #1a2332; color: #fff; }
   .pillars { grid-template-columns: 1fr; }
   .centinela-feat-grid { grid-template-columns: 1fr; }
   .end-footer-grid { grid-template-columns: 1fr; }
-  .re-features { grid-template-columns: 1fr; }
   .demo-form-row { flex-direction: column; }
 }
 
 /* ── Real Estate AI Section ── */
-/* Wider grid: more room for content, remove image column padding */
-.centinela-grid.re-grid { grid-template-columns: 1fr 1.55fr; gap: 48px; }
+/* Mobile-first: 1 column default, 2 columns on desktop */
+.centinela-grid.re-grid { grid-template-columns: 1fr; gap: 40px; }
 .centinela-grid.re-grid .centinela-images { padding-right: 0; }
 .centinela-grid.re-grid .centinela-content { text-align: left; }
 .centinela-grid.re-grid .centinela-badge { align-self: flex-start; }
 .centinela-grid.re-grid .centinela-actions { justify-content: flex-start; }
+@media (min-width: 961px) {
+  .centinela-grid.re-grid { grid-template-columns: 1fr 1.55fr; gap: 48px; }
+}
 
 /* WhatsApp Chat Mockup */
 .re-chat {
@@ -1204,17 +1206,34 @@ select.demo-input option { background: #1a2332; color: #fff; }
 @keyframes rePulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 .re-features { 
   display: grid; 
-  grid-template-columns: repeat(2, 1fr); 
+  grid-template-columns: 1fr;
   gap: 12px;
-  width: 100%; /* Fuerza a expandirse */
+  width: 100%;
+}
+@media (min-width: 601px) {
+  .re-features { grid-template-columns: repeat(2, 1fr); }
 }
 .re-feat {
   display: flex; gap: 18px; align-items: flex-start;
   padding: 20px; border-radius: 14px;
-  background: rgba(255,255,255,.55);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(11,19,32,.06);
+  background: var(--glass-bg-l);
+  backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border-l);
+  box-shadow: var(--glass-shadow-l), inset 0 1px 0 var(--glass-sheen);
+  position: relative; overflow: hidden;
+  transition: border-color .3s, transform .3s;
 }
+.re-feat:hover {
+  border-color: rgba(16,185,129,.25);
+  transform: translateY(-2px);
+}
+.re-feat::after {
+  content: '';
+  position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 45%, transparent 60%, rgba(16,185,129,0.04) 100%);
+  pointer-events: none;
+}
+.re-feat > * { position: relative; z-index: 1; }
 .re-feat-icon {
   width: 44px; height: 44px; border-radius: 12px;
   background: #10b981; display: flex; align-items: center;
@@ -1420,7 +1439,7 @@ select.demo-input option { background: #1a2332; color: #fff; }
      PRODUCTS: REAL ESTATE AI
 ══════════════════════════════════════════ -->
 
-<section class="products" style="background:#f0f4f8;" id="realestate">
+<section class="products" id="realestate">
   <div class="products-inner">
     <span class="section-eyebrow">IA Inmobiliaria</span>
     <h2 class="section-heading">Agente Inmobiliario <i>24/7</i></h2>
@@ -1465,11 +1484,11 @@ select.demo-input option { background: #1a2332; color: #fff; }
         <div class="centinela-features" style="margin-top:28px;">
           <div class="centinela-stat">
             <div class="centinela-stat-num" data-to="100" data-suffix="%">0%</div>
-            <div class="centinela-stat-label">leads respondidos en menos de 30 segundos, 24/7</div>
+            <div class="centinela-stat-label">leads respondidos al instante, 24/7 — sin perder uno</div>
           </div>
           <div class="re-features">
             <div class="re-feat">
-              <div class="re-feat-icon"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+              <div class="re-feat-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
               <div class="re-feat-text">
                 <strong>Pre-calificación automática</strong>
                 <span>Extrae presupuesto, zona y tipo de inmueble antes de derivar al asesor.</span>
