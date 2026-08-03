@@ -8,11 +8,12 @@
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap');
 
   :root {
+    --dark:  #040811;
+    --white: #ffffff;
+    --blue-sky: #b2deff;
     --color-bg-start: #0B1320;
     --color-bg-mid: #0d1a2d;
-    --color-text-main: #ffffff;
     --color-text-muted: rgba(255, 255, 255, 0.65);
-    --color-accent: #B2DEFF;
     --color-soft: #EEF5FB;
     --glass-bg: rgba(255, 255, 255, 0.03);
     --glass-border: rgba(255, 255, 255, 0.08);
@@ -29,7 +30,7 @@
 
   body {
     font-family: 'Inter', sans-serif;
-    color: var(--color-text-main);
+    color: var(--white);
     background-color: var(--color-bg-start);
     line-height: 1.7;
     padding: 90px 20px 80px;
@@ -57,7 +58,7 @@
     letter-spacing: -0.3px;
     white-space: nowrap;
   }
-  .nav-logo i { font-style: italic; font-weight: 500; color: var(--color-accent); }
+  .nav-logo i { font-style: italic; font-weight: 500; color: var(--blue-sky); }
   .nav-links {
     display: flex; align-items: center; gap: 22px;
     list-style: none; flex-wrap: wrap; justify-content: center;
@@ -67,7 +68,7 @@
     color: rgba(255,255,255,0.6); text-decoration: none;
     transition: color 0.2s; white-space: nowrap;
   }
-  .nav-links a:hover { color: var(--color-accent); }
+  .nav-links a:hover { color: var(--blue-sky); }
   .nav-cta {
     padding: 8px 20px; border-radius: 50px;
     font-size: 12px; font-weight: 600;
@@ -144,7 +145,7 @@
   .header .badge {
     display: inline-block;
     background: rgba(178, 222, 255, 0.12);
-    color: var(--color-accent);
+    color: var(--blue-sky);
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.1em;
@@ -159,7 +160,7 @@
     font-size: clamp(36px, 5vw, 56px);
     font-weight: 700;
     letter-spacing: -1.5px;
-    background: linear-gradient(135deg, #ffffff 0%, var(--color-accent) 70%);
+    background: linear-gradient(135deg, #ffffff 0%, var(--blue-sky) 70%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 16px;
@@ -184,7 +185,7 @@
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.15em;
-    color: var(--color-accent);
+    color: var(--blue-sky);
     font-weight: 600;
     margin-bottom: 12px;
   }
@@ -225,7 +226,7 @@
 
   /* ── AI Type Cards ── */
   .ai-type-card {
-    border-left: 3px solid var(--color-accent);
+    border-left: 3px solid var(--blue-sky);
     padding: 24px 28px;
     display: flex;
     flex-direction: column;
@@ -255,7 +256,7 @@
     padding: 3px 10px;
     border-radius: 10px;
     background: rgba(178, 222, 255, 0.1);
-    color: var(--color-accent);
+    color: var(--blue-sky);
     align-self: flex-start;
   }
 
@@ -279,7 +280,7 @@
     justify-content: center;
     font-weight: 700;
     font-size: 1rem;
-    color: var(--color-accent);
+    color: var(--blue-sky);
   }
   .step-list .step-content h4 {
     font-size: 1.05rem;
@@ -331,7 +332,7 @@
     font-weight: 700;
     line-height: 1;
     margin-bottom: 8px;
-    background: linear-gradient(135deg, #fff, var(--color-accent));
+    background: linear-gradient(135deg, #fff, var(--blue-sky));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
