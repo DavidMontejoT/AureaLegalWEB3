@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playbook de Guardrails IA para Firmas Legales — Aurea Legal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap');
+
+  :root {
+    --dark:  #040811;
+    --white: #ffffff;
+    --blue-sky: #b2deff;
+    --color-bg-start: #0B1320;
+    --color-bg-mid: #0d1a2d;
+    --color-text-muted: rgba(255, 255, 255, 0.65);
+    --color-soft: #EEF5FB;
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    --color-green: #3fb950;
+    --color-yellow: #d2991d;
+    --color-red: #f85149;
+    --color-purple: #bc8cff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--white);
+    background-color: var(--color-bg-start);
+    line-height: 1.7;
+    padding: 90px 20px 80px;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+  }
+
+  /* ── Navbar ── */
+  .nav {
+    position: fixed; top: 0; left: 0; width: 100%;
+    padding: 16px 36px;
+    display: flex; align-items: center; justify-content: space-between;
+    z-index: 200;
+    background: rgba(11, 19, 32, 0.85);
+    backdrop-filter: blur(18px) saturate(150%);
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700;
+    color: #fff; text-decoration: none;
+    letter-spacing: -0.3px;
+    white-space: nowrap;
+  }
+  .nav-logo i { font-style: italic; font-weight: 500; color: var(--blue-sky); }
+  .nav-links {
+    display: flex; align-items: center; gap: 22px;
+    list-style: none; flex-wrap: wrap; justify-content: center;
+  }
+  .nav-links a {
+    font-size: 12px; font-weight: 500; letter-spacing: 0.3px;
+    color: rgba(255,255,255,0.6); text-decoration: none;
+    transition: color 0.2s; white-space: nowrap;
+  }
+  .nav-links a:hover { color: var(--blue-sky); }
+  .nav-cta {
+    padding: 8px 20px; border-radius: 50px;
+    font-size: 12px; font-weight: 600;
+    background: rgba(178, 222, 255, 0.15);
+    border: 1px solid rgba(178, 222, 255, 0.3);
+    color: #fff; cursor: pointer; text-decoration: none;
+    transition: background 0.25s, border-color 0.25s;
+    white-space: nowrap;
+  }
+  .nav-cta:hover { background: rgba(178, 222, 255, 0.25); border-color: rgba(178, 222, 255, 0.5); }
+
+  @media (max-width: 768px) {
+    .nav { padding: 12px 16px; }
+    .nav-links { gap: 10px; }
+    .nav-links a { font-size: 10px; }
+    .nav-cta { padding: 6px 14px; font-size: 10px; }
+    .nav-logo { font-size: 15px; }
+  }
+
+  /* Ambient blobs */
+  .blob {
+    position: fixed;
+    filter: blur(100px);
+    z-index: -1;
+    border-radius: 50%;
+    animation: float 20s infinite alternate ease-in-out;
+    pointer-events: none;
+  }
+  .blob-1 {
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(178, 222, 255, 0.12) 0%, transparent 70%);
+    top: -200px; left: -200px;
+  }
+  .blob-2 {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(238, 245, 251, 0.06) 0%, transparent 70%);
+    bottom: -100px; right: -150px;
+    animation-delay: -8s;
+  }
+  .blob-3 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(178, 222, 255, 0.08) 0%, transparent 70%);
+    top: 50%; left: 40%;
+    animation-delay: -14s;
+  }
+
+  @keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(60px, -50px) scale(1.08); }
+    100% { transform: translate(-40px, 40px) scale(0.94); }
+  }
+
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    box-shadow: var(--glass-shadow);
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Header ── */
+  .header {
+    padding: 80px 60px 60px;
+    border-bottom: 1px solid var(--glass-border);
+    background: radial-gradient(circle at top left, rgba(178, 222, 255, 0.06) 0%, transparent 60%);
+    text-align: center;
+  }
+  .header .badge {
+    display: inline-block;
+    background: rgba(178, 222, 255, 0.12);
+    color: var(--blue-sky);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 20px;
+    border: 1px solid rgba(178, 222, 255, 0.2);
+    margin-bottom: 28px;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    background: linear-gradient(135deg, #ffffff 0%, var(--blue-sky) 70%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 16px;
+  }
+  .header h1 i { font-style: italic; font-weight: 600; }
+  .header .subtitle {
+    font-size: 1.15rem;
+    color: var(--color-text-muted);
+    font-weight: 300;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* ── Sections ── */
+  .section {
+    padding: 56px 60px;
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .section:last-child { border-bottom: none; }
+
+  .section-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--blue-sky);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+  }
+  .section-subtitle {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+    font-weight: 300;
+    margin-bottom: 36px;
+  }
+
+  /* ── Glass cards ── */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.025);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 16px;
+    padding: 32px;
+    transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+  }
+  .glass-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(178, 222, 255, 0.2);
+    transform: translateY(-3px);
+  }
+
+  /* ── Grids ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+
+  /* ── AI Type Cards ── */
+  .ai-type-card {
+    border-left: 3px solid var(--blue-sky);
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .ai-type-card .icon {
+    font-size: 2rem;
+    margin-bottom: 6px;
+  }
+  .ai-type-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .ai-type-card p {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+  .ai-type-card .tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 10px;
+    background: rgba(178, 222, 255, 0.1);
+    color: var(--blue-sky);
+    align-self: flex-start;
+  }
+
+  /* ── Step list ── */
+  .step-list { counter-reset: step; list-style: none; display: flex; flex-direction: column; gap: 20px; }
+  .step-list li {
+    counter-increment: step;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .step-list li::before {
+    content: counter(step);
+    flex-shrink: 0;
+    width: 40px; height: 40px;
+    background: rgba(178, 222, 255, 0.1);
+    border: 1px solid rgba(178, 222, 255, 0.25);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--blue-sky);
+  }
+  .step-list .step-content h4 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .step-list .step-content p {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+  }
+
+  /* ── Before/After table ── */
+  .ba-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  .ba-table th {
+    text-align: left;
+    padding: 16px 20px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .ba-table td {
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    color: var(--color-text-muted);
+  }
+  .ba-table tr:last-child td { border-bottom: none; }
+  .ba-table .old { color: var(--color-red); }
+  .ba-table .new { color: var(--color-green); font-weight: 500; }
+
+  /* ── Metrics ── */
+  .metric-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .metric-card {
+    text-align: center;
+    padding: 28px 20px;
+  }
+  .metric-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #fff, var(--blue-sky));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .metric-label {
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+    font-weight: 400;
+  }
+
+  /* ── Callout boxes ── */
+  .callout {
+    border-radius: 14px;
+    padding: 24px 28px;
+    border: 1px solid;
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+  .callout-info {
+    background: rgba(178, 222, 255, 0.06);
+    border-color: rgba(178, 222, 255, 0.2);
+    color: var(--color-text-muted);
+  }
+  .callout-warning {
+    background: rgba(210, 153, 29, 0.06);
+    border-color: rgba(210, 153, 29, 0.2);
+    color: var(--color-text-muted);
+  }
+  .callout-success {
+    background: rgba(63, 185, 80, 0.06);
+    border-color: rgba(63, 185, 80, 0.2);
+    color: var(--color-text-muted);
+  }
+  .callout strong { color: #fff; }
+
+  /* ── Divider ── */
+  .divider {
+    height: 1px;
+    background: var(--glass-border);
+    margin: 32px 0;
+    border: none;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .header { padding: 50px 28px 40px; }
+    .section { padding: 36px 28px; }
+    .grid-2, .grid-3, .grid-4, .metric-row { grid-template-columns: 1fr; }
+    .ba-table { font-size: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<!-- ═══════════ NAVBAR ═══════════ -->
+<nav class="nav">
+  <a href="https://aurea.legal" class="nav-logo">Aurea <i>Legal</i></a>
+  <ul class="nav-links">
+    <li><a href="#section-01">01</a></li>
+    <li><a href="#section-02">02</a></li>
+    <li><a href="#section-03">03</a></li>
+    <li><a href="#section-04">04</a></li>
+    <li><a href="#section-05">05</a></li>
+    <li><a href="#section-06">06</a></li>
+    <li><a href="#section-07">07</a></li>
+  </ul>
+  <a href="https://aurea.legal" class="nav-cta">← aurea.legal</a>
+</nav>
+
+<div class="container">
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <header class="header">
+    <div class="badge">Playbook de Guardrails IA · Aurea Legal · Julio 2026</div>
+    <h1>Tu Despacho <i>con</i> Inteligencia Artificial</h1>
+    <p class="subtitle">
+      Los 7 guardrails esenciales para construir agentes de IA auditables en firmas legales y equipos de compliance.
+    </p>
+  </header>
+
+  <!-- ═══════════ SECCIÓN 1: LO QUE NECESITAS SABER ═══════════ -->
+  <section class="section" id="section-01">
+    <div class="section-label">01 · Fundamentos</div>
+    <h2 class="section-title">Lo que necesitas saber</h2>
+    <p class="section-subtitle">
+      Cuatro tipos de IA que ya se usan en despachos reales. No son conceptos teóricos — 
+      existen hoy y están en producción.
+    </p>
+
+    <div class="grid-2" style="margin-bottom: 24px;">
+      <!-- Tipo A -->
+      <div class="glass-card ai-type-card">
+        <div class="icon">📄</div>
+        <div class="tag">Tipo A</div>
+        <h3>Extracción de Documentos</h3>
+        <p>
+          La IA lee 500 páginas de un expediente escaneado y extrae: fechas, partes, 
+          artículos citados, montos. El abogado ya no lee todo — busca y verifica.
+        </p>
+      </div>
+
+      <!-- Tipo B -->
+      <div class="glass-card ai-type-card">
+        <div class="icon">📚</div>
+        <div class="tag">Tipo B</div>
+        <h3>Consulta a tu Normativa</h3>
+        <p>
+          Subes tu Manual de Compliance, tu ley sectorial, tus circulares. La IA responde 
+          preguntas <strong>citando página, sección y párrafo textual</strong>. Nunca opina 
+          sobre derecho en general — solo cita TU fuente.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <!-- Tipo C -->
+      <div class="glass-card ai-type-card" style="border-left-color: var(--color-green);">
+        <div class="icon">⚙️</div>
+        <div class="tag">Tipo C · El más potente</div>
+        <h3>Agente de Flujo de Trabajo</h3>
+        <p>
+          Un proceso completo que el agente ejecuta solo: validar → clasificar riesgo → 
+          verificar listas → generar informe → <strong>detenerse y esperar tu firma</strong> 
+          → archivar. 3 minutos en vez de 3 días.
+        </p>
+      </div>
+
+      <!-- Tipo D -->
+      <div class="glass-card ai-type-card" style="border-left-color: var(--color-red);">
+        <div class="icon">🛡️</div>
+        <div class="tag">Tipo D</div>
+        <h3>Guardrails Automáticos</h3>
+        <p>
+          Reglas que no se pueden saltar. Si el sistema detecta un match en lista de 
+          sanciones, <strong>bloquea el expediente sin botón de aprobar</strong>. Solo el 
+          Oficial de Cumplimiento puede desbloquear. No depende de que un junior "se acuerde".
+        </p>
+      </div>
+    </div>
+
+    <div class="callout callout-info" style="margin-top: 28px;">
+      <strong>💡 El patrón:</strong> Los Tipos A y B <strong>asisten</strong> al abogado. 
+      Los Tipos C y D <strong>ejecutan</strong> procesos completos, pero siempre con un 
+      humano firmando al final.
+    </div>
+  </section>
+
+  <!-- ═══════════ SECCIÓN 2: CÓMO EMPEZAR ═══════════ -->
+  <section class="section" id="section-02">
+    <div class="section-label">02 · Plan de Acción</div>
+    <h2 class="section-title">Cómo empezar mañana mismo</h2>
+    <p class="section-subtitle">
+      Siete pasos concretos. Sin inversión en tecnología el día 1. Solo decisiones.
+    </p>
+
+    <ol class="step-list">
+      <li>
+        <div class="step-content">
+          <h4>Elige UN proceso</h4>
+          <p>
+            No intentes automatizar todo el despacho. Elige el proceso que más tiempo 
+            consume y más se repite: onboarding de clientes, debida diligencia, revisión 
+            de contratos, generación de informes…
+          </p>
+        </div>
+      </li>
+      <li>
+        <div class="step-content">
+          <h4>Documéntalo como si entrenaras a un pasante nuevo</h4>
+          <p>
+            Escribe cada paso, cada decisión, cada excepción. "Si el cliente es PJ, 
+            pido escritura de constitución. Si hay socios con +10%, verifico a cada uno." 
+            Esto es el SOP que la IA seguirá.
+          </p>
+        </div>
+      </li>
+      <li>
+        <div class="step-content">
+          <h4>Define tus reglas no negociables</h4>
+          <p>
+            ¿Qué condiciones hacen que rechaces automáticamente? Match en OFAC, PEP no 
+            declarado, documentación falsa, inconsistencia en origen de fondos. Estas 
+            serán tus "deal breakers" — la IA las ejecutará sin preguntar.
+          </p>
+        </div>
+      </li>
+      <li>
+        <div class="step-content">
+          <h4>Digitaliza tu base de conocimiento</h4>
+          <p>
+            Reúne en una carpeta: tu manual de compliance, las leyes que aplicas, 
+            circulares del regulador, jurisprudencia relevante. PDF, Word, lo que tengas.
+          </p>
+        </div>
+      </li>
+      <li>
+        <div class="step-content">
+          <h4>Define tu matriz de riesgo</h4>
+          <p>
+            ¿Qué factores suben el riesgo? ¿Qué lo baja? ¿PEP es automáticamente Alto? 
+            ¿Transacciones en efectivo? ¿País de origen? Asigna pesos. La IA aplicará 
+            tu criterio, no el de un estándar genérico.
+          </p>
+        </div>
+      </li>
+      <li>
+        <div class="step-content">
+          <h4>Busca un equipo técnico que entienda compliance</h4>
+          <p>
+            El error más común: contratar developers que saben de IA pero no de derecho. 
+            Busca un equipo que hable los dos idiomas. Que entienda qué es la UAF, 
+            SARLAFT, y por qué un falso negativo en OFAC es peligroso.
+          </p>
+        </div>
+      </li>
+      <li>
+        <div class="step-content">
+          <h4>Prueba con 10 casos reales (supervisados)</h4>
+          <p>
+            El agente procesa 10 expedientes. Tú revisas cada uno. Corriges lo que 
+            no cuadre. En la segunda ronda, el agente ya aplica tu criterio calibrado. 
+            A la tercera, solo revisas excepciones.
+          </p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="callout callout-warning" style="margin-top: 28px;">
+      <strong>⚠️ Error común:</strong> Muchos despachos empiezan al revés — compran 
+      "el software de IA" y luego intentan que encaje en sus procesos. El orden correcto 
+      es: proceso → reglas → normativa → tecnología. La tecnología es lo último.
+    </div>
+  </section>
+
+  <!-- ═══════════ SECCIÓN 3: HITL ═══════════ -->
+  <section class="section" id="section-03">
+    <div class="section-label">03 · El Concepto Clave</div>
+    <h2 class="section-title">Human-in-the-Loop</h2>
+    <p class="section-subtitle">
+      El principio más importante. La diferencia entre un chatbot peligroso y un 
+      agente de compliance que resiste una fiscalización.
+    </p>
+
+    <div class="grid-2">
+      <div class="glass-card" style="border-left: 3px solid var(--color-red);">
+        <h4 style="color: var(--color-red); margin-bottom: 12px;">❌ Esto NO es HITL</h4>
+        <p style="font-size: 0.88rem; color: var(--color-text-muted);">
+          Un botón de "Confirmar" en la pantalla que el analista puede clickear sin leer. 
+          Si el sistema puede seguir aunque el humano no preste atención, no hay HITL real.
+        </p>
+      </div>
+      <div class="glass-card" style="border-left: 3px solid var(--color-green);">
+        <h4 style="color: var(--color-green); margin-bottom: 12px;">✅ Esto SÍ es HITL</h4>
+        <p style="font-size: 0.88rem; color: var(--color-text-muted);">
+          El sistema <strong>físicamente no puede</strong> ejecutar el siguiente paso 
+          sin intervención humana. El harness se detiene. No es un botón decorativo — 
+          es una restricción de arquitectura.
+        </p>
+      </div>
+    </div>
+
+    <div class="glass-card" style="margin-top: 24px; padding: 28px 32px; text-align: center;">
+      <div style="font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 16px;">
+        El flujo correcto
+      </div>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; font-size: 0.9rem; color: var(--color-text-muted);">
+        <span style="background: rgba(178,222,255,0.1); padding: 10px 18px; border-radius: 10px;">📥 Ingreso</span>
+        <span>→</span>
+        <span style="background: rgba(178,222,255,0.1); padding: 10px 18px; border-radius: 10px;">🔍 Análisis IA</span>
+        <span>→</span>
+        <span style="background: rgba(178,222,255,0.1); padding: 10px 18px; border-radius: 10px;">📋 Informe</span>
+        <span>→</span>
+        <span style="background: rgba(210,153,29,0.15); padding: 10px 18px; border-radius: 10px; border: 1px solid rgba(210,153,29,0.3); font-weight: 600; color: #fff;">🛑 SE DETIENE</span>
+        <span>→</span>
+        <span style="background: rgba(63,185,80,0.1); padding: 10px 18px; border-radius: 10px; border: 1px solid rgba(63,185,80,0.3); font-weight: 600;">✍️ Tú firmas</span>
+        <span>→</span>
+        <span style="background: rgba(178,222,255,0.1); padding: 10px 18px; border-radius: 10px;">✅ Ejecución</span>
+      </div>
+      <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-top: 16px;">
+        La IA organiza, analiza y propone. <strong style="color: #fff;">Las decisiones críticas siguen siendo tuyas.</strong>
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════ SECCIÓN 4: EJEMPLO REAL ═══════════ -->
+  <section class="section" id="section-04">
+    <div class="section-label">04 · Caso Real</div>
+    <h2 class="section-title">De 3 días a 3 minutos</h2>
+    <p class="section-subtitle">
+      Así funciona Aurea Centinela, un agente de debida diligencia AML/KYC para 
+      despachos de abogados en Chile y Colombia.
+    </p>
+
+    <div class="glass-card" style="margin-bottom: 28px; overflow-x: auto;">
+      <table class="ba-table">
+        <thead>
+          <tr>
+            <th style="color: var(--color-red);">Antes (manual)</th>
+            <th style="color: var(--color-green);">Ahora (con IA)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="old">El analista lee la escritura de constitución, extrae socios manualmente</td>
+            <td class="new">La IA extrae socios, porcentajes, y estructura en segundos</td>
+          </tr>
+          <tr>
+            <td class="old">Busca cada socio en listas OFAC, ONU, UAF una por una</td>
+            <td class="new">Verifica automáticamente contra OpenSanctions + fuzzy matching</td>
+          </tr>
+          <tr>
+            <td class="old">Clasifica el riesgo "a ojo" según su experiencia</td>
+            <td class="new">Aplica la matriz de riesgo del despacho, citando página y sección del manual</td>
+          </tr>
+          <tr>
+            <td class="old">Escribe la ficha en Word, adjunta PDFs al expediente</td>
+            <td class="new">Genera ficha HTML + ZIP forense automáticamente</td>
+          </tr>
+          <tr>
+            <td class="old">Si hay match en OFAC, el junior podría no notarlo</td>
+            <td class="new"><strong>Deal breaker → bloqueo inmediato.</strong> Sin botón de aprobar</td>
+          </tr>
+          <tr>
+            <td class="old">Si la UAF fiscaliza, no hay trazabilidad (Excel + correos)</td>
+            <td class="new">El trace del agente ES el log de auditoría. ZIP con todo</td>
+          </tr>
+          <tr>
+            <td class="old">3-5 días por expediente</td>
+            <td class="new"><strong>3 minutos.</strong> El analista solo revisa y firma</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-success">
+      <strong>📦 El expediente de auditoría incluye:</strong> ficha de hallazgos, 
+      traza completa de cada paso, evidencias (matches en listas, fuentes citadas), 
+      timestamp de cada decisión y firma humana. <strong>Listo para entregar al regulador.</strong>
+    </div>
+  </section>
+
+  <!-- ═══════════ SECCIÓN 5: ROI ═══════════ -->
+  <section class="section" id="section-05">
+    <div class="section-label">05 · Retorno</div>
+    <h2 class="section-title">Lo que gana tu despacho</h2>
+
+    <div class="metric-row" style="margin-bottom: 40px;">
+      <div class="glass-card metric-card">
+        <div class="metric-value">−95%</div>
+        <div class="metric-label">Tiempo por expediente</div>
+      </div>
+      <div class="glass-card metric-card">
+        <div class="metric-value">100%</div>
+        <div class="metric-label">Trazabilidad auditoría</div>
+      </div>
+      <div class="glass-card metric-card">
+        <div class="metric-value">0</div>
+        <div class="metric-label">Falsos negativos en OFAC</div>
+      </div>
+      <div class="glass-card metric-card">
+        <div class="metric-value">2 sem</div>
+        <div class="metric-label">Nuevo país (mismo harness)</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="glass-card" style="padding: 28px;">
+        <h4 style="font-weight: 600; margin-bottom: 12px;">💰 Beneficio directo</h4>
+        <ul style="font-size: 0.88rem; color: var(--color-text-muted); padding-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+          <li>El abogado senior ya no revisa formularios — <strong style="color: #fff;">revisa decisiones</strong></li>
+          <li>Más expedientes por mes con el mismo equipo</li>
+          <li>Menos riesgo de multa por fiscalización</li>
+          <li>Diferenciación comercial: "nosotros tenemos compliance automatizado"</li>
+        </ul>
+      </div>
+      <div class="glass-card" style="padding: 28px;">
+        <h4 style="font-weight: 600; margin-bottom: 12px;">🛡️ Beneficio legal</h4>
+        <ul style="font-size: 0.88rem; color: var(--color-text-muted); padding-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+          <li>Consistencia: <strong style="color: #fff;">todos los analistas aplican el mismo criterio</strong></li>
+          <li>Auditabilidad: si el regulador pregunta, entregas el ZIP</li>
+          <li>Deal breakers <strong style="color: #fff;">no se pueden saltar</strong></li>
+          <li>Grounding: cada hallazgo cita fuente (página, sección, párrafo)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ SECCIÓN 6: ERRORES ═══════════ -->
+  <section class="section" id="section-06">
+    <div class="section-label">06 · Errores Comunes</div>
+    <h2 class="section-title">Lo que casi todos hacen mal</h2>
+
+    <div class="grid-2">
+      <div class="glass-card" style="border-left: 3px solid var(--color-red); padding: 24px 28px;">
+        <h4 style="margin-bottom: 8px;">❌ Comprar "el software de IA" antes de tener el proceso</h4>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted);">
+          Es como comprar un coche antes de saber a dónde vas. Primero documenta tu 
+          proceso, luego busca la herramienta.
+        </p>
+      </div>
+      <div class="glass-card" style="border-left: 3px solid var(--color-red); padding: 24px 28px;">
+        <h4 style="margin-bottom: 8px;">❌ Dejar que la IA "opine" sin citar fuente</h4>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted);">
+          Si el agente dice "Riesgo Alto", debe decir por qué. Citando tu manual, tu 
+          matriz, tu normativa. Si no cita fuente, no sirve para compliance.
+        </p>
+      </div>
+      <div class="glass-card" style="border-left: 3px solid var(--color-red); padding: 24px 28px;">
+        <h4 style="margin-bottom: 8px;">❌ Automatizar sin HITL real</h4>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted);">
+          Un botón de "Aprobar" que nadie lee es peor que no tener IA — crea una falsa 
+          sensación de control. El sistema debe <strong>detenerse</strong> hasta que 
+          un humano firme.
+        </p>
+      </div>
+      <div class="glass-card" style="border-left: 3px solid var(--color-red); padding: 24px 28px;">
+        <h4 style="margin-bottom: 8px;">❌ No involucrar al abogado senior en el diseño</h4>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted);">
+          Si solo programa el equipo técnico, el agente aplicará "sentido común" en vez 
+          de criterio jurídico. El abogado define las reglas. El ingeniero las implementa.
+        </p>
+      </div>
+    </div>
+
+    <div class="callout callout-warning" style="margin-top: 28px;">
+      <strong>⚠️ El error más caro:</strong> En Centinela, un abogado revisor detectó 
+      que el sistema citaba la "Circular 49" cuando la vigente era la "Circular UAF N°62". 
+      Si eso llega a producción, el despacho entrega informes con la normativa equivocada. 
+      <strong>El dominio legal LO ES TODO.</strong>
+    </div>
+  </section>
+
+  <!-- ═══════════ SECCIÓN 7: GLOSARIO ═══════════ -->
+  <section class="section" id="section-07">
+    <div class="section-label">07 · Glosario Rápido</div>
+    <h2 class="section-title">Las 6 palabras que necesitas</h2>
+    <p class="section-subtitle">
+      Para hablar con tu equipo técnico sin perderte.
+    </p>
+
+    <div class="grid-2">
+      <div class="glass-card" style="padding: 24px;">
+        <h4 style="font-weight: 600;">HITL</h4>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted);">
+          <em>Human-in-the-Loop.</em> El sistema se detiene y espera aprobación humana 
+          antes de continuar. No es un botón decorativo.
+        </p>
+      </div>
+      <div class="glass-card" style="padding: 24px;">
+        <h4 style="font-weight: 600;">Grounding</h4>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted);">
+          La IA responde basándose en documentos reales (TU manual), no en conocimiento 
+          general. Cada respuesta cita fuente concreta.
+        </p>
+      </div>
+      <div class="glass-card" style="padding: 24px;">
+        <h4 style="font-weight: 600;">RAG</h4>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted);">
+          <em>Retrieval-Augmented Generation.</em> Técnica para que la IA busque en tus 
+          documentos antes de responder. Es lo que permite el grounding.
+        </p>
+      </div>
+      <div class="glass-card" style="padding: 24px;">
+        <h4 style="font-weight: 600;">Deal Breaker</h4>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted);">
+          Condición que dispara un bloqueo automático sin posibilidad de aprobación 
+          manual (salvo por el Oficial de Cumplimiento).
+        </p>
+      </div>
+      <div class="glass-card" style="padding: 24px;">
+        <h4 style="font-weight: 600;">SOP</h4>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted);">
+          <em>Standard Operating Procedure.</em> El paso a paso de tu proceso actual. 
+          Es el plano que usará el equipo técnico para construir el agente.
+        </p>
+      </div>
+      <div class="glass-card" style="padding: 24px;">
+        <h4 style="font-weight: 600;">Trazabilidad</h4>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted);">
+          Cada acción del sistema queda registrada: qué datos entraron, qué herramienta 
+          se usó, qué respondió el modelo, quién aprobó, a qué hora.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <section class="section" style="text-align: center; background: radial-gradient(circle at bottom, rgba(178,222,255,0.04) 0%, transparent 60%);">
+    <div style="font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; margin-bottom: 12px;">
+      La tecnología no reemplaza <i>criterio jurídico</i>
+    </div>
+    <p style="color: var(--color-text-muted); font-size: 0.95rem; max-width: 500px; margin: 0 auto 24px;">
+      Lo amplifica. La IA organiza, analiza y propone. Las decisiones críticas 
+      siguen siendo tuyas. Ese es el principio.
+    </p>
+    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+      <span style="font-size: 0.75rem; color: var(--color-text-muted); padding: 6px 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 20px;">Aurea Legal</span>
+      <span style="font-size: 0.75rem; color: var(--color-text-muted); padding: 6px 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 20px;">Julio 2026</span>
+      <span style="font-size: 0.75rem; color: var(--color-text-muted); padding: 6px 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 20px;">centinela.aurea.legal</span>
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>
