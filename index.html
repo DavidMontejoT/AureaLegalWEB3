@@ -1263,6 +1263,12 @@ select.demo-input option { background: #1a2332; color: #fff; }
   text-decoration: none; transition: background .2s;
 }
 .re-btn-info:hover { background: rgba(255,255,255,.9); }
+
+/* ── 3D Tilt ── */
+.re-feat, .pillar-card, .centinela-main-img, .insight-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
 </style>
 </head>
 <body>
@@ -2035,6 +2041,86 @@ window.addEventListener('DOMContentLoaded', () => {
       }
       btn.disabled = false;
       btn.innerHTML = 'Solicitar Demo <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3\"/></svg>';
+    });
+  }
+
+  /* ══════════════════════════════════════════
+     PARALLAX: blobs move at different speeds
+  ══════════════════════════════════════════ */
+  gsap.to('.blob-1', {
+    y: -180,
+    ease: 'none',
+    scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom top', scrub: 0.6 }
+  });
+  gsap.to('.blob-2', {
+    y: -100,
+    ease: 'none',
+    scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom top', scrub: 0.8 }
+  });
+  gsap.to('.blob-3', {
+    y: -60,
+    ease: 'none',
+    scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom top', scrub: 1 }
+  });
+
+  /* ══════════════════════════════════════════
+     CURSOR TILT: cards follow mouse
+  ══════════════════════════════════════════ */
+  const tiltEls = document.querySelectorAll('.re-feat, .pillar-card, .centinela-main-img, .insight-card');
+  tiltEls.forEach(el => {
+    el.addEventListener('mousemove', e => {
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      gsap.to(el, {
+        rotateY: x * 7,
+        rotateX: -y * 7,
+        duration: 0.4,
+        ease: 'power2.out',
+        overwrite: 'auto'
+      });
+    });
+    el.addEventListener('mouseleave', () => {
+      gsap.to(el, { rotateY: 0, rotateX: 0, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
+    });
+  });
+
+  /* ══════════════════════════════════════════
+     STAGGER REVEALS: sections animate in
+  ══════════════════════════════════════════ */
+  // Insight cards
+  gsap.from('.insight-card', {
+    scrollTrigger: { trigger: '#hallazgo', start: 'top 78%', once: true },
+    y: 50, autoAlpha: 0, duration: 0.65, stagger: 0.14, ease: 'power3.out'
+  });
+
+  // Pillar cards
+  gsap.from('.pillar-card', {
+    scrollTrigger: { trigger: '.pillars', start: 'top 82%', once: true },
+    y: 40, autoAlpha: 0, duration: 0.55, stagger: 0.07, ease: 'power3.out'
+  });
+
+  // Real estate features
+  gsap.from('.re-feat', {
+    scrollTrigger: { trigger: '#realestate', start: 'top 78%', once: true },
+    y: 36, autoAlpha: 0, duration: 0.5, stagger: 0.1, ease: 'power2.out'
+  });
+
+  // Team cards
+  gsap.from('.team-card', {
+    scrollTrigger: { trigger: '#equipo', start: 'top 82%', once: true },
+    y: 48, autoAlpha: 0, duration: 0.7, stagger: 0.18, ease: 'power3.out'
+  });
+
+  // Architecture statement stagger (replace IntersectionObserver with GSAP)
+  const archStmtEl = document.querySelector('.arch-statement');
+  if (archStmtEl) {
+    archStmtEl.style.opacity = '';
+    archStmtEl.style.transform = '';
+    archStmtEl.style.transition = '';
+    gsap.from(archStmtEl, {
+      scrollTrigger: { trigger: archStmtEl, start: 'top 85%', once: true },
+      y: 40, autoAlpha: 0, duration: 0.8, ease: 'power3.out'
     });
   }
 });
