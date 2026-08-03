@@ -2046,19 +2046,20 @@ window.addEventListener('DOMContentLoaded', () => {
 
   /* ══════════════════════════════════════════
      PARALLAX: blobs move at different speeds
+     Uses marginTop to avoid clashing with CSS floatBlob animation
   ══════════════════════════════════════════ */
   gsap.to('.blob-1', {
-    y: -180,
+    marginTop: -180,
     ease: 'none',
     scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom top', scrub: 0.6 }
   });
   gsap.to('.blob-2', {
-    y: -100,
+    marginTop: -100,
     ease: 'none',
     scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom top', scrub: 0.8 }
   });
   gsap.to('.blob-3', {
-    y: -60,
+    marginTop: -60,
     ease: 'none',
     scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom top', scrub: 1 }
   });
@@ -2073,8 +2074,8 @@ window.addEventListener('DOMContentLoaded', () => {
       const x = (e.clientX - r.left) / r.width - 0.5;
       const y = (e.clientY - r.top) / r.height - 0.5;
       gsap.to(el, {
-        rotateY: x * 7,
-        rotateX: -y * 7,
+        rotateY: x * 12,
+        rotateX: -y * 12,
         duration: 0.4,
         ease: 'power2.out',
         overwrite: 'auto'
