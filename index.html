@@ -1985,28 +1985,10 @@ window.addEventListener('DOMContentLoaded', () => {
     ScrollTrigger.create({ trigger: el, start: 'top 88%', once: true, onEnter: () => { gsap.to(obj, { val: target, duration: 2.2, ease: 'power3.inOut', onUpdate: () => { el.textContent = Math.round(obj.val) + suffix; } }); } });
   });
 
-  /* ── ARCHITECTURE: statement fade-in ── */
-  const archStmt = document.querySelector('.arch-statement');
-  if (archStmt) {
-    archStmt.style.opacity = '0';
-    archStmt.style.transform = 'translateY(24px)';
-    archStmt.style.transition = 'opacity .7s ease, transform .7s ease';
-    const stmtObs = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.style.opacity = '1';
-          entry.target.style.transform = 'translateY(0)';
-        }
-      });
-    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-    stmtObs.observe(archStmt);
-  }
-
   gsap.from('#chatBox', { autoAlpha: 0, y: 56, duration: 1, ease: 'power4.out', scrollTrigger: { trigger: '#chatBox', start: 'top 85%', once: true } });
   gsap.to('#cvOrbPulse', { scale: 1.35, opacity: 0.35, duration: 2.2, repeat: -1, yoyo: true, ease: 'sine.inOut' });
   // Orb idle glow — only set once, cvSend() handles active glow with overwrite:'auto'
   gsap.set('#cvOrb', { boxShadow: 'inset -10px -10px 28px rgba(255,255,255,.22), 0 20px 50px rgba(29,161,242,.35)' });
-  gsap.from('#teamCard', { autoAlpha: 0, y: 48, duration: 1, ease: 'power4.out', scrollTrigger: { trigger: '#teamCard', start: 'top 85%', once: true } });
 
   /* ── DEMO FORM SUBMISSION ── */
   const demoForm = document.getElementById('demoForm');
@@ -2113,17 +2095,11 @@ window.addEventListener('DOMContentLoaded', () => {
     y: 48, autoAlpha: 0, duration: 0.7, stagger: 0.18, ease: 'power3.out'
   });
 
-  // Architecture statement stagger (replace IntersectionObserver with GSAP)
-  const archStmtEl = document.querySelector('.arch-statement');
-  if (archStmtEl) {
-    archStmtEl.style.opacity = '';
-    archStmtEl.style.transform = '';
-    archStmtEl.style.transition = '';
-    gsap.from(archStmtEl, {
-      scrollTrigger: { trigger: archStmtEl, start: 'top 85%', once: true },
-      y: 40, autoAlpha: 0, duration: 0.8, ease: 'power3.out'
-    });
-  }
+  // Architecture statement
+  gsap.from('.arch-statement', {
+    scrollTrigger: { trigger: '.arch-statement', start: 'top 85%', once: true },
+    y: 40, autoAlpha: 0, duration: 0.8, ease: 'power3.out'
+  });
 });
 </script>
 <!-- ═══ DEMO MODAL ═══ -->
