@@ -10,288 +10,144 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="tailwind.min.css">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23040811'/><text x='50' y='70' font-family='Georgia,serif' font-style='italic' font-size='54' font-weight='600' fill='%234B8FEA' text-anchor='middle'>A</text></svg>">
+<meta name="theme-color" content="#EEF5FB">
+
 <style>
-:root {
-  --dark:  #040811;
-  --dark2: #03060d;
-  --white: #ffffff;
-  --blue-sky: #b2deff;
-  --blue:  #1da1f2;
-  --muted: #5a6b7c;
-  --border-d: rgba(255,255,255,0.08);
-  --glass-bg-d:  rgba(255,255,255,0.04);
-  --glass-bg-d-strong: rgba(255,255,255,0.08);
-  --glass-border-d:  rgba(255,255,255,0.15);
-  --glass-shadow-d:  0 24px 48px -12px rgba(0,0,0,0.6), 0 8px 20px rgba(0,0,0,0.3);
-  --glass-blur:  blur(28px) saturate(180%) brightness(1.06);
-  --glass-inset: inset 0 1px 1px rgba(255,255,255,0.2), inset 0 -1px 1px rgba(0,0,0,0.4);
-  --max: 900px;
-}
-
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  font-family:'Inter',sans-serif;
-  background:var(--dark);
-  color:var(--white);
-  -webkit-font-smoothing:antialiased;
-  min-height:100vh;
-}
-
-/* Blobs */
-.blob{
-  position:fixed;filter:blur(100px);z-index:0;border-radius:50%;
-  pointer-events:none;animation:floatBlob 22s infinite alternate ease-in-out;
-}
-.blob-1{
-  width:650px;height:650px;
-  background:radial-gradient(circle,rgba(178,222,255,0.15) 0%,transparent 70%);
-  top:-8%;left:-8%;
-}
-.blob-2{
-  width:850px;height:850px;
-  background:radial-gradient(circle,rgba(29,161,242,0.12) 0%,transparent 70%);
-  bottom:-12%;right:-12%;
-  animation-delay:-8s;
-}
-@keyframes floatBlob{
-  0%{transform:translate(0,0) scale(1) rotate(0deg)}
-  50%{transform:translate(70px,-70px) scale(1.06) rotate(12deg)}
-  100%{transform:translate(-50px,60px) scale(0.94) rotate(-12deg)}
-}
-
-/* Header */
-.header{
-  position:relative;z-index:10;
-  padding:28px 32px 0;
-}
-.back-link{
-  display:inline-flex;align-items:center;gap:8px;
-  color:rgba(255,255,255,.45);text-decoration:none;
-  font-size:13px;font-weight:500;
-  transition:color .25s;
-}
-.back-link:hover{color:var(--white)}
-.back-link svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
-
-/* Main */
-.main{
-  max-width:var(--max);margin:0 auto;padding:60px 32px 120px;
-  position:relative;z-index:2;
-}
-.page-eyebrow{
-  font-size:11px;text-transform:uppercase;letter-spacing:2px;
-  color:rgba(255,255,255,.4);font-weight:700;margin-bottom:12px;display:block;
-}
-.page-title{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(2rem,4vw,3.2rem);font-weight:700;
-  letter-spacing:-1px;line-height:1.15;margin-bottom:12px;
-}
-.page-title i{font-style:italic;font-weight:500;color:var(--blue-sky)}
-.page-sub{
-  font-size:14px;color:rgba(255,255,255,.45);line-height:1.7;
-  max-width:520px;margin-bottom:56px;
-}
-
-/* Resource card */
-.resource-grid{
-  display:grid;grid-template-columns:1fr;gap:20px;
-}
-.resource-card{
-  background:linear-gradient(135deg,rgba(255,255,255,0.04) 0%,rgba(255,255,255,0.01) 100%);
-  backdrop-filter:var(--glass-blur);
-  -webkit-backdrop-filter:var(--glass-blur);
-  border:1px solid var(--glass-border-d);
-  border-radius:20px;padding:36px 32px;
-  box-shadow:var(--glass-shadow-d),var(--glass-inset);
-  position:relative;overflow:hidden;
-  text-decoration:none;display:block;
-  transition:border-color .3s,transform .3s;
-}
-.resource-card:hover{
-  border-color:rgba(29,161,242,.3);
-  transform:translateY(-3px);
-}
-.resource-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);
-  opacity:.3;z-index:2;pointer-events:none;
-}
-.resource-card::after{
-  content:'';position:absolute;inset:0;border-radius:inherit;
-  background:linear-gradient(135deg,rgba(255,255,255,0.05) 0%,transparent 40%,transparent 60%,rgba(29,161,242,0.02) 100%);
-  pointer-events:none;
-}
-.resource-card>*{position:relative;z-index:1}
-.resource-icon{
-  width:44px;height:44px;border-radius:12px;
-  background:rgba(29,161,242,.12);border:1px solid rgba(29,161,242,.2);
-  display:flex;align-items:center;justify-content:center;
-  font-size:20px;margin-bottom:18px;
-}
-.resource-tag{
-  display:inline-block;padding:4px 10px;border-radius:50px;
-  background:rgba(29,161,242,.1);border:1px solid rgba(29,161,242,.2);
-  font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
-  color:var(--blue-sky);margin-bottom:12px;
-}
-.resource-title{
-  font-family:'Playfair Display',serif;
-  font-size:22px;font-weight:700;color:var(--white);
-  letter-spacing:-.3px;margin-bottom:8px;
-}
-.resource-desc{
-  font-size:13px;color:rgba(255,255,255,.45);line-height:1.65;
-}
-.resource-arrow{
-  display:inline-flex;align-items:center;gap:8px;
-  margin-top:16px;font-size:12px;font-weight:600;
-  color:var(--blue);transition:gap .25s;
-}
-.resource-card:hover .resource-arrow{gap:12px}
-.resource-arrow svg{width:12px;height:12px}
-
-/* Coming soon card */
-.coming-soon{
-  opacity:.4;pointer-events:none;
-}
-.coming-label{
-  font-size:11px;font-weight:600;color:rgba(255,255,255,.3);
-  letter-spacing:1px;margin-top:48px;padding-top:24px;
-  border-top:1px solid var(--border-d);
-}
-
-/* Footer */
-.footer{
-  text-align:center;padding:40px 32px;
-  border-top:1px solid rgba(255,255,255,.05);
-  position:relative;z-index:2;
-}
-.footer-text{
-  font-size:11px;color:rgba(255,255,255,.25);
-  letter-spacing:1px;
-}
-.footer-text a{
-  color:rgba(255,255,255,.35);text-decoration:none;
-  transition:color .2s;
-}
-.footer-text a:hover{color:var(--blue-sky)}
-
-/* ── Guide (install section) ── */
-.guide-section {
-  margin-top: 64px; padding-top: 40px;
-  border-top: 1px solid var(--border-d);
-}
-.guide-heading {
-  font-family: 'Playfair Display', serif;
-  font-size: 24px; font-weight: 700; color: var(--white);
-  letter-spacing: -.3px; margin-bottom: 8px;
-}
-.guide-sub {
-  font-size: 13px; color: rgba(255,255,255,.4); line-height: 1.6;
-  margin-bottom: 28px;
-}
-.guide-steps {
-  display: grid; grid-template-columns: 1fr; gap: 16px;
-}
-@media (min-width: 700px) {
-  .guide-steps { grid-template-columns: 1fr 1fr 1fr; }
-}
-.guide-step {
-  background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
-  border: 1px solid var(--border-d);
-  border-radius: 14px; padding: 24px 20px;
-  position: relative;
-}
-.guide-step-num {
-  font-family: 'Playfair Display', serif;
-  font-size: 28px; font-weight: 700; color: var(--blue-sky);
-  opacity: .35; margin-bottom: 8px;
-}
-.guide-step-cli {
-  font-size: 11px; font-weight: 700; letter-spacing: 1px;
-  text-transform: uppercase; color: var(--blue);
-  margin-bottom: 6px;
-}
-.guide-step code {
-  display: block; font-size: 11px; color: rgba(255,255,255,.55);
-  background: rgba(255,255,255,.04); padding: 8px 10px;
-  border-radius: 6px; margin-top: 8px; word-break: break-all;
-  font-family: 'SF Mono', 'Fira Code', monospace;
-}
-.guide-badge-row {
-  display: flex; align-items: center; gap: 12px; margin-bottom: 32px;
-  flex-wrap: wrap;
-}
-.guide-badge-row img { height: 20px; }
-.skill-btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 18px; border-radius: 8px;
-  font-size: 12px; font-weight: 600; text-decoration: none;
-  transition: transform .2s, box-shadow .2s;
-}
-.skill-btn:hover { transform: translateY(-1px); }
-.skill-btn-primary {
-  background: var(--blue); color: #fff;
-  box-shadow: 0 4px 16px rgba(29,161,242,.25);
-}
-.skill-btn-primary:hover { box-shadow: 0 6px 20px rgba(29,161,242,.4); }
-.skill-btn-gh {
-  background: rgba(255,255,255,.06); color: rgba(255,255,255,.7);
-  border: 1px solid rgba(255,255,255,.1);
-}
-.skill-btn-gh:hover { background: rgba(255,255,255,.1); }
-.skill-steps-inline {
-  display: grid; grid-template-columns: 1fr; gap: 14px;
-}
-@media (min-width: 700px) {
-  .skill-steps-inline { grid-template-columns: 1fr 1fr 1fr; }
-}
-.skill-step-inline {
-  display: flex; gap: 12px; align-items: flex-start;
-  background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.06);
-  border-radius: 10px; padding: 16px 14px;
-}
-.skill-step-num {
-  font-family: 'Playfair Display', serif;
-  font-size: 22px; font-weight: 700; color: var(--blue-sky);
-  opacity: .35; line-height: 1; flex-shrink: 0;
-}
-.skill-step-cli {
-  font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
-  text-transform: uppercase; color: var(--blue); margin-bottom: 4px;
-}
-.skill-step-inline p {
-  font-size: 11px; color: rgba(255,255,255,.45); line-height: 1.55; margin-bottom: 6px;
-}
-.skill-step-inline code {
-  display: block; font-size: 10px; color: rgba(255,255,255,.5);
-  background: rgba(255,255,255,.04); padding: 6px 8px;
-  border-radius: 5px; word-break: break-all;
-  font-family: 'SF Mono', 'Fira Code', monospace;
-}
-.resource-card-expanded { padding: 36px 32px 32px !important; }
+  body {
+    background:
+      radial-gradient(ellipse 40% 18% at 0% 5%,  rgba(72,137,232,.35) 0%, transparent 100%),
+      radial-gradient(ellipse 40% 18% at 100% 5%, rgba(72,137,232,.35) 0%, transparent 100%),
+      radial-gradient(ellipse 55% 18% at 50% 25%, rgba(178,222,255,.35) 0%, transparent 100%),
+      linear-gradient(180deg, #EEF5FB 0%, #EEF5FB 15%, #E6F0F8 35%, #EEF5FB 55%, #D8E5F0 75%, #EEF5FB 100%);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: #5A6B7C; text-decoration: none;
+    font-size: 13px; font-weight: 500;
+    transition: color .25s;
+  }
+  .back-link:hover { color: #040811; }
+  .back-link svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .resource-card {
+    display: block; text-decoration: none;
+    background: rgba(255,255,255,.40);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,.55);
+    border-radius: 20px; padding: 36px 32px;
+    transition: transform .3s ease, box-shadow .3s ease;
+    position: relative;
+  }
+  .resource-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(11,19,32,.08);
+  }
+  .resource-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: rgba(75,143,234,.10); border: 1px solid rgba(75,143,234,.20);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; margin-bottom: 18px;
+  }
+  .resource-tag {
+    display: inline-block; padding: 4px 10px; border-radius: 50px;
+    background: rgba(75,143,234,.10); border: 1px solid rgba(75,143,234,.22);
+    font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    color: #4B8FEA; margin-bottom: 12px;
+  }
+  .resource-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700; color: #040811;
+    letter-spacing: -.3px; margin-bottom: 8px;
+  }
+  .resource-desc { font-size: 13.5px; color: #5A6B7C; line-height: 1.65; }
+  .resource-arrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 16px; font-size: 12px; font-weight: 600;
+    color: #4B8FEA; transition: gap .25s;
+  }
+  .resource-card:hover .resource-arrow { gap: 12px; }
+  .resource-arrow svg { width: 12px; height: 12px; }
+  .coming-soon { opacity: .45; pointer-events: none; }
+  .coming-label {
+    font-size: 11px; font-weight: 600; color: #5A6B7C;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    margin-top: 48px; padding-top: 24px;
+    border-top: 1px solid rgba(90,107,124,.15);
+  }
+  .skill-step-inline {
+    display: grid; grid-template-columns: 1fr; gap: 14px;
+  }
+  @media (min-width: 700px) {
+    .skill-step-inline { grid-template-columns: 1fr 1fr 1fr; }
+  }
+  .skill-step-inline {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: rgba(255,255,255,.45); border: 1px solid rgba(255,255,255,.65);
+    border-radius: 10px; padding: 16px 14px;
+  }
+  .skill-step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; font-weight: 700; color: #4B8FEA;
+    opacity: .4; line-height: 1; flex-shrink: 0;
+  }
+  .skill-step-cli {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+    text-transform: uppercase; color: #4B8FEA; margin-bottom: 4px;
+  }
+  .skill-step-inline p { font-size: 11.5px; color: #5A6B7C; line-height: 1.55; margin-bottom: 6px; }
+  .skill-step-inline code {
+    display: block; font-size: 10px; color: #2f3a47;
+    background: rgba(75,143,234,.07); padding: 6px 8px;
+    border-radius: 5px; word-break: break-all;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+  .skill-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 18px; border-radius: 50px;
+    font-size: 12px; font-weight: 600; text-decoration: none;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .skill-btn:hover { transform: translateY(-1px); }
+  .skill-btn-primary {
+    background: #040811; color: #EEF5FB;
+    box-shadow: 0 4px 16px rgba(4,8,17,.18);
+  }
+  .skill-btn-primary:hover { box-shadow: 0 6px 20px rgba(4,8,17,.28); }
+  .skill-btn-gh {
+    background: rgba(255,255,255,.5); color: #040811;
+    border: 1px solid rgba(4,8,17,.15);
+  }
+  .skill-btn-gh:hover { background: rgba(255,255,255,.8); }
+  .footer-text {
+    font-size: 11px; color: #5A6B7C; letter-spacing: 1px;
+  }
+  .footer-text a { color: #4B8FEA; text-decoration: none; transition: color .2s; }
+  .footer-text a:hover { color: #040811; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
 </style>
 </head>
-<body>
+<body class="font-sans antialiased text-abyssal">
 
-<div class="blob blob-1"></div>
-<div class="blob blob-2"></div>
-
-<header class="header">
+<header class="px-6 md:px-12 pt-7 relative z-10">
   <a href="/" class="back-link">
     <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
     Volver a Aurea Legal
   </a>
 </header>
 
-<main class="main">
-  <span class="page-eyebrow">Recursos</span>
-  <h1 class="page-title">Guías, playbooks <i>y metodología</i></h1>
-  <p class="page-sub">Material práctico sobre automatización con criterio humano. Todo basado en lo que ya implementamos en producción.</p>
+<main class="max-w-3xl mx-auto px-6 md:px-12 py-14 md:py-20 relative z-10">
+  <span class="text-xs tracking-widest uppercase text-brand-blue font-medium mb-4 block">Recursos</span>
+  <h1 class="font-serif text-4xl md:text-5xl font-light text-abyssal mb-4 leading-tight">Guías, playbooks <span class="italic font-medium text-brand-blue">y metodología</span></h1>
+  <p class="text-slate text-base leading-relaxed mb-14 max-w-xl">Material práctico sobre automatización con criterio humano. Todo basado en lo que ya implementamos en producción.</p>
 
-  <div class="resource-grid">
+  <div class="space-y-5">
 
     <a href="/playbooks/Guia-LegalTech" class="resource-card">
       <div class="resource-icon">📘</div>
@@ -301,26 +157,24 @@ body{
       <span class="resource-arrow">Leer guía <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></span>
     </a>
 
-    <div class="resource-card resource-card-expanded">
+    <div class="resource-card">
       <div class="resource-icon">🎬</div>
       <span class="resource-tag">Skill · Hermes Agent</span>
       <h2 class="resource-title">Video Edit con IA</h2>
-      <p class="resource-desc">Skill para agentes CLI que automatiza la edicion de video con Remotion: overlays Liquid Glass, subtitulos, key phrases, zooms y CTA. Arquitectura de composiciones reutilizables. Se instala como skill nativa de Hermes Agent.</p>
+      <p class="resource-desc">Skill para agentes CLI que automatiza la edición de video con Remotion: overlays Liquid Glass, subtítulos, key phrases, zooms y CTA. Arquitectura de composiciones reutilizables. Se instala como skill nativa de Hermes Agent.</p>
 
-      
-
-      <h3 style="font-size:13px;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:.5px;text-transform:uppercase;margin-bottom:14px">Como instalar</h3>
+      <h3 class="text-xs font-semibold text-slate uppercase tracking-widest mb-4 mt-6">Cómo instalar</h3>
 
       <div class="skill-step-inline">
         <div class="skill-step-num">01</div>
         <div>
           <div class="skill-step-cli">Hermes Agent</div>
-          <p>Copiar la carpeta <code>remotion-video-editing/</code> a <code>~/.hermes/skills/creative/</code>. El agente la detecta automaticamente y queda disponible como skill cargable.</p>
+          <p>Copiar la carpeta <code>remotion-video-editing/</code> a <code>~/.hermes/skills/creative/</code>. El agente la detecta automáticamente y queda disponible como skill cargable.</p>
           <code>cp -r remotion-video-editing ~/.hermes/skills/creative/</code>
         </div>
       </div>
 
-      <div style="display:flex;gap:10px;margin-top:24px;flex-wrap:wrap">
+      <div class="flex gap-3 mt-6 flex-wrap">
         <a href="https://github.com/DavidMontejoT/SkillVideoHermes/archive/refs/heads/master.zip" target="_blank" rel="noopener" class="skill-btn skill-btn-primary">Descargar Skill</a>
         <a href="https://github.com/DavidMontejoT/SkillVideoHermes" target="_blank" rel="noopener" class="skill-btn skill-btn-gh">Ver en GitHub</a>
       </div>
@@ -328,10 +182,9 @@ body{
 
   </div>
 
-
   <p class="coming-label">Próximamente</p>
 
-  <div class="resource-grid" style="margin-top:16px">
+  <div class="grid sm:grid-cols-2 gap-5 mt-5">
     <div class="resource-card coming-soon">
       <div class="resource-icon">📋</div>
       <span class="resource-tag">Checklist</span>
@@ -347,7 +200,7 @@ body{
   </div>
 </main>
 
-<footer class="footer">
+<footer class="text-center py-10 px-6 border-t border-slate/15 relative z-10">
   <p class="footer-text"><a href="/">Aurea Legal</a> · Automatización con criterio humano</p>
 </footer>
 
