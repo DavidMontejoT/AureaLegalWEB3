@@ -10,6 +10,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
 
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23040811'/><text x='50' y='70' font-family='Georgia,serif' font-style='italic' font-size='54' font-weight='600' fill='%234B8FEA' text-anchor='middle'>A</text></svg>">
+<meta name="theme-color" content="#EEF5FB">
+
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script id="tailwind-config">
   tailwind.config = {
@@ -853,6 +856,10 @@
           <option value="Diagnostico">No lo sé — necesito un diagnóstico</option>
         </select>
       </div>
+      <!-- Honeypot antispam: oculto, si tiene valor es un bot. NUNCA va al payload -->
+      <input type="text" name="empresa_web" id="hpField" tabindex="-1" autocomplete="off"
+             aria-hidden="true"
+             style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
       <button type="submit"
               class="w-full sm:w-auto inline-flex items-center justify-center px-10 py-4 text-base font-medium text-soft-luminous bg-abyssal border-2 border-abyssal rounded-full hover:bg-transparent hover:text-abyssal transition-all duration-300 transform hover:-translate-y-0.5 shadow-md hover:shadow-lg">
         Agenda una consultoría
@@ -984,12 +991,63 @@
     }, 2000);
   });
 
-  // Form handler
+  // Form handler — con fallback real: error visible + Reintentar + WhatsApp
+  const WHATSAPP_NUMBER = '573013188696';
+  let lastLead = null;
+
+  function buildWhatsAppUrl(data) {
+    const texto = `Hola Aurea Legal, soy ${data.nombre}${data.empresa ? ' de ' + data.empresa : ''}. Me interesa: ${data.interes || 'un diagnóstico'}. Email: ${data.email}.`;
+    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(texto)}`;
+  }
+
+  async function submitLead(data, msg, btn, originalHtml) {
+    try {
+      const res = await fetch('/api/demo-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      msg.className = 'text-sm mt-3 text-emerald-600';
+      msg.textContent = '¡Gracias! Te contactaremos en las próximas 24 horas.';
+      msg.classList.remove('hidden');
+      const form = document.getElementById('demoForm');
+      form.reset();
+      lastLead = null;
+      return true;
+    } catch (err) {
+      // Error real: no se pierde el lead en silencio
+      msg.className = 'text-sm mt-3 text-red-600';
+      msg.innerHTML =
+        'No pudimos enviar tu solicitud. ' +
+        '<button type="button" onclick="retryLead()" class="underline font-medium">Reintentar</button> ' +
+        'o <a href="' + buildWhatsAppUrl(data) + '" target="_blank" rel="noopener" class="underline font-medium">escríbenos por WhatsApp</a>.';
+      msg.classList.remove('hidden');
+      return false;
+    } finally {
+      if (btn) { btn.disabled = false; btn.innerHTML = originalHtml; }
+    }
+  }
+
+  function retryLead() {
+    const msg = document.getElementById('demoMsg');
+    const btn = document.querySelector('#demoForm button[type="submit"]');
+    if (!lastLead) return;
+    msg.className = 'text-sm mt-3 text-slate';
+    msg.textContent = 'Reintentando…';
+    submitLead(lastLead, msg, btn, btn ? btn.innerHTML : '');
+  }
+
   async function handleFormSubmit(e) {
     e.preventDefault();
     const form = e.target;
     const msg = document.getElementById('demoMsg');
     const btn = form.querySelector('button[type="submit"]');
+    const originalHtml = btn.innerHTML;
+
+    // Honeypot: si un bot llenó el campo oculto, descartar en silencio
+    const hp = document.getElementById('hpField');
+    if (hp && hp.value.trim()) return false;
 
     const data = {
       nombre: form.nombre.value.trim(),
@@ -1007,32 +1065,8 @@
 
     btn.disabled = true;
     btn.textContent = 'Enviando...';
-
-    try {
-      const res = await fetch('/api/demo-request', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-
-      if (res.ok) {
-        msg.className = 'text-sm mt-3 text-emerald-600';
-        msg.textContent = '¡Gracias! Te contactaremos en las próximas 24 horas.';
-        msg.classList.remove('hidden');
-        form.reset();
-      } else {
-        throw new Error('Server error');
-      }
-    } catch (err) {
-      // Fallback: if endpoint not available, still show success
-      msg.className = 'text-sm mt-3 text-emerald-600';
-      msg.textContent = '¡Gracias! Te contactaremos en las próximas 24 horas.';
-      msg.classList.remove('hidden');
-      form.reset();
-    }
-
-    btn.disabled = false;
-    btn.innerHTML = 'Agenda una consultoría <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>';
+    lastLead = data;
+    await submitLead(data, msg, btn, originalHtml);
     return false;
   }
 
@@ -1076,6 +1110,7 @@
     msgs.scrollTop = msgs.scrollHeight;
 
     let reply = null;
+    let apiOk = false;
     try {
       const res = await fetch('https://api.aurea.legal/chat', {
         method: 'POST',
@@ -1086,12 +1121,19 @@
       if (res.ok) {
         const data = await res.json();
         reply = data.reply || data.message || data.response;
+        apiOk = true;
       }
     } catch(e) {}
 
     typing.remove();
 
     if (!reply) {
+      // Aviso sutil cuando la API no respondió (modo demo / offline)
+      const demo = document.createElement('div');
+      demo.className = 'chat-msg-typing';
+      demo.textContent = apiOk ? '' : 'modo demo: respuestas locales, sin conexión al agente';
+      if (demo.textContent) msgs.appendChild(demo);
+      msgs.scrollTop = msgs.scrollHeight;
       const q = t.toLowerCase();
       if (q.includes('centinela') || q.includes('aml') || q.includes('kyc')) reply = chatResponses.centinela;
       else if (q.includes('contralitigador') || q.includes('precedente') || q.includes('jurisprudencia')) reply = chatResponses.contralitigador;
