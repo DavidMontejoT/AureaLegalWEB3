@@ -4,3 +4,8 @@ _infra/
 servidorAurea/backups/
 servidorAurea/__pycache__/
 *.pyc
+*.pyo
+*.sql.gz
+*.tar.gz
+snapshot-*/
+__pycache__/
