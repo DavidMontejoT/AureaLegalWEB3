@@ -16,14 +16,16 @@
 | 4a. Permisos .env | ✅ Completada | Todos los `.env` en 600; `.env.prod.bak` de Centinela eliminado |
 | 4b. Token TFG | ✅ Completada | Remote `git@github-tfg:DavidMontejoT/tokenizacion-grafo.git` (sin token) |
 | 5a. Logs Docker | ✅ Completada | `/etc/docker/daemon.json`: `max-size:10m, max-file:3` |
-| 5b. Swap | ⏳ Pendiente | Swap 0 B — Paso 3 del runbook 2026-08-16 |
-| 5c. Puertos internos | ⏳ Pendiente | `backend:8000` y `frontend:3000` en 0.0.0.0 — Paso 4, requiere OK + reconfig de Caddy |
-| 6. Watchdog | ⏳ Pendiente | Paso 5 opcional — definir modalidad |
+| 5b. Swap | ⏸️ NO implementar (decisión David) | Reevaluación condicional: OOM, RAM >6GB sostenido, servicio pesado nuevo |
+| 5c. Puertos internos | ✅ Completada (modo C) | DOCKER-USER DROP eth0→3000/8000/4173 (v4+v6) + UFW deny; verificado externo |
+| 6. Watchdog | ✅ Completada | Cron Hermes horario (Telegram, solo cambios) + offsite diario a Mac |
 
 ### Hallazgos nuevos (2026-08-16)
 
-1. **`contralitigator-api-py-1` healthcheck frágil**: el HEALTHCHECK viene del Dockerfile (`--timeout=5s`, urllib a `localhost:3000/health`), no del compose. Genera falsos negativos intermitentes (3 fails ~23:40Z; luego healthy). El servicio responde 200 OK siempre (logs). Fix: override del healthcheck en `docker-compose.prod.yml` (timeout 15s, start_period 20s) — Paso 2 del runbook.
-2. **Caddy → TFG vía `host.docker.internal:8000/3000`** (resuelve 172.17.0.1 = gateway docker0). Caddy NO está conectado a `tokenizaciongrafo_tokenizacion_net`. Bindear TFG a 127.0.0.1 sin reconfigurar Caddy rompe realtokenstate.aurea.legal → el Paso 4 necesita rediseño (conectar Caddy a la red TFG + actualizar reverse_proxy) o mitigación por UFW+watchdog.
+1. **CORRECCIÓN CRÍTICA de esta auditoría**: la afirmación "UFW los bloquea (solo abre 22/80/443/8089)" era **FALSA** para puertos publicados por Docker. El tráfico a puertos publicados circula por PREROUTING/FORWARD (cadenas DOCKER), no por INPUT: el `default deny incoming` de UFW no los alcanza. Verificado empíricamente: `154.29.72.136:3000/8000/4173` respondían desde internet con UFW activo. Mitigado con reglas DROP en `DOCKER-USER` (solo interfaz `eth0`, no afecta a Caddy por bridges internas) + `ufw deny` explícito + iptables en memoria.
+2. **Caddy → TFG vía `host.docker.internal`** (172.17.0.1 = gateway docker0). Caddy NO está conectado a `tokenizaciongrafo_tokenizacion_net`. Migración pendiente (red interna + nombres de servicio).
+3. **Healthcheck api-py**: override en compose (timeout 20s, urllib 15s, retries 3, start_period 30s). Latencia intermitente de /health bajo carga OCR/LLM (GIL + uvicorn 1 worker) — hallazgo de código abierto.
+4. **Conflicto ufw ↔ iptables-persistent** en este sistema (instalar uno desinstala el otro, verificado 2×). Se priorizó UFW; la persistencia de DOCKER-USER queda pendiente de decisión (script+systemd o watchdog correctivo) — ver acta R1.
 
 ---
 

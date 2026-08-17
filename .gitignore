@@ -1,3 +1,6 @@
 .DS_Store
 _archivo/
 _infra/
+servidorAurea/backups/
+servidorAurea/__pycache__/
+*.pyc

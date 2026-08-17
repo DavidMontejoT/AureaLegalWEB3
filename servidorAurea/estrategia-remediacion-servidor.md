@@ -10,11 +10,22 @@
 |-------------|------|-----------|-----------|
 | 2026-08-16T23:52 | Pre-check global | ✅ OK | host estable, disco 69G libres, 14 contenedores Up, endpoints 200 |
 | 2026-08-16T23:52 | Backups de compose | ✅ | `docker-compose.prod.yml.bak.20260816T235213Z` (contralitigator), `docker-compose.yml.bak.20260816T235201Z` (TFG) |
-| 2026-08-16T23:55 | Paso 1 Docs | ✅ | Este archivo + `revision-servidor-sectorve.md` actualizados |
-| — | Paso 2 Healthcheck api-py | ⏳ | Pendiente de ejecutar |
-| — | Paso 3 Swap 2GB | ⏳ | Pendiente de ejecutar |
-| — | Paso 4 Bind puertos TFG | ⏳ | **Requiere OK de David** — hallazgo: Caddy usa `host.docker.internal` (172.17.0.1), no está en red TFG; bind a 127.0.0.1 rompe el dominio sin reconfig de Caddy |
-| — | Paso 5 Watchdog | ⏳ | Definir modalidad: log-only vs Telegram |
+| 2026-08-16T23:55 | Paso 1 Docs | ✅ | `revision-servidor-sectorve.md` + este archivo actualizados (commit 5f64966) |
+| 2026-08-17T00:10 | Paso 2 Healthcheck api-py | ✅ | timeout 20s/urllib 15s/retries 3/start_period 30s; validación 10 min: healthy 20/20, público 200 20/20, 0 transiciones a unhealthy |
+| 2026-08-17T00:20 | Paso 3 Swap | ⏸️ No implementar (decisión David) | 0 OOM en 7 días, pico RAM 2.8/9.7GB — reevaluación condicional |
+| 2026-08-17T00:30 | Paso 4 Bind puertos TFG | ✅ Modo C corregido | DOCKER-USER DROP eth0→3000/8000/4173 v4+v6 + UFW deny + iptables-persistent (luego descartado por conflicto ufw) + verificación externa OK |
+| 2026-08-17T00:40 | Paso 5 Watchdog | ✅ | Cron `3e41f81b8ef5` horario Telegram; script `vps-watchdog.py`; baseline silencioso |
+| 2026-08-17T00:50 | Offsite backups | ✅ | Cron `dc8f8c0b8874` 23:00 local; 12 dumps en `~/aurealegal-backups/` |
+| 2026-08-17T01:00 | Acta | ✅ | `acta-runbook-2026-08-16.md` + riesgos residuales + reevaluación |
+
+### Incidente y lecciones
+
+- **apt desinstaló ufw** al instalar iptables-persistent (conflicto de paquetes verificado 2×, ambos sentidos). Detectado por el watchdog ("command not found"), corregido reinstalando ufw + `ufw enable`. Lección: verificar `dpkg -l ufw` y el estado del firewall tras cualquier instalación de paquetes de red.
+- **Auditoría 13-ago incorrecta** en "UFW los bloquea": los puertos Docker publicados no pasan por INPUT. Corregido en `revision-servidor-sectorve.md` y mitigado.
+
+### Pendientes de decisión (ver acta)
+
+- **R1 — Persistencia DOCKER-USER**: script + unit systemd `After=docker.service` (recomendado) vs watchdog correctivo vs riesgo aceptado (reglas en memoria, se pierden en reboot).
 
 ### Notas técnicas del runbook
 
