@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Componentes Agosto — Sistema de Diseño Aurea Legal</title>
+<meta name="description" content="Style guide IA-first de Aurea Legal: colores, fuentes, branding, tono de copywriting, assets y proyección. Fuente de verdad para recrear páginas y publicaciones con IA.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../tailwind.min.css">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23040811'/><text x='50' y='70' font-family='Georgia,serif' font-style='italic' font-size='54' font-weight='600' fill='%234B8FEA' text-anchor='middle'>A</text></svg>">
+<meta name="theme-color" content="#EEF5FB">
+
+<style>
+  body {
+    background:
+      radial-gradient(ellipse 40% 18% at 0% 5%,  rgba(72,137,232,.35) 0%, transparent 100%),
+      radial-gradient(ellipse 40% 18% at 100% 5%, rgba(72,137,232,.35) 0%, transparent 100%),
+      radial-gradient(ellipse 55% 18% at 50% 25%, rgba(178,222,255,.35) 0%, transparent 100%),
+      linear-gradient(180deg, #EEF5FB 0%, #EEF5FB 15%, #E6F0F8 35%, #EEF5FB 55%, #D8E5F0 75%, #EEF5FB 100%);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  .swatch { border-radius: 14px; padding: 18px; border: 1px solid rgba(255,255,255,.6); min-height: 96px; display: flex; flex-direction: column; justify-content: flex-end; }
+  .swatch code { font-size: 11px; opacity: .85; }
+  .token-table td { padding: 8px 12px; border-bottom: 1px solid rgba(90,107,124,.12); font-size: 12.5px; vertical-align: top; }
+  .token-table td:first-child { font-weight: 600; color: #040811; white-space: nowrap; }
+  .token-table tr:last-child td { border-bottom: none; }
+  .demo-card {
+    background: rgba(255,255,255,.40);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,.55);
+    border-radius: 20px; padding: 28px 26px;
+  }
+  .badge-example { display: inline-block; padding: 4px 12px; border-radius: 50px; font-size: 10.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  .copy-good { background: rgba(16,120,80,.10); border: 1px solid rgba(16,120,80,.25); border-radius: 12px; padding: 14px 16px; }
+  .copy-bad  { background: rgba(190,40,40,.07);  border: 1px solid rgba(190,40,40,.22);  border-radius: 12px; padding: 14px 16px; }
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 10.5px; font-weight: 600; letter-spacing: .5px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 26px; border-radius: 50px; font-size: 14px; font-weight: 500; text-decoration: none; transition: all .25s; }
+  .btn-dark { background: #040811; color: #EEF5FB; border: 2px solid #040811; }
+  .btn-dark:hover { background: transparent; color: #040811; }
+  .btn-light { background: rgba(255,255,255,.5); color: #040811; border: 1px solid rgba(4,8,17,.15); }
+  .btn-light:hover { background: rgba(255,255,255,.85); }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body class="font-sans text-abyssal antialiased">
+
+<!-- ════════════════════════════════════════════════════════════════
+     COMPONENTES AGOSTO — SYSTEMA DE DISEÑO AUREA LEGAL
+     Este archivo es la FUENTE DE VERDAD visual y de copy.
+     Para IA: lee las secciones en orden; cada token tiene valor exacto.
+     Para recrear una página: copia los tokens, aplica las reglas de
+     composición (sección 10) y el tono de copy (sección 7).
+     ════════════════════════════════════════════════════════════════ -->
+
+<header class="px-6 md:px-12 pt-8 pb-4 relative z-10">
+  <a href="../" class="inline-flex items-center gap-2 text-slate text-[13px] font-medium hover:text-abyssal transition-colors">
+    <svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Volver a Aurea Legal
+  </a>
+</header>
+
+<main class="max-w-4xl mx-auto px-6 md:px-12 py-10 md:py-16 relative z-10">
+
+  <!-- 0. Portada -->
+  <span class="text-xs tracking-[2px] uppercase text-brand-blue font-bold mb-4 block">Componentes Agosto · v1.0 · 2026-08-17</span>
+  <h1 class="font-serif text-4xl md:text-5xl font-light leading-tight mb-4">El sistema de diseño <span class="italic font-medium text-brand-blue">de Aurea Legal</span></h1>
+  <p class="text-slate text-base leading-relaxed mb-12 max-w-2xl">Fuente de verdad para cualquier página, publicación o pieza visual: tokens exactos de color y tipografía, activos del proyecto, tono de copywriting validado y la proyección de marca que queremos comunicar. Diseñado para que una IA pueda recrear piezas fieles con solo leer este archivo.</p>
+
+  <!-- 1. Identidad -->
+  <section class="demo-card mb-10">
+    <h2 class="font-serif text-2xl font-semibold mb-5">1 · Identidad</h2>
+    <div class="space-y-3 text-[13.5px] leading-relaxed text-dark-slate">
+      <p><span class="pill bg-brand-blue/10 text-brand-blue border border-brand-blue/25">Qué somos</span> Aurea Legal es una consultora de <strong>automatización con criterio humano</strong>. Diseñamos procesos donde la IA analiza, clasifica y propone — pero el equipo humano decide, firma y responde. Sin cajas negras.</p>
+      <p><span class="pill bg-brand-blue/10 text-brand-blue border border-brand-blue/25">Modelo</span> Consultoría + implementación enterprise. <strong>NUNCA</strong> posicionar como SaaS o producto empaquetado.</p>
+      <p><span class="pill bg-brand-blue/10 text-brand-blue border border-brand-blue/25">Mensaje central</span> «La IA asiste. El equipo decide.» / «Velocidad artificial. Responsabilidad humana.»</p>
+      <p><span class="pill bg-brand-blue/10 text-brand-blue border border-brand-blue/25">Verticales</span> Legal AI (Centinela · Contralitigador) y Real Estate AI (AureaMax Lead).</p>
+      <p><span class="pill bg-brand-blue/10 text-brand-blue border border-brand-blue/25">CTA único</span> «Agenda una consultoría» — jamás «Solicitar demo» ni «Probar gratis».</p>
+      <p><span class="pill bg-red-500/10 text-red-600 border border-red-500/25">Prohibido</span> Mencionar CountryHomes (cliente piloto interno), inventar métricas, prometer «IA que decide por ti», jerga vacía (disruptivo, sinergia, 360°).</p>
+    </div>
+  </section>
+
+  <!-- 2. Colores -->
+  <section class="demo-card mb-10">
+    <h2 class="font-serif text-2xl font-semibold mb-2">2 · Colores</h2>
+    <p class="text-slate text-[13px] mb-6">Paleta «Azure Abyss» — light theme. Usar los tokens por nombre; los hex son exactos.</p>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+      <div class="swatch text-white" style="background:#040811" data-token="abyssal" data-hex="#040811">
+        <code class="font-mono">abyssal</code>
+        <code class="font-mono">#040811 · texto principal</code>
+      </div>
+      <div class="swatch text-white" style="background:#2f3a47" data-token="dark-slate" data-hex="#2f3a47">
+        <code class="font-mono">dark-slate</code>
+        <code class="font-mono">#2f3a47 · texto secundario</code>
+      </div>
+      <div class="swatch" style="background:#5A6B7C" data-token="slate" data-hex="#5A6B7C">
+        <code class="font-mono text-white">slate</code>
+        <code class="font-mono text-white">#5A6B7C · texto muted</code>
+      </div>
+      <div class="swatch" style="background:#EEF5FB" data-token="soft-luminous" data-hex="#EEF5FB">
+        <code class="font-mono">soft-luminous</code>
+        <code class="font-mono">#EEF5FB · fondo / texto sobre oscuro</code>
+      </div>
+      <div class="swatch" style="background:#B2DEFF" data-token="sky-azure" data-hex="#B2DEFF">
+        <code class="font-mono">sky-azure</code>
+        <code class="font-mono">#B2DEFF · acento suave</code>
+      </div>
+      <div class="swatch" style="background:#4B8FEA" data-token="brand-blue" data-hex="#4B8FEA">
+        <code class="font-mono text-white">brand-blue</code>
+        <code class="font-mono text-white">#4B8FEA · CTA / acentos</code>
+      </div>
+    </div>
+    <h3 class="text-xs font-bold uppercase tracking-widest text-slate mb-3">Reglas de color</h3>
+    <table class="token-table w-full">
+      <tr><td>Fondo de página</td><td>Degradado de 4 capas (sección 10.1). Nunca blanco plano #FFFFFF.</td></tr>
+      <tr><td>Texto principal</td><td>abyssal #040811 sobre fondos claros; soft-luminous #EEF5FB sobre abyssal.</td></tr>
+      <tr><td>Muted</td><td>slate #5A6B7C para subtítulos, metadatos, descripciones.</td></tr>
+      <tr><td>Acentos / links</td><td>brand-blue #4B8FEA. Opacidades permitidas: /10, /20, /25 para fondos de pills y tags.</td></tr>
+      <tr><td>Botones</td><td>Primario: fondo abyssal, texto soft-luminous. Hover: transparente con borde abyssal y texto abyssal.</td></tr>
+      <tr><td>Superficies glass</td><td>rgba(255,255,255,.40) con blur 14px y borde rgba(255,255,255,.55).</td></tr>
+      <tr><td>Prohibido</td><td>Negros puros (#000), grises fríos tipo #999, neones, gradientes multicolor.</td></tr>
+    </table>
+  </section>
+
+  <!-- 3. Tipografía -->
+  <section class="demo-card mb-10">
+    <h2 class="font-serif text-2xl font-semibold mb-2">3 · Tipografía</h2>
+    <p class="text-slate text-[13px] mb-6">Dos familias de Google Fonts. Serif para presencia y autoridad; sans para lectura.</p>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div>
+        <div class="font-serif text-3xl italic font-medium text-brand-blue mb-1">Playfair Display</div>
+        <div class="font-serif text-lg mb-2">Títulos, citas, palabras-acento</div>
+        <p class="text-[12px] text-slate leading-relaxed">Pesos: 500 / 600 / 700 + itálica (500/600). La <em>itálica</em> en brand-blue es el acento de marca — se usa en 1-2 palabras del titular para darle carácter. Interlineado 1.15, letter-spacing -1px en títulos grandes.</p>
+      </div>
+      <div>
+        <div class="font-sans text-3xl font-semibold mb-1">Inter</div>
+        <div class="font-sans text-lg mb-2">Cuerpo, UI, navegación</div>
+        <p class="text-[12px] text-slate leading-relaxed">Pesos: 300 (light, titulares alternativos) / 400 (cuerpo) / 500 (énfasis) / 600 (botones, labels) / 700 (tags, eyebrows). Cuerpo 14-16px, line-height 1.65. Eyebrows: 10-12px, uppercase, letter-spacing 1-2px.</p>
+      </div>
+    </div>
+    <h3 class="text-xs font-bold uppercase tracking-widest text-slate mt-6 mb-3">Jerarquía estándar</h3>
+    <table class="token-table w-full">
+      <tr><td>Hero H1</td><td>Playfair 500/700 light, clamp(2.6rem→4.5rem), con 1 palabra en itálica brand-blue</td></tr>
+      <tr><td>H2 sección</td><td>Playfair 600, 1.8-2.5rem, título + párrafo slate debajo</td></tr>
+      <tr><td>H3</td><td>Playfair 700 o Inter 600, 1.1-1.3rem</td></tr>
+      <tr><td>Eyebrow</td><td>Inter 700, 10-12px, uppercase, tracking 2px, brand-blue o slate</td></tr>
+      <tr><td>Cuerpo</td><td>Inter 400, 14-16px, slate/dark-slate, line-height 1.65</td></tr>
+      <tr><td>CTA / botón</td><td>Inter 500-600, 14px</td></tr>
+    </table>
+  </section>
+
+  <!-- 4. Branding -->
+  <section class="demo-card mb-10">
+    <h2 class="font-serif text-2xl font-semibold mb-2">4 · Branding</h2>
+    <p class="text-slate text-[13px] mb-5">Logo (favicon): círculo abyssal #040811 con la letra «A» serif itálica en brand-blue. La «A» es el monograma; usarla siempre sobre círculo oscuro o como letra suelta en títulos.</p>
+    <div class="flex items-center gap-8 flex-wrap mb-6">
+      <div class="w-16 h-16 rounded-2xl bg-abyssal flex items-center justify-center shadow-lg">
+        <span class="font-serif italic text-3xl font-semibold text-brand-blue">A</span>
+      </div>
+      <div class="font-serif text-2xl"><span class="font-semibold">Aurea</span> <span class="italic text-brand-blue font-medium">Legal</span></div>
+      <div class="text-[13px] text-slate">Tipografía del wordmark: Playfair Display (500/700), «Aurea» normal, «Legal» itálica brand-blue.</div>
+    </div>
+    <table class="token-table w-full">
+      <tr><td>Favicon</td><td>data-URI SVG: círculo #040811 + «A» Georgia/Playfair itálica #4B8FEA, 54px centrada</td></tr>
+      <tr><td>Wordmark</td><td>«Aurea Legal» en Playfair; «Legal» en itálica brand-blue. Alternar «A» sola como monograma.</td></tr>
+      <tr><td>theme-color</td><td>#EEF5FB</td></tr>
+      <tr><td>No hacer</td><td>No cambiar el color de la «A» (siempre brand-blue sobre abyssal), no usar el círculo con gradiente, no añadir eslóganes al logo.</td></tr>
+    </table>
+  </section>
+
+  <!-- 5. Assets -->
+  <section class="demo-card mb-10">
+    <h2 class="font-serif text-2xl font-semibold mb-2">5 · Assets del proyecto</h2>
+    <p class="text-slate text-[13px] mb-5">Rutas relativas a la raíz del repo. Los screenshots son capturas reales de producto — usarlos como prueba social, siempre con alt descriptivo.</p>
+    <table class="token-table w-full">
+      <tr><td>centinela-1.png</td><td>Dashboard de análisis de riesgo Centinela (matriz de riesgo, scoring)</td></tr>
+      <tr><td>centinela-2.png</td><td>Formulario de nuevo expediente (alta de persona)</td></tr>
+      <tr><td>centinela-3.png</td><td>Vista de expediente con hallazgos</td></tr>
+      <tr><td>centinela-4.png</td><td>Lista de expedientes / bandeja del Oficial de Cumplimiento</td></tr>
+      <tr><td>contralitigador-main.png</td><td>Pantalla principal: análisis de precedentes con fuentes citadas</td></tr>
+      <tr><td>contralitigador-1.png</td><td>Búsqueda de jurisprudencia</td></tr>
+      <tr><td>contralitigador-2.png</td><td>Líneas de argumentación propuestas</td></tr>
+      <tr><td>contralitigador-3.png</td><td>Detalle de fuente / cita</td></tr>
+      <tr><td>contralitigador-4.png</td><td>Comparativa de casos</td></tr>
+      <tr><td>contralitigador-5.png</td><td>Reporte final / exportación</td></tr>
+      <tr><td>david_montejo.png</td><td>Foto de David Montejo (PM/Dev) — sección Equipo</td></tr>
+      <tr><td>Giancarlo.jpeg</td><td>Foto de Giancarlo Vilcapoma (socio) — sección Equipo</td></tr>
+      <tr><td>hero.png · testimonio-1/2/3.png</td><td>Sin uso actual — candidatos a purgar (no referenciar)</td></tr>
+    </table>
+    <p class="text-[12px] text-slate mt-4">Regla: <code class="font-mono bg-brand-blue/10 px-1.5 py-0.5 rounded">loading="lazy"</code> en todas las imágenes salvo la primera del hero; siempre <code class="font-mono bg-brand-blue/10 px-1.5 py-0.5 rounded">alt</code> descriptivo; nunca embeder en base64 (usar rutas relativas).</p>
+  </section>
+
+  <!-- 6. Componentes -->
+  <section class="demo-card mb-10">
+    <h2 class="font-serif text-2xl font-semibold mb-2">6 · Componentes recurrentes</h2>
+    <p class="text-slate text-[13px] mb-6">Estilos verificados en producción (index.html).</p>
+    <div class="space-y-6">
+      <div>
+        <h3 class="text-xs font-bold uppercase tracking-widest text-slate mb-3">Botones</h3>
+        <div class="flex gap-3 flex-wrap">
+          <a href="#" class="btn btn-dark">Agenda una consultoría</a>
+          <a href="#" class="btn btn-light">Conoce más</a>
+        </div>
+        <p class="text-[12px] text-slate mt-3">Primario: bg #040811, texto #EEF5FB, borde 2px #040811, radius 50px, hover → transparente + texto abyssal. Secundario: glass blanco 50%, borde rgba(4,8,17,.15).</p>
+      </div>
+      <div>
+        <h3 class="text-xs font-bold uppercase tracking-widest text-slate mb-3">Tags / pills</h3>
+        <div class="flex gap-2 flex-wrap">
+          <span class="pill bg-brand-blue/10 text-brand-blue border border-brand-blue/25">AML / KYC</span>
+          <span class="pill bg-brand-blue/10 text-brand-blue border border-brand-blue/25">Listas PEP</span>
+          <span class="pill bg-brand-blue/10 text-brand-blue border border-brand-blue/25">Trazabilidad</span>
+          <span class="pill bg-slate/10 text-slate border border-slate/20">Próximamente</span>
+        </div>
+      </div>
+      <div>
+        <h3 class="text-xs font-bold uppercase tracking-widest text-slate mb-3">Card glass</h3>
+        <div class="demo-card max-w-sm">
+          <div class="w-11 h-11 rounded-xl bg-brand-blue/10 border border-brand-blue/20 flex items-center justify-center text-xl mb-4">📘</div>
+          <span class="badge-example bg-brand-blue/10 text-brand-blue border border-brand-blue/25">Guía</span>
+          <h4 class="font-serif text-lg font-bold mt-2 mb-1">Guía LegalTech para Implementar IA</h4>
+          <p class="text-[12.5px] text-slate leading-relaxed">Framework paso a paso para evaluar, diseñar e implementar automatización con IA.</p>
+        </div>
+      </div>
+      <div>
+        <h3 class="text-xs font-bold uppercase tracking-widest text-slate mb-3">Formulario + chat</h3>
+        <p class="text-[12.5px] text-slate leading-relaxed">Form: campos con borde rgba(4,8,17,.15), radius 12px, focus ring brand-blue. Mensaje de éxito: emerald-600. Mensaje de error con fallback: rojo + botón Reintentar + link WhatsApp (wa.me/573013188696 con prefill). Honeypot oculto para antispam (nunca en el payload). Chat: burbuja usuario abyssal / agente glass, aviso «modo demo» si la API no responde.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Tono de copywriting -->
+  <section class="demo-card mb-10">
+    <h2 class="font-serif text-2xl font-semibold mb-2">7 · Tono de copywriting</h2>
+    <p class="text-slate text-[13px] mb-5">Serio, directo, sin humo. Voz de consultor senior: diagnóstico honesto, evidencia, humano en el centro.</p>
+    <div class="grid md:grid-cols-2 gap-6 mb-6">
+      <div class="copy-good">
+        <p class="text-[11px] font-bold uppercase tracking-wider text-emerald-700 mb-2">✓ Correcto</p>
+        <ul class="text-[12.5px] text-dark-slate space-y-1.5 leading-relaxed">
+          <li>«Automatización con criterio humano.»</li>
+          <li>«La IA analiza, clasifica y propone — pero tu equipo decide, firma y responde.»</li>
+          <li>«El 80% del tiempo de un equipo legal se consume en la primera pasada.»</li>
+          <li>«Sin cajas negras.» / «Con trazabilidad auditable.»</li>
+          <li>CTA: «Agenda una consultoría de diagnóstico.»</li>
+        </ul>
+      </div>
+      <div class="copy-bad">
+        <p class="text-[11px] font-bold uppercase tracking-wider text-red-600 mb-2">✗ Incorrecto</p>
+        <ul class="text-[12.5px] text-dark-slate space-y-1.5 leading-relaxed">
+          <li>«¡Revoluciona tu legal con nuestra IA de última generación!»</li>
+          <li>«Solicita tu demo gratis» / «Prueba ahora»</li>
+          <li>«La IA decide por ti» (promesa falsa)</li>
+          <li>«Disruptivo, sinergia, 360°, innovación» (jerga vacía)</li>
+          <li>«10x tu productividad» (métrica inventada)</li>
+        </ul>
+      </div>
+    </div>
+    <h3 class="text-xs font-bold uppercase tracking-widest text-slate mb-3">Reglas de tono</h3>
+    <table class="token-table w-full">
+      <tr><td>Persona</td><td>Consultor senior: primero entiende tu operación, después propone. Nunca vendedor de software.</td></tr>
+      <tr><td>Promesas</td><td>Solo las que se pueden demostrar con lo implementado (Centinela, Contralitigador). Cero métricas inventadas.</td></tr>
+      <tr><td>Estructura</td><td>Problema concreto → patrón observado → solución con humano en el centro → evidencia.</td></tr>
+      <tr><td>Contracción / coloquialismos</td><td>Evitar; español neutro formal-cercano. Tú/Usted: «tu equipo» (cercano) en landing; «su operación» en documentos.</td></tr>
+      <tr><td>Largo</td><td>Frases cortas y declarativas. Párrafos de 1-3 líneas en landing; desarrollos largos solo en guías/playbooks.</td></tr>
+      <tr><td>Emojis</td><td>Permitidos SOLO como iconos de tarjetas (📘🎬📋🎥) y en chat. Nunca en titulares ni CTAs.</td></tr>
+    </table>
+  </section>
+
+  <!-- 8. Proyección -->
+  <section class="demo-card mb-10">
+    <h2 class="font-serif text-2xl font-semibold mb-2">8 · Proyección de marca</h2>
+    <p class="text-slate text-[13px] mb-5">Dónde queremos estar en 12 meses y cómo se refleja en cada pieza.</p>
+    <table class="token-table w-full">
+      <tr><td>Posicionamiento</td><td>La consultora de automatización con criterio humano para empresas B2B, firmas legales e inmobiliarias. Sin cajas negras, con trazabilidad.</td></tr>
+      <tr><td>Audiencia</td><td>Oficiales de Cumplimiento, abogados senior, gerentes B2B, inmobiliarias (Real Estate AI). Decisores que desconfían de la IA genérica.</td></tr>
+      <tr><td>Diferenciador</td><td>El humano decide y firma; la IA ejecuta lo masivo. Evidencia real (screenshots de producto en producción, no renders).</td></tr>
+      <tr><td>Voz aspiracional</td><td>«Velocidad artificial. Responsabilidad humana.» — la velocidad es de la IA, la responsabilidad es nuestra (del cliente, con nuestro acompañamiento).</td></tr>
+      <tr><td>Prueba social</td><td>Solo clientes con autorización explícita. Los partners del hero deben aprobar su logo (Atom Salud, Transcripty.ai pendientes de confirmar).</td></tr>
+      <tr><td>Vetos de marca</td><td>Nunca CountryHomes, nunca SaaS, nunca demo-gratis, nunca «IA que decide». Violar cualquiera rompe la proyección.</td></tr>
+    </table>
+  </section>
+
+  <!-- 9. Reglas de composición -->
+  <section class="demo-card mb-10">
+    <h2 class="font-serif text-2xl font-semibold mb-2">9 · Reglas de composición</h2>
+    <table class="token-table w-full">
+      <tr><td>9.1 Fondo</td><td>4 capas: radial (40% 18% at 0% 5%, rgba(72,137,232,.35)) + radial (40% 18% at 100% 5%, idem) + radial (55% 18% at 50% 25%, rgba(178,222,255,.35)) + linear #EEF5FB→#E6F0F8→#EEF5FB→#D8E5F0→#EEF5FB. Aplicar al body.</td></tr>
+      <tr><td>9.2 Layout</td><td>Contenedor max-w-4xl/6xl centrado, padding lateral 24-48px responsive. Secciones con espaciado vertical 80-120px.</td></tr>
+      <tr><td>9.3 Glass</td><td>Superficies: rgba(255,255,255,.40), backdrop-filter blur(14px), borde rgba(255,255,255,.55), radius 20px, sombra suave al hover (0 12px 40px rgba(11,19,32,.08)).</td></tr>
+      <tr><td>9.4 Nav</td><td>Fija/transparente con blur al scroll. Links slate → abyssal al hover. CTA a la derecha (botón oscuro).</td></tr>
+      <tr><td>9.5 Accesibilidad</td><td>Contraste AA: texto principal abyssal sobre #EEF5FB; muted slate solo para 12px+. prefers-reduced-motion respetado. Alt en toda imagen.</td></tr>
+      <tr><td>9.6 Rendimiento</td><td>CSS estático local (tailwind.min.css compilado — nunca el CDN). Imágenes lazy. Sin base64. Cero dependencias de terceros bloqueables.</td></tr>
+      <tr><td>9.7 Móvil</td><td>Mobile-first: stacks de 1 columna, nav colapsada a menú hamburguesa, tipografía clamp().</td></tr>
+    </table>
+  </section>
+
+  <!-- 10. Cómo usar este archivo -->
+  <section class="demo-card">
+    <h2 class="font-serif text-2xl font-semibold mb-2">10 · Cómo usar este archivo (para IA)</h2>
+    <ol class="list-decimal ml-5 space-y-2 text-[13.5px] text-dark-slate leading-relaxed">
+      <li>Lee las secciones 1-9 en orden; los tokens (hex, pesos, tamaños) son exactos.</li>
+      <li>Para una pieza nueva: define el objetivo (sección 8) → estructura (sección 9.2) → copy siguiendo la sección 7 (usa los ejemplos correctos como plantilla) → aplica colores y tipografía con los tokens → monta los componentes de la sección 6.</li>
+      <li>Antes de entregar, verifica: ¿el CTA es «Agenda una consultoría»? ¿Hay CountryHomes o jerga prohibida? ¿El fondo es el degradado de 4 capas (no blanco plano)? ¿Los hex coinciden con la sección 2?</li>
+      <li>Para publicaciones (LinkedIn/blog): mismo tono (sección 7), titular con itálica brand-blue (sección 3), 1 idea por párrafo, cierre con CTA de consultoría.</li>
+    </ol>
+  </section>
+
+  <footer class="text-center py-12 text-[11px] text-slate tracking-wider">
+    Aurea Legal · Componentes Agosto v1.0 · El sistema es la marca: úsalo siempre, desvíate nunca sin aprobación.
+  </footer>
+
+</main>
+</body>
+</html>
