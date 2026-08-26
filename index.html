@@ -350,6 +350,62 @@
   .alianzas-logo { height: 32px; }
   .alianzas-track { gap: 2.5rem; }
 }
+
+/* ── CASOS DE ÉXITO ── */
+.caso-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+}
+.caso-logo {
+  height: 30px;
+  width: auto;
+  object-fit: contain;
+  opacity: .7;
+  filter: grayscale(1);
+}
+.caso-tag {
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--brand-blue, #4B8FEA);
+  font-weight: 600;
+}
+.caso-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  line-height: 1.2;
+  color: var(--abyssal, #040811);
+}
+.caso-text {
+  font-size: .95rem;
+  color: #5A6B7C;
+  line-height: 1.55;
+}
+.caso-stat {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid rgba(4,8,17,.08);
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.caso-stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: var(--abyssal, #040811);
+  line-height: 1;
+}
+.caso-stat-label {
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #5A6B7C;
+}
 </style>
 </head>
 <body class="font-sans antialiased text-abyssal min-h-screen flex flex-col">
@@ -721,6 +777,59 @@
             </div>
             <span class="shot-feat-label">Control de Plazos</span>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     CASOS DE ÉXITO
+══════════════════════════════════════════ -->
+<section class="py-24 md:py-32 px-6 md:px-12 relative z-10" id="casos">
+  <div class="max-w-6xl mx-auto scroll-reveal">
+    <span class="text-xs tracking-widest uppercase text-brand-blue font-medium mb-4 block text-center">Casos de éxito</span>
+    <h2 class="text-3xl md:text-4xl font-light text-abyssal mb-6 text-center reveal-heading" style="animation-delay: 0.2s;">
+      Riesgo detectado <span class="font-serif italic">a tiempo.</span>
+    </h2>
+    <p class="text-center text-slate max-w-2xl mx-auto mb-14 text-lg">
+      Vulnerabilidades que cerramos antes de que fueran una crisis. Cultura de IA que ya opera en el día a día.
+    </p>
+
+    <div class="grid md:grid-cols-3 gap-8 mt-16">
+      <!-- Caso 1: Transcriptly -->
+      <div class="glass-card rounded-2xl p-8 hover-lift caso-card">
+        <img class="caso-logo" src="assets/logos/transcriptly.png" alt="Transcriptly.ai">
+        <span class="caso-tag">Pentesting · Pre-lanzamiento</span>
+        <h3 class="caso-title">El panel de administración estaba abierto a internet.</h3>
+        <p class="caso-text">Dos hallazgos críticos antes de salir al mercado: backoffice sin control de acceso y entorno dev expuesto junto a producción.</p>
+        <div class="caso-stat">
+          <span class="caso-stat-num">2</span>
+          <span class="caso-stat-label">críticos cerrados<br>pre-lanzamiento</span>
+        </div>
+      </div>
+
+      <!-- Caso 2: IA Amiga Lab -->
+      <div class="glass-card rounded-2xl p-8 hover-lift caso-card">
+        <img class="caso-logo" src="assets/logos/ia-amiga-lab.png" alt="IA Amiga Lab">
+        <span class="caso-tag">Pentesting + Remediación</span>
+        <h3 class="caso-title">Una puerta abierta hacia los datos de un cliente B2B.</h3>
+        <p class="caso-text">Acceso no autorizado con un correo falso a la información de un piloto empresarial. Cerrado con matriz re-ejecutable y retest con evidencia.</p>
+        <div class="caso-stat">
+          <span class="caso-stat-num">18</span>
+          <span class="caso-stat-label">hallazgos · 1 crítico<br>remediados + retest</span>
+        </div>
+      </div>
+
+      <!-- Caso 3: IA para Pymes -->
+      <div class="glass-card rounded-2xl p-8 hover-lift caso-card">
+        <img class="caso-logo" src="assets/logos/ia-parapymes.png" alt="IA para Pymes">
+        <span class="caso-tag">Consultoría · Cultura de IA</span>
+        <h3 class="caso-title">La IA como método de trabajo, no como un proyecto aislado.</h3>
+        <p class="caso-text">Herramientas integradas al flujo real: procesos más eficaces, decisiones con criterio humano y tecnología al servicio del equipo.</p>
+        <div class="caso-stat">
+          <span class="caso-stat-num">100%</span>
+          <span class="caso-stat-label">adopción en el<br>día a día del equipo</span>
         </div>
       </div>
     </div>
