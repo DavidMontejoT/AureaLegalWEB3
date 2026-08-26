@@ -1,0 +1,54 @@
+#!/bin/bash
+# Pre-commit hook — rechaza dumps de BD, bytecode y archivos > umbral.
+# Checklist de prevención de push (David Montejo, 2026-08-16).
+# Instalación: copiar a .git/hooks/pre-commit y chmod +x
+#
+# Configuración:
+#   MAX_FILE_MB    umbral de tamaño (default 10). Override por env para repos especiales:
+#                  MAX_FILE_MB=25 git commit ...
+#   GIT_ALLOWLIST  paths permitidos (separados por espacio) para binarios legítimos:
+#                  GIT_ALLOWLIST="assets/fonts/logo.bin" git commit ...
+set -u
+
+MAX_FILE_MB="${MAX_FILE_MB:-10}"
+BIG=$((MAX_FILE_MB * 1024 * 1024))
+ALLOWLIST="${GIT_ALLOWLIST:-}"
+FAIL_FILE=".git/pre-commit-fail"
+rm -f "$FAIL_FILE"
+
+in_allowlist() { # $1 = path
+    local p
+    for p in $ALLOWLIST; do
+        [ "$1" = "$p" ] && return 0
+    done
+    return 1
+}
+
+# Archivos staged (con espacios preservados); FAIL se señala con archivo
+# porque el loop corre en un subshell (pipe).
+git diff --cached --name-only -z | while IFS= read -r -d '' f; do
+    if in_allowlist "$f"; then
+        echo "pre-commit: excepción allowlist: $f"
+        continue
+    fi
+    case "$f" in
+        *.sql.gz|*.tar.gz|*.zip|*.pyc|*.pyo)
+            echo "ERROR pre-commit: archivo bloqueado: $f"
+            touch "$FAIL_FILE"
+            ;;
+    esac
+    if [ -f "$f" ]; then
+        SIZE=$(stat -f%z "$f" 2>/dev/null || stat -c%s "$f" 2>/dev/null)
+        if [ "${SIZE:-0}" -gt "$BIG" ]; then
+            echo "ERROR pre-commit: archivo > ${MAX_FILE_MB} MB: $f ($SIZE bytes)"
+            touch "$FAIL_FILE"
+        fi
+    fi
+done
+
+if [ -f "$FAIL_FILE" ]; then
+    rm -f "$FAIL_FILE"
+    echo "pre-commit: commit rechazado"
+    exit 1
+fi
+echo "pre-commit: OK"
