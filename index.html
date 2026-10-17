@@ -436,7 +436,7 @@
     <a href="#hallazgo" class="text-sm font-medium text-slate hover:text-abyssal transition-colors duration-300">Investigación</a>
     <a href="#productos" class="text-sm font-medium text-slate hover:text-abyssal transition-colors duration-300">Proyectos</a>
     <a href="#arquitectura" class="text-sm font-medium text-slate hover:text-abyssal transition-colors duration-300">Arquitectura</a>
-    <a href="#agente" class="text-sm font-medium text-slate hover:text-abyssal transition-colors duration-300">Agente</a>
+    <a href="#agente" class="text-sm font-medium text-slate hover:text-abyssal transition-colors duration-300">Preguntas</a>
     <a href="#equipo" class="text-sm font-medium text-slate hover:text-abyssal transition-colors duration-300">Equipo</a>
     <a href="/recursos" class="text-sm font-medium text-slate hover:text-abyssal transition-colors duration-300">Recursos</a>
     <a href="#consulta" class="inline-flex items-center justify-center px-5 py-2 text-sm font-medium text-abyssal bg-soft-luminous/60 backdrop-blur-sm border border-slate/30 rounded-full hover:bg-white hover:border-slate/50 transition-all duration-300 shadow-sm">
@@ -458,7 +458,7 @@
     <a href="#hallazgo" class="text-sm font-medium text-slate hover:text-abyssal transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Investigación</a>
     <a href="#productos" class="text-sm font-medium text-slate hover:text-abyssal transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Proyectos</a>
     <a href="#arquitectura" class="text-sm font-medium text-slate hover:text-abyssal transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Arquitectura</a>
-    <a href="#agente" class="text-sm font-medium text-slate hover:text-abyssal transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Agente</a>
+    <a href="#agente" class="text-sm font-medium text-slate hover:text-abyssal transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Preguntas</a>
     <a href="#equipo" class="text-sm font-medium text-slate hover:text-abyssal transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Equipo</a>
     <a href="/recursos" class="text-sm font-medium text-slate hover:text-abyssal transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Recursos</a>
     <a href="#consulta" class="text-sm font-medium text-brand-blue hover:text-abyssal transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Agenda consultoría</a>
@@ -904,9 +904,9 @@
 ══════════════════════════════════════════ -->
 <section class="py-24 md:py-32 px-6 md:px-12 relative z-10" id="agente">
   <div class="scroll-reveal">
-    <span class="text-xs tracking-widest uppercase text-brand-blue font-medium mb-4 block text-center">Pruébalo tú mismo</span>
+    <span class="text-xs tracking-widest uppercase text-brand-blue font-medium mb-4 block text-center">Respuestas rápidas</span>
     <h2 class="text-3xl md:text-4xl font-light text-abyssal mb-12 text-center reveal-heading" style="animation-delay: 0.2s;">
-      Habla con el agente <span class="font-serif italic">de Aurea</span>
+      Lo que más nos preguntan <span class="font-serif italic">sobre Aurea</span>
     </h2>
 
     <div class="chat-dashboard" id="chatBox">
@@ -952,10 +952,10 @@
       <!-- Main chat -->
       <div class="chat-main">
         <div class="chat-main-header">
-          <span class="chat-main-title">Sesión con el agente</span>
+          <span class="chat-main-title">Preguntas frecuentes</span>
         </div>
         <div class="chat-messages" id="chatMsgs">
-          <div class="chat-msg bot">Hola, soy el agente de Aurea Legal. Pregúntame sobre Centinela, Contralitigador, o cómo funciona la arquitectura human-in-the-loop.</div>
+          <div class="chat-msg bot">Hola. Aquí tienes respuestas directas sobre Centinela, Contralitigador y la arquitectura human-in-the-loop. Elige un tema o escribe una palabra clave. Para tu caso puntual, agenda una consultoría y te responde una persona del equipo.</div>
         </div>
         <div class="chat-chips">
           <button class="chat-chip" onclick="chatSend('¿Cómo evita alucinar el agente?')">¿Cómo evita alucinar?</button>
@@ -963,7 +963,7 @@
           <button class="chat-chip" onclick="chatSend('¿Qué queda registrado para una auditoría?')">¿Qué se registra?</button>
         </div>
         <div class="chat-input-row">
-          <input class="chat-input" id="chatInput" type="text" placeholder="Escribe tu pregunta…" onkeydown="if(event.key==='Enter')chatSend(this.value)">
+          <input class="chat-input" id="chatInput" type="text" placeholder="Busca un tema: Centinela, riesgo, auditoría…" onkeydown="if(event.key==='Enter')chatSend(this.value)">
           <button class="chat-send-btn" id="chatSendBtn" onclick="chatSend(document.getElementById('chatInput').value)">
             <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
           </button>
@@ -1042,6 +1042,13 @@
       <input type="text" name="empresa_web" id="hpField" tabindex="-1" autocomplete="off"
              aria-hidden="true"
              style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
+      <!-- Ley 1581 de 2012: autorizacion previa y expresa. El backend rechaza el lead sin ella -->
+      <label class="flex items-start gap-3 text-left text-xs text-slate" style="cursor:pointer">
+        <input type="checkbox" name="consentimiento" required
+               class="mt-0.5 w-4 h-4 shrink-0" style="accent-color:#0B1320;cursor:pointer">
+        <span>Autorizo a Aurea Legal a tratar mis datos para responder esta solicitud, según la
+          <a href="/privacidad" target="_blank" rel="noopener" class="underline hover:text-abyssal">Política de Privacidad</a>.</span>
+      </label>
       <button type="submit"
               class="w-full sm:w-auto inline-flex items-center justify-center px-10 py-4 text-base font-medium text-soft-luminous bg-abyssal border-2 border-abyssal rounded-full hover:bg-transparent hover:text-abyssal transition-all duration-300 transform hover:-translate-y-0.5 shadow-md hover:shadow-lg">
         Agenda una consultoría
@@ -1090,7 +1097,7 @@
         <ul class="space-y-2.5">
           <li><a href="#productos" class="text-sm text-slate/70 hover:text-soft-luminous transition-colors">Centinela AI</a></li>
           <li><a href="#contralitigador" class="text-sm text-slate/70 hover:text-soft-luminous transition-colors">Contralitigador AI</a></li>
-          <li><a href="#agente" class="text-sm text-slate/70 hover:text-soft-luminous transition-colors">Chat Asistente</a></li>
+          <li><a href="#agente" class="text-sm text-slate/70 hover:text-soft-luminous transition-colors">Preguntas frecuentes</a></li>
         </ul>
       </div>
 
@@ -1320,12 +1327,20 @@ window.addEventListener('DOMContentLoaded', () => {
       nombre: form.nombre.value.trim(),
       email: form.email.value.trim(),
       empresa: form.empresa.value.trim(),
-      interes: form.interes.value
+      interes: form.interes.value,
+      consentimiento: form.consentimiento.checked
     };
 
     if (!data.nombre || !data.email) {
       msg.className = 'text-sm mt-3 text-red-500';
       msg.textContent = 'Por favor complete nombre y email.';
+      msg.classList.remove('hidden');
+      return false;
+    }
+
+    if (!data.consentimiento) {
+      msg.className = 'text-sm mt-3 text-red-500';
+      msg.textContent = 'Para enviarte una respuesta necesitamos tu autorización de tratamiento de datos.';
       msg.classList.remove('hidden');
       return false;
     }
@@ -1347,19 +1362,44 @@ window.addEventListener('DOMContentLoaded', () => {
     alucinar: 'El agente no opina: **cita la fuente exacta** — norma, precedente, sanción, lista PEP. Cada afirmación va acompañada de su referencia. Si no encuentra fuente, lo declara explícitamente en lugar de inventar. Además, el humano siempre revisa antes de ejecutar. Esa es la arquitectura human-in-the-loop: sin cajas negras.',
     riesgo: 'Cuando el agente detecta un cliente de alto riesgo (PEP, sanciones, jurisdicción de riesgo), **bloquea el expediente y escala al Oficial de Cumplimiento** con un informe detallado. El Oficial revisa, decide y firma. El agente nunca desbloquea por su cuenta. Todo queda registrado para auditoría.',
     auditoria: 'Cada acción del agente queda registrada con **hash criptográfico y timestamp**. El rastro incluye: quién inició el expediente, qué verificaciones ejecutó el agente, qué fuentes citó, qué decisión tomó el humano, y quién firmó. Es un rastro que resiste cualquier auditoría de compliance.',
-    default: 'Soy el agente de Aurea Legal. Puedo hablarte sobre:\n\n• **Centinela** — debida diligencia AML/KYC automatizada\n• **Contralitigador** — análisis de precedentes legales\n• **Arquitectura human-in-the-loop** — cómo aseguramos que la IA nunca decida sola\n\n¿Sobre cuál quieres saber más?'
+    default: 'No tengo una respuesta preparada para eso. Puedo contarte sobre:\n\n• **Centinela** — debida diligencia AML/KYC automatizada\n• **Contralitigador** — análisis de precedentes legales\n• **Arquitectura human-in-the-loop** — cómo aseguramos que la IA nunca decida sola\n\nSi tu pregunta es sobre tu caso, mejor que te responda una persona del equipo.'
   };
 
-  function chatAddMsg(role, text) {
+  // Respuestas frecuentes, locales a proposito: no hay un agente detras y no se finge que lo hay.
+  // El texto del usuario se escapa ANTES de aplicar el formato: nunca entra como HTML.
+  function chatEscape(s) {
+    return s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  function chatAddMsg(role, text, conCta) {
     const msgs = document.getElementById('chatMsgs');
     const div = document.createElement('div');
     div.className = 'chat-msg ' + role;
-    div.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+    div.innerHTML = chatEscape(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+    if (conCta) {
+      const cta = document.createElement('a');
+      cta.href = '#consulta';
+      cta.className = 'underline font-medium';
+      cta.textContent = 'Agenda una consultoría →';
+      div.appendChild(document.createElement('br'));
+      div.appendChild(document.createElement('br'));
+      div.appendChild(cta);
+    }
     msgs.appendChild(div);
     msgs.scrollTop = msgs.scrollHeight;
   }
 
-  async function chatSend(text) {
+  function chatReply(t) {
+    const q = t.toLowerCase();
+    if (q.includes('centinela') || q.includes('aml') || q.includes('kyc')) return chatResponses.centinela;
+    if (q.includes('contralitigador') || q.includes('precedente') || q.includes('jurisprudencia')) return chatResponses.contralitigador;
+    if (q.includes('alucina') || q.includes('fuente') || q.includes('cita')) return chatResponses.alucinar;
+    if (q.includes('riesgo') || q.includes('detecta')) return chatResponses.riesgo;
+    if (q.includes('auditor') || q.includes('registr') || q.includes('trazabilidad')) return chatResponses.auditoria;
+    return chatResponses.default;
+  }
+
+  function chatSend(text) {
     const t = (text || '').trim();
     if (!t || chatSending) return;
     chatSending = true;
@@ -1369,48 +1409,8 @@ window.addEventListener('DOMContentLoaded', () => {
     chatAddMsg('user', t);
     input.value = '';
 
-    const msgs = document.getElementById('chatMsgs');
-    const typing = document.createElement('div');
-    typing.className = 'chat-msg-typing';
-    typing.textContent = 'Escribiendo…';
-    msgs.appendChild(typing);
-    msgs.scrollTop = msgs.scrollHeight;
-
-    let reply = null;
-    let apiOk = false;
-    try {
-      const res = await fetch('https://api.aurea.legal/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: t }),
-        signal: AbortSignal.timeout(8000)
-      });
-      if (res.ok) {
-        const data = await res.json();
-        reply = data.reply || data.message || data.response;
-        apiOk = true;
-      }
-    } catch(e) {}
-
-    typing.remove();
-
-    if (!reply) {
-      // Aviso sutil cuando la API no respondió (modo demo / offline)
-      const demo = document.createElement('div');
-      demo.className = 'chat-msg-typing';
-      demo.textContent = apiOk ? '' : 'modo demo: respuestas locales, sin conexión al agente';
-      if (demo.textContent) msgs.appendChild(demo);
-      msgs.scrollTop = msgs.scrollHeight;
-      const q = t.toLowerCase();
-      if (q.includes('centinela') || q.includes('aml') || q.includes('kyc')) reply = chatResponses.centinela;
-      else if (q.includes('contralitigador') || q.includes('precedente') || q.includes('jurisprudencia')) reply = chatResponses.contralitigador;
-      else if (q.includes('alucina') || q.includes('fuente') || q.includes('cita')) reply = chatResponses.alucinar;
-      else if (q.includes('riesgo') || q.includes('detecta')) reply = chatResponses.riesgo;
-      else if (q.includes('auditor') || q.includes('registr') || q.includes('trazabilidad')) reply = chatResponses.auditoria;
-      else reply = chatResponses.default;
-    }
-
-    chatAddMsg('bot', reply);
+    const reply = chatReply(t);
+    chatAddMsg('bot', reply, reply === chatResponses.default);
     setTimeout(() => { chatSending = false; btn.disabled = false; }, 600);
   }
 </script>
