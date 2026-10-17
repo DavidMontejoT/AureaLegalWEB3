@@ -9,3 +9,7 @@ servidorAurea/__pycache__/
 *.tar.gz
 snapshot-*/
 __pycache__/
+.env
+.env.*
+!.env.example
+servicios/leads/datos/
