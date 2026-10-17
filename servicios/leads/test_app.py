@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import contextlib
+import io
 import json
 import tempfile
 import threading
@@ -299,6 +301,29 @@ class HttpTest(unittest.TestCase):
 
     def test_ruta_desconocida_404(self):
         self.assertEqual(self.post(VALIDO, ruta="/api/otra")[0], 404)
+
+    def test_cliente_que_corta_no_ensucia_el_registro(self):
+        # Caddy corta la subida (max_size) mientras leads ya contesto 413: el socket se cierra.
+        # Eso es una linea de registro, no un traceback de 20 lineas por cada peticion grande.
+        salida = io.StringIO()
+        with contextlib.redirect_stderr(salida):
+            try:
+                raise BrokenPipeError(32, "Broken pipe")
+            except BrokenPipeError:
+                self.servidor.handle_error(None, ("172.18.0.2", 1))
+        lineas = salida.getvalue().strip().splitlines()
+        self.assertEqual(len(lineas), 1)
+        self.assertEqual(json.loads(lineas[0])["evento"], "conexion_cortada")
+
+    def test_otros_errores_siguen_registrandose(self):
+        salida = io.StringIO()
+        with contextlib.redirect_stderr(salida):
+            try:
+                raise KeyError("x")
+            except KeyError:
+                self.servidor.handle_error(None, ("172.18.0.2", 1))
+        self.assertEqual(json.loads(salida.getvalue().strip().splitlines()[-1])["evento"], "error_peticion")
+        self.assertIn("KeyError", salida.getvalue())
 
     def test_salud(self):
         with urllib.request.urlopen(self.url + "/salud", timeout=5) as r:

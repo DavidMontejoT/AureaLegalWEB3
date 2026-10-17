@@ -320,6 +320,19 @@ def hash_ip(sal: bytes, ip: str) -> str:
     return hmac.new(sal, ip.encode(), hashlib.sha256).hexdigest()[:32]
 
 
+class Servidor(ThreadingHTTPServer):
+    daemon_threads = True
+
+    def handle_error(self, request, client_address) -> None:
+        # Un cliente (o Caddy, al cortar por max_size) que cierra antes de leer la respuesta no
+        # es un fallo nuestro: una linea, no un traceback por peticion que llene el registro.
+        tipo, error, _ = sys.exc_info()
+        if tipo is not None and issubclass(tipo, (BrokenPipeError, ConnectionResetError)):
+            registrar("conexion_cortada", error=tipo.__name__)
+        else:
+            registrar("error_peticion", error=f"{tipo.__name__ if tipo else '?'}: {error}")
+
+
 def crear_servidor(almacen: Almacen, limitador: Limitador, sal: bytes, puerto: int,
                    al_guardar=lambda: None) -> ThreadingHTTPServer:
 
@@ -385,7 +398,7 @@ def crear_servidor(almacen: Almacen, limitador: Limitador, sal: bytes, puerto: i
             al_guardar()
             self._json(200, {"ok": True})
 
-    return ThreadingHTTPServer(("0.0.0.0", puerto), Manejador)
+    return Servidor(("0.0.0.0", puerto), Manejador)
 
 
 # ---------------------------------------------------------------- arranque
