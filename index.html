@@ -327,10 +327,14 @@
 }
 .alianzas-track {
   display: flex;
-  align-items: center;
-  gap: 4.5rem;
   width: max-content;
   animation: alianzas-scroll 32s linear infinite;
+}
+.alianzas-group {
+  display: flex;
+  align-items: center;
+  gap: 4.5rem;
+  padding-right: 4.5rem;
 }
 .alianzas-marquee:hover .alianzas-track { animation-play-state: paused; }
 @keyframes alianzas-scroll {
@@ -338,7 +342,7 @@
   to { transform: translateX(-50%); }
 }
 .alianzas-logo {
-  height: 40px;
+  height: 52px;
   width: auto;
   object-fit: contain;
   opacity: .45;
@@ -347,8 +351,8 @@
 }
 .alianzas-logo:hover { opacity: 1; filter: grayscale(0); }
 @media (max-width: 640px) {
-  .alianzas-logo { height: 32px; }
-  .alianzas-track { gap: 2.5rem; }
+  .alianzas-logo { height: 42px; }
+  .alianzas-group { gap: 2.5rem; padding-right: 2.5rem; }
 }
 
 /* ── CASOS DE ÉXITO ── */
@@ -498,16 +502,20 @@
     <p class="alianzas-label reveal-anim">Alianzas que potencian el ecosistema</p>
     <div class="alianzas-marquee reveal-anim delay-2">
       <div class="alianzas-track">
-        <img class="alianzas-logo" src="assets/logos/atomo-salud.png" alt="Atomo Salud">
-        <img class="alianzas-logo" src="assets/logos/ia-parapymes.png" alt="IA para Pymes">
-        <img class="alianzas-logo" src="assets/logos/ia-amiga-lab.png" alt="IA Amiga Lab">
-        <img class="alianzas-logo" src="assets/logos/snapwar.png" alt="SnapWar">
-        <img class="alianzas-logo" src="assets/logos/transcriptly.png" alt="Transcriptly">
-        <img class="alianzas-logo" src="assets/logos/atomo-salud.png" alt="Atomo Salud" aria-hidden="true">
-        <img class="alianzas-logo" src="assets/logos/ia-parapymes.png" alt="IA para Pymes" aria-hidden="true">
-        <img class="alianzas-logo" src="assets/logos/ia-amiga-lab.png" alt="IA Amiga Lab" aria-hidden="true">
-        <img class="alianzas-logo" src="assets/logos/snapwar.png" alt="SnapWar" aria-hidden="true">
-        <img class="alianzas-logo" src="assets/logos/transcriptly.png" alt="Transcriptly" aria-hidden="true">
+        <div class="alianzas-group">
+          <img class="alianzas-logo" src="assets/logos/atomo-salud.png" alt="Atomo Salud">
+          <img class="alianzas-logo" src="assets/logos/ia-parapymes.png" alt="IA para Pymes">
+          <img class="alianzas-logo" src="assets/logos/ia-amiga-lab.png" alt="IA Amiga Lab">
+          <img class="alianzas-logo" src="assets/logos/snapwar.png" alt="SnapWar">
+          <img class="alianzas-logo" src="assets/logos/transcriptly.png" alt="Transcriptly">
+        </div>
+        <div class="alianzas-group" aria-hidden="true">
+          <img class="alianzas-logo" src="assets/logos/atomo-salud.png" alt="Atomo Salud">
+          <img class="alianzas-logo" src="assets/logos/ia-parapymes.png" alt="IA para Pymes">
+          <img class="alianzas-logo" src="assets/logos/ia-amiga-lab.png" alt="IA Amiga Lab">
+          <img class="alianzas-logo" src="assets/logos/snapwar.png" alt="SnapWar">
+          <img class="alianzas-logo" src="assets/logos/transcriptly.png" alt="Transcriptly">
+        </div>
       </div>
     </div>
   </div>
