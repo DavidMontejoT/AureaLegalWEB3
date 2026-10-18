@@ -5,1276 +5,1262 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aurea Legal — La IA asiste, el equipo jurídico decide</title>
 <meta name="description" content="Agentes de IA con arquitectura human-in-the-loop para equipos jurídicos y de compliance en Latinoamérica.">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
-
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23040811'/><text x='50' y='70' font-family='Georgia,serif' font-style='italic' font-size='54' font-weight='600' fill='%234B8FEA' text-anchor='middle'>A</text></svg>">
-<meta name="theme-color" content="#EEF5FB">
-
-<link rel="stylesheet" href="tailwind.min.css">
-
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%2303195b'/><text x='50' y='70' font-family='Georgia,serif' font-style='italic' font-size='54' font-weight='600' fill='%23cbe9fd' text-anchor='middle'>A</text></svg>">
+<meta name="theme-color" content="#02040b">
+<link rel="preload" href="js/hero-balanza.js?v=2026-10-18" as="script">
+<script>
+  // Con WebGL el titular lo dibuja la escena 3D; sin WebGL (o si tarda demasiado) queda el titular HTML
+  (function () {
+    var root = document.documentElement, c = document.createElement('canvas');
+    try { if (c.getContext('webgl2') || c.getContext('webgl')) root.classList.add('webgl'); } catch (e) {}
+    setTimeout(function () { if (!document.querySelector('.hb-ready')) root.classList.remove('webgl'); }, 8000);
+  })();
+</script>
 <style>
-  /* ── CSS Custom Properties ── */
-  :root {
-    --mouse-x: 0px;
-    --mouse-y: 0px;
-  }
+/* ══════════════════════════════════════════
+   TOKENS — degradado de vidrio azul
+══════════════════════════════════════════ */
+:root {
+  --b1: #03195b;   /* abismo */
+  --b2: #0b2cb1;
+  --b3: #1951fc;
+  --b4: #3781fc;
+  --b5: #79bafd;
+  --b6: #cbe9fd;   /* hielo */
+  --bg: #02040b;
+  --ink: #eef6ff;
+  --muted: rgba(203, 233, 253, .62);
+  --faint: rgba(203, 233, 253, .38);
+  --line: rgba(203, 233, 253, .12);
+  --glass: linear-gradient(180deg, rgba(55, 129, 252, .10), rgba(3, 25, 91, .16));
+  --radius: 28px;
+  --font: 'Inter', -apple-system, 'SF Pro Display', 'Segoe UI', sans-serif;
+  --serif: 'Playfair Display', Georgia, serif;
+}
 
-  /* ── BODY BACKGROUND ── */
-  body {
-    background:
-      radial-gradient(ellipse 40% 18% at 0% 5%,  rgba(72,137,232,.35) 0%, transparent 100%),
-      radial-gradient(ellipse 40% 18% at 100% 5%, rgba(72,137,232,.35) 0%, transparent 100%),
-      radial-gradient(ellipse 55% 18% at 50% 25%, rgba(178,222,255,.35) 0%, transparent 100%),
-      radial-gradient(ellipse 60% 22% at 90% 55%, rgba(72,137,232,.12) 0%, transparent 100%),
-      radial-gradient(ellipse 70% 22% at 10% 75%, rgba(90,107,124,.12) 0%, transparent 100%),
-      linear-gradient(180deg, #EEF5FB 0%, #EEF5FB 15%, #E6F0F8 35%, #EEF5FB 55%, #D8E5F0 75%, #EEF5FB 100%);
-    position: relative;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  /* ── AMBIENT STREAKS ── */
-  .streaks {
-    position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .72;
-    background:
-      linear-gradient(90deg,
-        rgba(255,255,255,.02) 0%,   rgba(255,255,255,.14) 3%,
-        rgba(255,255,255,.02) 5%,   transparent 8%,
-        rgba(255,255,255,.10) 10%,  transparent 13%,
-        rgba(255,255,255,.07) 16%,  transparent 20%,
-        transparent 80%,
-        rgba(255,255,255,.07) 84%,  transparent 87%,
-        rgba(255,255,255,.10) 90%,  transparent 93%,
-        rgba(255,255,255,.14) 96%,  rgba(255,255,255,.02) 100%
-      );
-    filter: blur(4px);
-    transform: scaleX(1.04);
-    animation: ambientGlow 8s ease-in-out infinite alternate;
-  }
-
-  /* ── EDGE GLOW ── */
-  .edge-glow {
-    position: fixed; inset: 0; pointer-events: none; z-index: 1;
-    background:
-      linear-gradient(90deg,
-        rgba(67,133,229,.30) 0%,  rgba(67,133,229,.08) 8%,
-        transparent 17%,           transparent 83%,
-        rgba(67,133,229,.08) 92%,  rgba(67,133,229,.30) 100%);
-    filter: blur(12px);
-    transform: translate(calc(var(--mouse-x) * -0.015), calc(var(--mouse-y) * -0.015));
-    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-    animation: ambientGlow 10s ease-in-out infinite alternate-reverse;
-  }
-
-  /* ── CENTER AMBIENT LIGHT ── */
-  .center-light {
-    position: fixed;
-    width: 70vw; height: 62vh;
-    left: 15vw; top: 12vh;
-    border-radius: 50%;
-    background: rgba(255,255,255,.18);
-    filter: blur(65px);
-    pointer-events: none; z-index: 2;
-    transform: translate(calc(var(--mouse-x) * 0.03), calc(var(--mouse-y) * 0.03));
-    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-    animation: pulseLight 6s ease-in-out infinite alternate;
-  }
-
-  @keyframes ambientGlow {
-    0%   { opacity: 0.6; }
-    100% { opacity: 0.9; }
-  }
-
-  @keyframes pulseLight {
-    0%   { opacity: 0.65; transform: scale(0.95) translate(calc(var(--mouse-x) * 0.03), calc(var(--mouse-y) * 0.03)); }
-    100% { opacity: 1;    transform: scale(1.05) translate(calc(var(--mouse-x) * 0.03), calc(var(--mouse-y) * 0.03)); }
-  }
-
-  /* ── REVEAL ANIMATIONS ── */
-  @keyframes revealUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .reveal-anim {
-    opacity: 0;
-    animation: revealUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-  .reveal-heading {
-    opacity: 0;
-    animation: revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-  .delay-1 { animation-delay: 0.2s; }
-  .delay-2 { animation-delay: 0.4s; }
-  .delay-3 { animation-delay: 0.6s; }
-  .delay-4 { animation-delay: 0.8s; }
-  .delay-5 { animation-delay: 1.0s; }
-
-  /* ── SCROLL REVEAL ── */
-  .scroll-reveal {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .scroll-reveal.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* ── GLASS CARDS ── */
-  .glass-card {
-    background: rgba(255, 255, 255, 0.40);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(255, 255, 255, 0.55);
-  }
-  .glass-card-strong {
-    background: rgba(255, 255, 255, 0.60);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border: 1px solid rgba(255, 255, 255, 0.65);
-  }
-
-  /* ── HOVER LIFT ── */
-  .hover-lift {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  .hover-lift:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(11,19,32,0.08);
-  }
-
-  /* ── CUSTOM SCROLLBAR ── */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(90,107,124,0.25); border-radius: 3px; }
-
-  /* ── MOBILE ADJUSTMENTS ── */
-  @media (max-width: 768px) {
-    .streaks, .edge-glow { opacity: 0.35; }
-    .center-light { width: 90vw; left: 5vw; }
-  }
-
-  /* ── SCREENSHOT OVERLAYS (Centinela / Contralitigador) ── */
-  .shot-overlay {
-    position: relative; margin-top: -28px; margin-left: 20px; margin-right: 20px; z-index: 2;
-    background: rgba(255,255,255,.75); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,.7); border-radius: 14px; padding: 16px 18px;
-    box-shadow: 0 8px 24px rgba(11,19,32,.06);
-  }
-  .shot-overlay-inner { display: flex; align-items: center; gap: 12px; }
-  .shot-overlay-img { width: 44px; height: 44px; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
-  .shot-overlay-img img { width: 100%; height: 100%; object-fit: cover; }
-  .shot-overlay-text h4 { font-size: 13px; font-weight: 600; color: var(--abyssal, #040811); margin-bottom: 2px; }
-  .shot-overlay-text p { font-size: 11.5px; color: #5A6B7C; line-height: 1.4; }
-  .shot-overlay-arrow {
-    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; margin-left: auto;
-    background: var(--abyssal, #040811); border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; transition: transform .2s;
-  }
-  .shot-overlay-arrow:hover { transform: scale(1.1); }
-  .shot-overlay-arrow svg { width: 12px; height: 12px; stroke: #fff; fill: none; stroke-width: 2.5; }
-  .shot-feat-card { display: flex; flex-direction: column; }
-  .shot-feat-img {
-    position: relative; width: 100%; aspect-ratio: 1.35/1; border-radius: 12px; overflow: hidden;
-    margin-bottom: 8px; border: 1px solid rgba(255,255,255,.5);
-    box-shadow: 0 6px 16px rgba(11,19,32,.05);
-  }
-  .shot-feat-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .shot-feat-label { font-size: 12.5px; font-weight: 600; color: #040811; }
-  .shot-feat-arrow {
-    position: absolute; bottom: 8px; right: 8px;
-    width: 24px; height: 24px; border-radius: 50%;
-    background: rgba(255,255,255,.85); border: 1px solid rgba(0,0,0,.08);
-    display: flex; align-items: center; justify-content: center;
-    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
-  }
-  .shot-feat-arrow svg { width: 10px; height: 10px; stroke: #040811; fill: none; stroke-width: 2.5; }
-
-  /* ── LIGHT CHAT WIDGET ── */
-  .chat-dashboard {
-    display: grid; grid-template-columns: 230px 1fr; gap: 0;
-    max-width: 900px; margin: 0 auto;
-    background: rgba(255,255,255,.45); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,.6); border-radius: 20px; overflow: hidden;
-    box-shadow: 0 20px 50px rgba(11,19,32,.08);
-  }
-  .chat-sidebar {
-    background: rgba(255,255,255,.55); border-right: 1px solid rgba(0,0,0,.06);
-    padding: 20px 16px; display: flex; flex-direction: column;
-  }
-  .chat-logo { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
-  .chat-logo-icon {
-    width: 28px; height: 28px; border-radius: 50%; background: #040811;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Playfair Display', serif; font-size: 12px; font-weight: 700; color: #4B8FEA;
-  }
-  .chat-logo-name { font-size: 14px; font-weight: 600; color: #040811; }
-  .chat-logo-name i { font-style: italic; opacity: .5; }
-  .chat-quick-label { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #5A6B7C; margin-bottom: 10px; }
-  .chat-quick-item {
-    display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 12px;
-    background: rgba(255,255,255,.6); border: 1px solid rgba(0,0,0,.06);
-    margin-bottom: 8px; cursor: pointer; transition: all .2s;
-  }
-  .chat-quick-item:hover { background: rgba(75,143,234,.08); border-color: rgba(75,143,234,.2); }
-  .chat-quick-icon {
-    width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700;
-  }
-  .chat-quick-icon.blue { background: rgba(75,143,234,.12); color: #4B8FEA; }
-  .chat-quick-text-top { font-size: 10px; color: #5A6B7C; }
-  .chat-quick-text-main { font-size: 12px; font-weight: 500; color: #040811; }
-  .chat-user-foot {
-    margin-top: auto; padding-top: 14px; border-top: 1px solid rgba(0,0,0,.06);
-    display: flex; align-items: center; gap: 10px;
-  }
-  .chat-user-avatar {
-    width: 30px; height: 30px; border-radius: 50%; background: rgba(75,143,234,.1);
-    border: 1px solid rgba(75,143,234,.2); display: flex; align-items: center; justify-content: center;
-    font-family: 'Playfair Display', serif; font-size: 10px; font-weight: 700; color: #4B8FEA; flex-shrink: 0;
-  }
-  .chat-user-name { font-size: 12px; font-weight: 600; color: #040811; }
-  .chat-user-role { font-size: 10.5px; color: #5A6B7C; }
-  .chat-main { display: flex; flex-direction: column; overflow: hidden; }
-  .chat-main-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 20px; border-bottom: 1px solid rgba(0,0,0,.06); flex-shrink: 0;
-  }
-  .chat-main-title { font-size: 13.5px; font-weight: 600; color: #040811; }
-  .chat-messages { flex: 1; padding: 16px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; min-height: 260px; max-height: 380px; }
-  .chat-messages::-webkit-scrollbar { width: 3px; }
-  .chat-messages::-webkit-scrollbar-track { background: transparent; }
-  .chat-messages::-webkit-scrollbar-thumb { background: rgba(0,0,0,.08); border-radius: 2px; }
-  .chat-msg { max-width: 78%; padding: 10px 14px; border-radius: 14px; font-size: 13px; line-height: 1.6; }
-  .chat-msg.bot {
-    background: rgba(255,255,255,.7); border: 1px solid rgba(0,0,0,.06);
-    color: #2f3a47; align-self: flex-start; border-bottom-left-radius: 4px;
-  }
-  .chat-msg.user {
-    background: #4B8FEA; color: #fff; align-self: flex-end; border-bottom-right-radius: 4px;
-  }
-  .chat-msg-typing { align-self: flex-start; font-size: 12px; color: #5A6B7C; font-style: italic; padding: 4px 0; }
-  .chat-chips { padding: 10px 20px; border-top: 1px solid rgba(0,0,0,.05); display: flex; gap: 7px; flex-wrap: wrap; flex-shrink: 0; }
-  .chat-chip {
-    padding: 6px 13px; border-radius: 50px; border: 1px solid rgba(0,0,0,.1);
-    font-size: 12px; color: #5A6B7C; cursor: pointer; background: rgba(255,255,255,.5);
-    transition: all .2s; font-family: 'Inter', sans-serif;
-  }
-  .chat-chip:hover { border-color: #4B8FEA; color: #4B8FEA; background: rgba(75,143,234,.06); }
-  .chat-input-row { padding: 12px 20px; display: flex; gap: 10px; border-top: 1px solid rgba(0,0,0,.06); flex-shrink: 0; }
-  .chat-input {
-    flex: 1; border: 1px solid rgba(0,0,0,.1); border-radius: 50px; padding: 10px 18px;
-    font-size: 13.5px; font-family: 'Inter', sans-serif; outline: none;
-    background: rgba(255,255,255,.6); color: #040811; transition: border-color .2s;
-  }
-  .chat-input::placeholder { color: rgba(0,0,0,.25); }
-  .chat-input:focus { border-color: #4B8FEA; }
-  .chat-send-btn {
-    width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
-    background: #040811; border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; transition: transform .2s;
-  }
-  .chat-send-btn:hover { transform: scale(1.08); }
-  .chat-send-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
-  .chat-send-btn svg { width: 13px; height: 13px; stroke: #fff; fill: none; stroke-width: 2; }
-
-  @media (max-width: 700px) {
-    .chat-dashboard { grid-template-columns: 1fr; }
-    .chat-sidebar { display: none; }
-  }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+/* Brillos de fondo */
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(60vw 40vw at 85% -5%, rgba(25, 81, 252, .22), transparent 70%),
+    radial-gradient(50vw 40vw at -10% 40%, rgba(11, 44, 177, .18), transparent 70%),
+    radial-gradient(40vw 30vw at 60% 110%, rgba(55, 129, 252, .14), transparent 70%);
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+.wrap { width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+section { padding: 120px 0; position: relative; }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--b5); font-weight: 500; margin-bottom: 20px;
+}
+.eyebrow::before { content: ''; width: 28px; height: 1px; background: currentColor; opacity: .6; }
+h1, h2, h3 { font-weight: 400; letter-spacing: -.02em; line-height: 1.12; }
+h2 { font-size: clamp(32px, 4.4vw, 52px); font-weight: 300; }
+h2 em, h1 em { font-family: var(--serif); font-style: italic; font-weight: 500; color: var(--b6); }
+.lead { font-size: 18px; color: var(--muted); font-weight: 300; max-width: 620px; }
+.center { text-align: center; }
+.center .lead { margin: 0 auto; }
 
 /* ══════════════════════════════════════════
-   SHARED
+   CÁPSULA DE VIDRIO (componente base)
 ══════════════════════════════════════════ */
-.section-eyebrow {
-  font-size: 11px; text-transform: uppercase; letter-spacing: 2px;
-  color: var(--muted); font-weight: 700; margin-bottom: 12px; display: block;
+.cap {
+  --c: var(--b3); --hi: var(--b4);
+  position: relative; border-radius: 999px; isolation: isolate;
+  background:
+    radial-gradient(120% 160% at 22% -20%, rgba(255, 255, 255, .38), transparent 42%),
+    linear-gradient(180deg, var(--hi) 0%, var(--c) 58%, var(--c) 100%);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, .55),
+    inset 0 -14px 28px rgba(0, 0, 0, .22),
+    inset 18px 0 30px -18px rgba(255, 255, 255, .25),
+    0 24px 70px -18px var(--c);
 }
-.section-eyebrow.light { color: rgba(255,255,255,.45); }
-.section-heading {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1.9rem,3.2vw,2.7rem);
-  font-weight: 700; letter-spacing: -1px; line-height: 1.15;
+.c1 { --c: var(--b1); --hi: #0a2580; }
+.c2 { --c: var(--b2); --hi: #1a44d6; }
+.c3 { --c: var(--b3); --hi: #4a7dff; }
+.c4 { --c: var(--b4); --hi: #6aa6ff; }
+.c5 { --c: var(--b5); --hi: #a9d6ff; }
+.c6 { --c: #a8d6fc; --hi: #f2faff; }
+
+/* ══════════════════════════════════════════
+   BOTONES
+══════════════════════════════════════════ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 15px 30px; border-radius: 999px; font: 500 15px var(--font);
+  border: 0; cursor: pointer; transition: transform .25s, box-shadow .25s, background .25s;
+  white-space: nowrap;
+}
+.btn-ice {
+  color: var(--b1);
+  background: radial-gradient(120% 160% at 25% -30%, #fff, transparent 50%), linear-gradient(180deg, #e8f5ff, var(--b5));
+  box-shadow: inset 0 1px 0 #fff, inset 0 -6px 14px rgba(25, 81, 252, .25), 0 14px 40px -10px rgba(121, 186, 253, .7);
+}
+.btn-ice:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 #fff, inset 0 -6px 14px rgba(25, 81, 252, .25), 0 20px 50px -8px rgba(121, 186, 253, .9); }
+.btn-glass {
+  color: var(--ink); background: rgba(55, 129, 252, .08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), inset 0 0 0 1px var(--line);
+}
+.btn-glass:hover { background: rgba(55, 129, 252, .18); }
+.btn svg { width: 16px; height: 16px; }
+
+/* ══════════════════════════════════════════
+   NAV
+══════════════════════════════════════════ */
+.nav {
+  position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 50;
+  width: calc(100% - 32px); max-width: 1180px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 10px 10px 10px 20px; border-radius: 999px;
+  background: rgba(4, 10, 30, .55); backdrop-filter: blur(18px) saturate(1.4); -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .10), inset 0 0 0 1px var(--line), 0 10px 40px rgba(0, 0, 0, .4);
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 500; letter-spacing: -.01em; }
+.brand-mark {
+  width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
+  font-family: var(--serif); font-style: italic; color: var(--b6); font-size: 18px;
+  background: radial-gradient(circle at 30% 20%, var(--b4), var(--b1) 70%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), 0 0 20px rgba(25, 81, 252, .5);
+}
+.nav-links { display: flex; gap: 28px; font-size: 14px; color: var(--muted); }
+.nav-links a:hover { color: var(--ink); }
+.nav .btn { padding: 11px 22px; font-size: 14px; }
+.menu-btn { display: none; background: none; border: 0; color: var(--ink); padding: 8px; cursor: pointer; }
+.menu-btn svg { width: 24px; height: 24px; }
+.mobile-menu {
+  display: none; position: fixed; top: 84px; left: 16px; right: 16px; z-index: 49;
+  padding: 18px; border-radius: 24px; flex-direction: column; gap: 4px;
+  background: rgba(4, 10, 30, .92); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+.mobile-menu a { padding: 12px 10px; color: var(--muted); border-radius: 12px; }
+.mobile-menu a:hover { background: rgba(55, 129, 252, .1); color: var(--ink); }
+.mobile-menu.open { display: flex; }
+
+/* ══════════════════════════════════════════
+   HERO
+══════════════════════════════════════════ */
+.hero { min-height: 100vh; display: flex; align-items: center; padding: 140px 0 80px; }
+.hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 64px; align-items: center; }
+.hero h1 { font-size: clamp(44px, 6.2vw, 80px); font-weight: 300; margin-bottom: 28px; }
+.hero h1 .glow {
+  background: linear-gradient(180deg, #fff 10%, var(--b5) 95%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.hero .lead { margin-bottom: 40px; }
+.hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+
+/* Pila de cápsulas: de la IA (abismo) al humano (hielo) */
+.stack { position: relative; display: flex; flex-direction: column; padding-right: 150px; }
+.stack .cap {
+  height: 104px; margin-top: -52px; display: flex; align-items: flex-start;
+  padding: 15px 34px 0; font-size: 14px; font-weight: 500; letter-spacing: .01em;
+  color: rgba(255, 255, 255, .92);
+  opacity: 0; transform: translateY(24px);
+  animation: capIn .9s cubic-bezier(.2, .8, .2, 1) forwards;
+}
+.stack .cap:first-child { margin-top: 0; }
+.stack .cap span.tag { margin-left: auto; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; opacity: .7; }
+.stack .c5, .stack .c6 { color: var(--b1); }
+.stack .c6 { height: 120px; align-items: center; padding-top: 0; font-size: 17px; }
+.stack .cap:nth-child(1) { z-index: 1; animation-delay: .10s; }
+.stack .cap:nth-child(2) { z-index: 2; animation-delay: .22s; }
+.stack .cap:nth-child(3) { z-index: 3; animation-delay: .34s; }
+.stack .cap:nth-child(4) { z-index: 4; animation-delay: .46s; }
+.stack .cap:nth-child(5) { z-index: 5; animation-delay: .58s; }
+.stack .cap:nth-child(6) { z-index: 6; animation-delay: .70s; }
+@keyframes capIn { to { opacity: 1; transform: none; } }
+/* Etiquetas laterales con punto y línea, como una paleta */
+.stack .tick {
+  position: absolute; right: -150px; top: 15px; display: flex; align-items: center; gap: 10px;
+  font-size: 12px; color: var(--muted); font-weight: 400; letter-spacing: .02em;
+}
+.stack .c6 .tick { top: 50%; transform: translateY(-50%); }
+.stack .tick::before { content: ''; width: 34px; height: 1px; background: var(--line); }
+.stack .tick i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); box-shadow: 0 0 10px var(--c); }
+
+/* ══════════════════════════════════════════
+   ALIANZAS
+══════════════════════════════════════════ */
+.alianzas { padding: 40px 0 20px; }
+.alianzas p { text-align: center; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); margin-bottom: 28px; }
+.marquee { overflow: hidden; -webkit-mask: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent); mask: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent); }
+.marquee-track { display: flex; gap: 72px; width: max-content; animation: slide 32s linear infinite; }
+.marquee-track img { height: 34px; width: auto; filter: brightness(0) invert(1); opacity: .55; }
+@keyframes slide { to { transform: translateX(-50%); } }
+
+/* ══════════════════════════════════════════
+   TARJETAS DE VIDRIO
+══════════════════════════════════════════ */
+.glass {
+  background: var(--glass); border-radius: var(--radius);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .10), inset 0 0 0 1px var(--line);
+  padding: 36px;
+}
+.num {
+  width: 46px; height: 46px; border-radius: 999px; display: grid; place-items: center;
+  font-size: 13px; font-weight: 600; margin-bottom: 22px;
 }
 
+/* Investigación */
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+.chain { margin-top: 32px; display: grid; gap: 10px; }
+.chain div { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--muted); padding: 12px 18px; border-radius: 999px; background: rgba(55, 129, 252, .06); box-shadow: inset 0 0 0 1px var(--line); }
+.chain b { color: var(--ink); font-weight: 500; }
+.chain svg { width: 14px; height: 14px; color: var(--b4); flex-shrink: 0; }
+.findings { display: grid; gap: 18px; }
+.findings .glass { padding: 30px; }
+.findings p { color: var(--muted); font-size: 15px; }
+.statement { margin-top: 64px; text-align: center; font-family: var(--serif); font-style: italic; font-size: clamp(22px, 2.6vw, 30px); color: var(--b6); }
 
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
-  }
+/* IA vs Humano */
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 56px; }
+.duo .glass { padding: 44px; }
+.duo h3 { font-size: 13px; letter-spacing: .2em; text-transform: uppercase; font-weight: 600; margin-bottom: 26px; }
+.duo ul { list-style: none; display: grid; gap: 14px; }
+.duo li { display: flex; gap: 12px; align-items: center; color: var(--muted); font-size: 16px; }
+.duo li::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--dot); box-shadow: 0 0 10px var(--dot); flex-shrink: 0; }
+.duo .ia { --dot: var(--b3); }
+.duo .ia h3 { color: var(--b4); }
+.duo .hu { --dot: var(--b6); background: linear-gradient(180deg, rgba(203, 233, 253, .12), rgba(55, 129, 252, .08)); }
+.duo .hu h3 { color: var(--b6); }
+.verdict { display: flex; justify-content: center; gap: 14px; margin-top: 36px; flex-wrap: wrap; }
+.verdict .cap { padding: 16px 32px; font-size: 16px; font-weight: 500; }
+.verdict .c6 { color: var(--b1); }
 
-/* ── ALIANZAS MARQUEE ── */
-.alianzas-section {
-  padding: 3rem 1.5rem 3.5rem;
+/* Cómo funciona: escalera de cápsulas */
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 56px; }
+.step .cap { height: 64px; display: flex; align-items: center; padding: 0 26px; font-weight: 600; font-size: 14px; margin-bottom: 22px; }
+.step .c5 { color: var(--b1); }
+.step h3 { font-size: 20px; font-weight: 500; margin-bottom: 10px; }
+.step p { color: var(--muted); font-size: 14px; }
+
+/* Proyectos */
+.project { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; margin-top: 64px; }
+.project.flip .project-media { order: -1; }
+.project h3 { font-size: 30px; font-weight: 400; margin-bottom: 18px; }
+.project p { color: var(--muted); margin-bottom: 26px; }
+.metric { display: flex; align-items: baseline; gap: 14px; margin-bottom: 26px; }
+.metric strong {
+  font-size: 56px; font-weight: 300; letter-spacing: -.04em;
+  background: linear-gradient(180deg, #fff, var(--b4)); -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.alianzas-label {
-  text-align: center;
-  font-size: .75rem;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--brand-blue, #4B8FEA);
-  font-weight: 500;
-  margin-bottom: 2.5rem;
+.metric span { color: var(--muted); font-size: 14px; max-width: 200px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; }
+.chips span { font-size: 12px; padding: 7px 14px; border-radius: 999px; color: var(--b6); background: rgba(55, 129, 252, .1); box-shadow: inset 0 0 0 1px var(--line); }
+.project-media { padding: 14px; border-radius: 32px; }
+.project-media img { border-radius: 20px; width: 100%; }
+.thumbs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.thumbs figure { font-size: 12px; color: var(--faint); }
+.thumbs img { border-radius: 14px; margin-bottom: 8px; aspect-ratio: 16/10; object-fit: cover; object-position: top; }
+
+/* Casos */
+.cases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 56px; }
+.case { display: flex; flex-direction: column; }
+.case img { height: 28px; width: auto; filter: brightness(0) invert(1); opacity: .8; margin-bottom: 26px; align-self: flex-start; }
+.case small { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--b5); margin-bottom: 12px; }
+.case h3 { font-size: 20px; font-weight: 500; margin-bottom: 12px; }
+.case p { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+.case .metric { margin: auto 0 0; }
+.case .metric strong { font-size: 44px; }
+
+/* Pilares */
+.pillars { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 56px; }
+.pillars .glass { padding: 28px; }
+.pillars h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+.pillars p { font-size: 14px; color: var(--muted); }
+.pillars .num { width: 38px; height: 38px; font-size: 12px; margin-bottom: 18px; }
+.pillars .num.c5, .pillars .num.c6 { color: var(--b1); }
+
+/* Equipo */
+.team { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 56px; }
+.member { display: flex; gap: 24px; align-items: flex-start; }
+.member img { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; flex-shrink: 0; box-shadow: 0 0 0 2px rgba(203, 233, 253, .25), 0 0 30px rgba(25, 81, 252, .45); }
+.member .avatar { width: 84px; height: 84px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center; font-size: 26px; font-weight: 500; letter-spacing: .04em; color: #fff; background: linear-gradient(135deg, #1951fc, #0b2cb1); box-shadow: 0 0 0 2px rgba(203, 233, 253, .25), 0 0 30px rgba(25, 81, 252, .45); }
+.light .member .avatar { box-shadow: 0 0 0 4px #fff, 0 10px 30px rgba(11, 44, 177, .25); }
+.member h3 { font-size: 20px; font-weight: 500; }
+.member small { display: block; color: var(--b5); font-size: 13px; margin: 4px 0 14px; }
+.member p { color: var(--muted); font-size: 14px; }
+
+/* ══════════════════════════════════════════
+   CONSULTA (formulario)
+══════════════════════════════════════════ */
+.cta-panel { max-width: 760px; margin: 0 auto; padding: 64px 56px; text-align: center; position: relative; overflow: hidden; }
+.cta-panel::before {
+  content: ''; position: absolute; inset: auto -20% -60% -20%; height: 90%; z-index: -1;
+  background: radial-gradient(closest-side, rgba(25, 81, 252, .45), transparent);
 }
-@media (max-width: 640px) { .alianzas-section { padding: 2.5rem 1.5rem; } }
-.alianzas-marquee {
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+.cta-panel h2 { margin-bottom: 16px; }
+.cta-panel .lead { margin: 0 auto 40px; }
+form { display: grid; gap: 14px; text-align: left; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.field {
+  width: 100%; padding: 16px 22px; border-radius: 999px; border: 0;
+  font: 400 15px var(--font); color: var(--ink);
+  background: rgba(2, 8, 28, .55);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), inset 0 0 0 1px var(--line);
+  transition: box-shadow .2s, background .2s; outline: none;
+  -webkit-appearance: none; appearance: none;
 }
-.alianzas-track {
-  display: flex;
-  width: max-content;
-  animation: alianzas-scroll 32s linear infinite;
+.field::placeholder { color: var(--faint); }
+.field:focus { background: rgba(3, 25, 91, .55); box-shadow: inset 0 0 0 1px var(--b4), 0 0 0 4px rgba(55, 129, 252, .18); }
+select.field {
+  cursor: pointer; padding-right: 48px; color: var(--ink);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2379bafd' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 20px center; background-size: 18px;
 }
-.alianzas-group {
-  display: flex;
-  align-items: center;
-  gap: 4.5rem;
-  padding-right: 4.5rem;
+select.field:invalid { color: var(--faint); }
+select.field option { background: var(--b1); color: var(--ink); }
+.consent { display: flex; gap: 12px; align-items: flex-start; font-size: 13px; color: var(--muted); cursor: pointer; padding: 4px 6px; }
+.consent input { margin-top: 3px; width: 17px; height: 17px; flex-shrink: 0; accent-color: var(--b4); cursor: pointer; }
+.consent a { text-decoration: underline; color: var(--b6); }
+form .btn { justify-self: center; margin-top: 10px; padding: 17px 40px; font-size: 16px; }
+form .btn:disabled { opacity: .7; cursor: progress; transform: none; }
+#demoMsg { text-align: center; font-size: 14px; min-height: 1px; }
+#demoMsg.ok { color: #7ee2b8; }
+#demoMsg.err { color: #ff9aa8; }
+#demoMsg button, #demoMsg a { color: inherit; text-decoration: underline; font: inherit; font-weight: 600; background: none; border: 0; cursor: pointer; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+footer { padding: 72px 0 40px; border-top: 1px solid var(--line); margin-top: 40px; }
+.foot { display: grid; grid-template-columns: 1.6fr repeat(4, 1fr); gap: 32px; }
+.foot p { color: var(--muted); font-size: 14px; margin-top: 16px; max-width: 280px; }
+.foot h4 { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); font-weight: 600; margin-bottom: 16px; }
+.foot ul { list-style: none; display: grid; gap: 10px; font-size: 14px; color: var(--muted); }
+.foot a:hover { color: var(--ink); }
+.social { display: flex; gap: 10px; margin-top: 22px; }
+.social a { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: rgba(55, 129, 252, .1); box-shadow: inset 0 0 0 1px var(--line); color: var(--b6); }
+.social a:hover { background: rgba(55, 129, 252, .25); }
+.social svg { width: 15px; height: 15px; }
+.copy { margin-top: 56px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--faint); }
+
+/* ══════════════════════════════════════════
+   HERO BALANZA 3D — la escena (js/hero-balanza.js) dibuja la balanza y el titular;
+   todo lo demás se ubica sobre una grilla invisible de --cols × --rows
+══════════════════════════════════════════ */
+.hero-balanza {
+  --cols: 4; --rows: 5;
+  /* Tokens que lee también la escena WebGL */
+  /* Todos salen de la escala --b1…--b6 del sitio: un solo azul por función */
+  --hb-bg: var(--bg); --hb-glow: var(--b5); --hb-halo: var(--b4); --hb-beam: var(--b5); --hb-accent: var(--b6);
+  --hb-glow-rgb: 121, 186, 253;
+  position: relative; display: block; padding: 0;
+  height: 100svh; min-height: 640px; overflow: hidden; isolation: isolate;
+  /* Fondo de respaldo mientras carga o si no hay WebGL */
+  background: radial-gradient(80% 60% at 50% 100%, rgba(25, 81, 252, .55) 0%, transparent 70%), var(--hb-bg);
 }
-.alianzas-marquee:hover .alianzas-track { animation-play-state: paused; }
-@keyframes alianzas-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+.hero-balanza::after { display: none; }
+.hb-scene { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; display: block; opacity: 0; transition: opacity 1.2s ease; }
+.hb-scene.ready { opacity: 1; }
+
+/* Titular HTML: visible sin WebGL; con WebGL queda solo para buscadores y lectores de pantalla */
+.hb-title {
+  position: absolute; z-index: 2; left: 50%; top: 22%; transform: translateX(-50%);
+  width: min(92vw, 1100px); margin: 0; text-align: center;
+  font-size: clamp(44px, 7.4vw, 112px); font-weight: 300; line-height: 1; letter-spacing: -.03em;
 }
-.alianzas-logo {
-  height: 52px;
-  width: auto;
-  object-fit: contain;
-  opacity: .45;
-  filter: grayscale(1);
-  transition: opacity .4s ease, filter .4s ease;
+.hb-title em { font-family: var(--serif); font-style: italic; font-weight: 500; }
+.hb-title small { font-size: .36em; letter-spacing: 0; }
+.hb-title .hb-accent { color: var(--hb-accent); }
+.webgl .hb-title { width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.hb-sparkle {
+  position: absolute; z-index: 2; pointer-events: none;
+  left: calc(var(--x) * 100% / var(--cols)); top: calc(var(--y) * 100% / var(--rows));
+  width: 18px; height: 18px; transform: translate(-50%, -50%); background: #fff;
+  clip-path: polygon(50% 0, 57% 43%, 100% 50%, 57% 57%, 50% 100%, 43% 57%, 0 50%, 43% 43%);
 }
-.alianzas-logo:hover { opacity: 1; filter: grayscale(0); }
+
+/* CTAs: fila inferior, columnas centrales; dejan aire para el panel blanco que se monta encima */
+.hb-ctas {
+  position: absolute; z-index: 3;
+  left: calc(100% / var(--cols)); width: calc(200% / var(--cols));
+  bottom: 48px; height: calc(100% / var(--rows));
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 1rem;
+}
+
+/* Botón de vidrio esmerilado en 4 capas */
+.hb-btn {
+  --mx: 50%; --my: 0%; --rx: 0deg; --ry: 0deg; --lift: 0px; --glass: .3; --tint: 255, 255, 255;
+  position: relative; isolation: isolate;
+  display: inline-flex; align-items: center; justify-content: center; gap: .9rem;
+  padding: 1.05rem 1.7rem; border-radius: 999px; border: 0;
+  font: 500 1rem/1 var(--font); color: #fff; cursor: pointer;
+  /* 1 · cuerpo de vidrio: desenfoca la escena que tiene detrás */
+  background: linear-gradient(160deg, rgba(var(--tint), var(--glass)) 0%, rgba(var(--tint), calc(var(--glass) * .35)) 100%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%); backdrop-filter: blur(20px) saturate(150%);
+  /* 2 · volumen: bisel de luz arriba, sombra interna abajo, sombra de apoyo */
+  --depth: inset 0 1px 0 rgba(255, 255, 255, .5), inset 0 -12px 20px -12px rgba(0, 0, 0, .45), 0 14px 30px -12px rgba(0, 0, 0, .7);
+  box-shadow: var(--depth);
+  transform: perspective(600px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--lift));
+  transition: transform .3s cubic-bezier(.2, .8, .2, 1), box-shadow .3s ease;
+}
+/* 3 · borde con degradado */
+.hb-btn::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .75), rgba(255, 255, 255, .06) 45%, rgba(255, 255, 255, .3));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+}
+/* 4 · reflejo que sigue al puntero */
+.hb-btn::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; z-index: -1; pointer-events: none;
+  background: radial-gradient(140px circle at var(--mx) var(--my), rgba(255, 255, 255, .38), transparent 60%);
+  opacity: 0; transition: opacity .3s ease;
+}
+.hb-btn:hover { --lift: -3px; }
+.hb-btn:hover::after { opacity: 1; }
+.hb-btn:active { --lift: 1px; transition-duration: .08s; }
+.hb-btn:focus-visible { outline: 2px solid var(--hb-glow); outline-offset: 4px; }
+.hb-btn .hb-arrow { flex: none; transition: transform .3s cubic-bezier(.2, .8, .2, 1); }
+.hb-btn:hover .hb-arrow { transform: translateX(5px); }
+/* Primario: el mismo hielo que el botón del menú (btn-ice), para que el sitio tenga un solo botón principal */
+.hb-btn-primary {
+  color: var(--b1); padding-inline: 1.9rem 1.6rem;
+  background: radial-gradient(120% 160% at 25% -30%, #fff, transparent 50%), linear-gradient(180deg, #e8f5ff, var(--b5));
+  box-shadow: inset 0 1px 0 #fff, 0 14px 40px -10px rgba(121, 186, 253, .7);
+}
+.hb-btn-primary:hover { box-shadow: inset 0 1px 0 #fff, 0 20px 50px -8px rgba(121, 186, 253, .9); }
+/* Secundario: el vidrio azul del sitio (btn-glass), no gris */
+.hb-btn-ghost { --tint: 55, 129, 252; --glass: .22; }
+.hb-btn-ghost:hover::before { background: linear-gradient(160deg, var(--hb-glow), rgba(255, 255, 255, .06) 45%, color-mix(in srgb, var(--hb-glow) 60%, transparent)); }
+
+/* Tablet: CTAs a todo el ancho central */
+@media (max-width: 1100px) {
+  .hb-ctas { left: 10%; width: 80%; }
+}
+/* Celular: grilla de 2 × 6, botones apilados */
+@media (max-width: 860px) {
+  .hero-balanza { --cols: 2; --rows: 6; min-height: 600px; }
+  .hb-sparkle.d-only { display: none; }
+  .hb-title { top: 18%; }
+  .hb-ctas { left: 0; width: 100%; padding-inline: 20px; flex-direction: column; flex-wrap: nowrap; gap: .7rem; height: auto; bottom: 72px; }
+  .hb-ctas .hb-btn { width: 100%; max-width: 340px; padding-block: .95rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hb-btn, .hb-btn .hb-arrow, .hb-scene { transition: none; }
+  .hb-btn:hover, .hb-btn:active { --lift: 0px; }
+}
+
+/* ══════════════════════════════════════════
+   PREGUNTAS FRECUENTES
+══════════════════════════════════════════ */
+.faq { display: grid; grid-template-columns: .85fr 1.15fr; gap: 64px; align-items: center; }
+.faq-intro { color: var(--muted); margin: 20px 0 32px; max-width: 380px; }
+.faq-topics { display: grid; gap: 10px; max-width: 380px; }
+.faq-topics button {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 18px 24px; border: 0; border-radius: 999px;
+  font: inherit; font-size: 15px; text-align: left; cursor: pointer; color: #fff;
+  background: linear-gradient(90deg, var(--b2), var(--b4)); box-shadow: 0 14px 30px -18px rgba(25, 81, 252, .8);
+  transition: transform .3s cubic-bezier(.2, .8, .2, 1), box-shadow .3s;
+}
+.faq-topics button:nth-child(2) { background: linear-gradient(90deg, var(--b3), var(--b5)); }
+.faq-topics button:nth-child(3) { background: linear-gradient(90deg, var(--b5), var(--b6)); color: var(--b1); }
+.faq-topics button:hover { transform: translateX(6px); }
+.faq-topics b { font-weight: 500; }
+.faq-topics span { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .75; }
+.faq-chat { border-radius: 32px; padding: 22px; display: flex; flex-direction: column; height: 520px; }
+.faq-head { display: flex; align-items: center; gap: 12px; font-weight: 600; padding: 4px 6px 18px; border-bottom: 1px solid var(--line); }
+.faq-head small { display: block; font-weight: 400; font-size: 12px; color: var(--faint); }
+.faq-head .brand-mark { width: 34px; height: 34px; }
+.faq-msgs { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 18px 4px; }
+.faq-msg { max-width: 86%; padding: 14px 18px; border-radius: 22px; font-size: 14px; line-height: 1.55; animation: faqIn .45s cubic-bezier(.2, .8, .2, 1); }
+.faq-msg.bot { background: #f1f5fc; color: var(--ink); border-bottom-left-radius: 8px; }
+.faq-msg.user { align-self: flex-end; color: #fff; background: linear-gradient(135deg, var(--b2), var(--b4)); border-bottom-right-radius: 8px; }
+.faq-msg a { color: var(--b3); font-weight: 500; }
+@keyframes faqIn { from { opacity: 0; transform: translateY(8px); } }
+.faq-chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 6px 0 14px; }
+.faq-chips button { font: inherit; font-size: 13px; padding: 8px 14px; border: 0; border-radius: 999px; cursor: pointer; color: var(--b2); background: rgba(25, 81, 252, .07); }
+.faq-chips button:hover { background: rgba(25, 81, 252, .14); }
+.faq-input { display: flex; gap: 8px; padding: 6px; border-radius: 999px; background: #f5f8fd; box-shadow: inset 0 0 0 1px var(--line); }
+.faq-input input { flex: 1; min-width: 0; border: 0; background: none; font: inherit; font-size: 14px; padding: 0 16px; color: var(--ink); outline: none; }
+.faq-input button { width: 44px; height: 44px; border: 0; border-radius: 50%; cursor: pointer; color: #fff; background: linear-gradient(135deg, var(--b2), var(--b4)); display: grid; place-items: center; }
+.faq-input button svg { width: 18px; height: 18px; }
+@media (max-width: 900px) {
+  .faq { grid-template-columns: 1fr; gap: 40px; }
+  .faq-topics, .faq-intro { max-width: none; }
+  .faq-chat { height: 480px; }
+}
+
+/* ══════════════════════════════════════════
+   TEMA CLARO — panel blanco redondeado sobre el hero oscuro
+══════════════════════════════════════════ */
+.hero { overflow: hidden; }
+/* horizonte: el borde de un planeta iluminado en azul */
+.hero::after {
+  content: ''; position: absolute; left: 50%; bottom: -84vw; transform: translateX(-50%);
+  width: 180vw; height: 90vw; border-radius: 50%; z-index: -1; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(25, 81, 252, 0) 92%, rgba(121, 186, 253, .55) 97%, rgba(203, 233, 253, 0) 100%);
+  box-shadow: 0 -40px 120px rgba(25, 81, 252, .35);
+}
+.alianzas { padding-bottom: 96px; }
+
+.light {
+  --ink: #0a1330;
+  --muted: rgba(10, 19, 48, .62);
+  --faint: rgba(10, 19, 48, .40);
+  --line: rgba(10, 19, 48, .10);
+  --glass: #fff;
+  position: relative; z-index: 2; margin-top: -48px;
+  background: #fff; color: var(--ink);
+  border-radius: 44px; overflow: hidden;
+}
+.light section { padding: 110px 0; }
+.light section:nth-of-type(even) { background: #f5f8fd; }
+.light .eyebrow { color: var(--b3); }
+.light h2 em, .light h3 em { font-family: var(--font); font-style: normal; font-weight: inherit; color: var(--b3); }
+.light .glass {
+  backdrop-filter: none; -webkit-backdrop-filter: none; background: #fff;
+  box-shadow: inset 0 0 0 1px var(--line), 0 24px 60px -36px rgba(11, 44, 177, .35);
+}
+.light .statement { color: var(--b2); }
+.light .chips span { color: var(--b2); background: rgba(25, 81, 252, .07); }
+.light .metric strong { background: linear-gradient(180deg, var(--b1), var(--b3)); -webkit-background-clip: text; background-clip: text; }
+.light .duo .hu { --dot: var(--b4); background: linear-gradient(180deg, #eaf5ff, #fff); }
+.light .duo .hu h3 { color: var(--b2); }
+.light .duo .ia h3 { color: var(--b3); }
+.light .case img { filter: none; opacity: 1; }
+.light .btn-glass { background: rgba(25, 81, 252, .07); }
+.light .btn-glass:hover { background: rgba(25, 81, 252, .14); }
+.light .member img { box-shadow: 0 0 0 4px #fff, 0 10px 30px rgba(11, 44, 177, .25); }
+.light .chain div { background: rgba(255, 255, 255, .7); }
+.light .cap { color: #fff; }
+.light .c5, .light .c6 { color: var(--b1); }
+/* Nav sobre fondo claro */
+.nav, .nav .brand, .nav-links a, .menu-btn { transition: background .3s, color .3s, box-shadow .3s; }
+.nav.on-light { background: rgba(255, 255, 255, .72); box-shadow: inset 0 0 0 1px rgba(10, 19, 48, .08), 0 10px 40px rgba(11, 44, 177, .12); }
+.nav.on-light .brand, .nav.on-light .menu-btn { color: #0a1330; }
+.nav.on-light .nav-links a { color: rgba(10, 19, 48, .6); }
+.nav.on-light .nav-links a:hover { color: #0a1330; }
+
+/* Panel de cifras grandes */
+.light .sheet-top { padding-top: 72px; background: #fff; }
+.stats { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 28px; }
+.stat {
+  border-left: 1px solid var(--line); padding: 0 0 0 18px;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 22px; min-height: 170px;
+}
+.stat-main { min-height: 280px; }
+.stat strong { font-size: clamp(48px, 5vw, 72px); font-weight: 300; letter-spacing: -.045em; line-height: 1; color: var(--ink); }
+.stat-main strong { font-size: clamp(64px, 8vw, 112px); }
+.stat-foot b { display: block; font-size: 14px; font-weight: 500; }
+.stat-foot small { display: block; font-size: 13px; color: var(--faint); margin-top: 2px; }
+.arrow {
+  margin-top: 14px; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+  font-size: 15px; background: #f0f4fa; box-shadow: inset 0 0 0 1px var(--line); transition: background .2s, color .2s;
+}
+.arrow:hover { background: var(--b3); color: #fff; }
+.statement-row { display: grid; grid-template-columns: 1fr 1.25fr; gap: 28px; margin: 96px 0 72px; }
+.statement-big { grid-column: 2; font-size: clamp(26px, 3vw, 38px); font-weight: 400; line-height: 1.22; letter-spacing: -.02em; color: var(--ink); }
+.statement-big .gray { color: rgba(10, 19, 48, .32); }
+.statement-note { grid-column: 2; font-size: 14px; color: var(--muted); }
+.rule { border: 0; border-top: 1px solid var(--line); margin: 88px 0 18px; }
+.rule-note { text-align: right; font-size: 12px; color: var(--faint); }
+
+/* Bloque de degradado azul */
+.light section.sky {
+  background:
+    radial-gradient(38% 55% at 8% 0%, rgba(25, 81, 252, .95), transparent 70%),
+    radial-gradient(30% 40% at 30% 4%, rgba(11, 44, 177, .7), transparent 70%),
+    radial-gradient(60% 60% at 85% 10%, #cfe6ff, transparent 70%),
+    linear-gradient(180deg, #dcebff 0%, #eef6ff 45%, #fff 100%);
+  padding: 140px 0 110px; position: relative; overflow: hidden;
+}
+/* anillo de luz difuso, como el planeta de la referencia */
+.light .sky::before {
+  content: ''; position: absolute; width: 1100px; height: 1100px; border-radius: 50%;
+  top: -640px; left: 18%; pointer-events: none;
+  background: radial-gradient(closest-side, transparent 76%, rgba(255, 255, 255, .6) 86%, transparent 96%);
+}
+.sky-panel {
+  position: relative; border-radius: 40px; padding: 72px 56px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .62), rgba(255, 255, 255, .94));
+  box-shadow: inset 0 1px 0 #fff, 0 30px 80px -40px rgba(11, 44, 177, .35);
+}
+.sky h2 { font-size: clamp(38px, 5.6vw, 72px); font-weight: 400; letter-spacing: -.035em; margin-bottom: 64px; }
+.sky-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 56px; align-items: start; }
+.bigcard { background: #f3f6fb; border-radius: 28px; padding: 36px 32px; box-shadow: inset 0 0 0 1px var(--line); }
+.bigcard strong { display: block; font-size: clamp(80px, 9vw, 128px); font-weight: 300; letter-spacing: -.05em; line-height: .95; margin-bottom: 28px; color: var(--ink); }
+.bigcard strong span { color: rgba(10, 19, 48, .28); }
+.bigcard p { color: var(--muted); font-size: 15px; border-left: 2px solid var(--b4); padding-left: 16px; }
+.sky-copy p { color: var(--muted); font-size: 15px; margin-bottom: 18px; }
+.sky-copy b { color: var(--ink); font-weight: 500; }
+.sky .statement { margin-top: 56px; }
+
+@media (max-width: 980px) {
+  .stats { grid-template-columns: 1fr 1fr; }
+  .stat-main { grid-column: 1 / -1; min-height: 200px; }
+  .statement-row, .sky-grid { grid-template-columns: 1fr; }
+  .statement-big, .statement-note { grid-column: 1; }
+}
 @media (max-width: 640px) {
-  .alianzas-logo { height: 42px; }
-  .alianzas-group { gap: 2.5rem; padding-right: 2.5rem; }
+  .light { border-radius: 28px; margin-top: -32px; }
+  .light section { padding: 80px 0; }
+  .stats { grid-template-columns: 1fr; gap: 36px; }
+  .stat, .stat-main { min-height: 0; }
+  .statement-row { margin: 64px 0 48px; }
+  .sky-panel { padding: 40px 22px; border-radius: 28px; }
+  .light .sky { padding: 90px 0 70px; }
+  .sky h2 { margin-bottom: 36px; }
+}
+/* ══════════════════════════════════════════
+   ANIMACIONES DE ENTRADA — muy suaves, con máscaras
+   (el JS asigna las clases; sin JS o con movimiento reducido todo se ve normal)
+══════════════════════════════════════════ */
+:root { --ease: cubic-bezier(.16, 1, .3, 1); }
+
+/* Desvanecido con máscara: el elemento se revela de arriba abajo con un borde difuso */
+.m-fade {
+  opacity: 0; transform: translate3d(0, 28px, 0); filter: blur(8px);
+  -webkit-mask-image: linear-gradient(180deg, #000 42%, transparent 58%);
+          mask-image: linear-gradient(180deg, #000 42%, transparent 58%);
+  -webkit-mask-size: 100% 240%; mask-size: 100% 240%;
+  -webkit-mask-position: 0 100%; mask-position: 0 100%;
+  transition: opacity 1.6s var(--ease), transform 1.9s var(--ease), filter 1.6s var(--ease),
+              -webkit-mask-position 2.2s var(--ease), mask-position 2.2s var(--ease);
+  transition-delay: var(--d, 0s);
+}
+.m-fade.in { opacity: 1; transform: none; filter: none; -webkit-mask-position: 0 0; mask-position: 0 0; }
+
+/* Barrido horizontal con máscara (titular del hero) */
+.m-sweep {
+  -webkit-mask-image: linear-gradient(90deg, #000 40%, transparent 60%);
+          mask-image: linear-gradient(90deg, #000 40%, transparent 60%);
+  -webkit-mask-size: 260% 100%; mask-size: 260% 100%;
+  -webkit-mask-position: 100% 0; mask-position: 100% 0;
+  filter: blur(6px); opacity: .2;
+  transition: -webkit-mask-position 2.6s var(--ease), mask-position 2.6s var(--ease), filter 2s var(--ease), opacity 1.6s var(--ease);
+  transition-delay: var(--d, 0s);
+}
+.m-sweep.in { -webkit-mask-position: 0 0; mask-position: 0 0; filter: none; opacity: 1; }
+
+/* Palabras que suben desde una máscara (titulares) */
+.m-words .w { display: inline-block; overflow: hidden; vertical-align: top; padding: .08em 0 .14em; margin: -.08em 0 -.14em; }
+.m-words .wi {
+  display: inline-block; opacity: 0; transform: translate3d(0, 108%, 0) rotate(3deg); transform-origin: 0 100%;
+  transition: transform 1.5s var(--ease), opacity 1.3s var(--ease); transition-delay: var(--d, 0s);
+}
+.m-words.in .wi { opacity: 1; transform: none; }
+
+/* Cortina: imágenes y paneles que se abren de abajo arriba */
+.m-wipe {
+  clip-path: inset(100% 0 0 0 round var(--r, 28px)); transform: scale(1.03);
+  transition: clip-path 1.9s var(--ease), transform 2.4s var(--ease); transition-delay: var(--d, 0s);
+}
+.m-wipe.in { clip-path: inset(0 0 0 0 round var(--r, 28px)); transform: none; }
+.m-wipe img { transform: scale(1.12); transition: transform 2.6s var(--ease); transition-delay: var(--d, 0s); }
+.m-wipe.in img { transform: none; }
+
+/* El panel blanco se abre a lo ancho al entrar */
+.m-sheet { clip-path: inset(0 4% 0 4% round 44px); transition: clip-path 2s var(--ease); }
+.m-sheet.in { clip-path: inset(0 0 0 0 round 44px); }
+
+/* Al terminar se quitan máscaras y recortes para no cortar sombras */
+.m-done { -webkit-mask-image: none !important; mask-image: none !important; clip-path: none !important; filter: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .stack .cap { opacity: 1; transform: none; }
 }
 
-/* ── CASOS DE ÉXITO ── */
-.caso-card {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  height: 100%;
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media (max-width: 980px) {
+  .nav-links, .nav .btn { display: none; }
+  .menu-btn { display: block; }
+  .hero-grid, .split, .project, .duo, .team { grid-template-columns: 1fr; }
+  .project.flip .project-media { order: 0; }
+  .hero-grid { gap: 72px; }
+  .steps { grid-template-columns: 1fr 1fr; }
+  .cases { grid-template-columns: 1fr; }
+  .foot { grid-template-columns: 1fr 1fr; }
+  .foot > div:first-child { grid-column: 1 / -1; }
 }
-.caso-logo {
-  height: 30px;
-  width: auto;
-  object-fit: contain;
-  opacity: .7;
-  filter: grayscale(1);
-}
-.caso-tag {
-  font-size: 10.5px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--brand-blue, #4B8FEA);
-  font-weight: 600;
-}
-.caso-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.35rem;
-  font-weight: 600;
-  letter-spacing: -.02em;
-  line-height: 1.2;
-  color: var(--abyssal, #040811);
-}
-.caso-text {
-  font-size: .95rem;
-  color: #5A6B7C;
-  line-height: 1.55;
-}
-.caso-stat {
-  margin-top: auto;
-  padding-top: 14px;
-  border-top: 1px solid rgba(4,8,17,.08);
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
-.caso-stat-num {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.9rem;
-  font-weight: 600;
-  color: var(--abyssal, #040811);
-  line-height: 1;
-}
-.caso-stat-label {
-  font-size: 11px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: #5A6B7C;
+@media (max-width: 640px) {
+  section { padding: 84px 0; }
+  .wrap { padding: 0 16px; }
+  .stack { padding-right: 0; }
+  .stack .tick { display: none; }
+  .stack .cap { height: 84px; margin-top: -40px; padding: 12px 24px 0; font-size: 13px; }
+  .stack .c6 { height: 96px; font-size: 15px; }
+  .row, .steps { grid-template-columns: 1fr; }
+  .glass, .duo .glass { padding: 26px; }
+  .cta-panel { padding: 44px 20px; }
+  .member { flex-direction: column; }
+  .hero-ctas .btn { flex: 1; }
 }
 </style>
 </head>
-<body class="font-sans antialiased text-abyssal min-h-screen flex flex-col">
+<body>
 
-<!-- ══════════════════════════════════════════
-     BACKGROUND EFFECTS
-══════════════════════════════════════════ -->
-<div class="streaks reveal-anim delay-1"></div>
-<div class="edge-glow reveal-anim delay-2"></div>
-<div class="center-light reveal-anim delay-1"></div>
-
-<!-- ══════════════════════════════════════════
-     NAVIGATION
-══════════════════════════════════════════ -->
-<header class="relative z-10 w-full px-6 py-5 md:px-12 flex items-center justify-between reveal-anim delay-2" id="mainNav">
-  <div class="flex items-center gap-2.5">
-    <div class="w-9 h-9 rounded-full bg-abyssal/8 flex items-center justify-center border border-abyssal/15">
-      <span class="font-serif italic text-brand-blue font-semibold text-sm">A</span>
-    </div>
-    <span class="text-lg font-semibold tracking-tight text-abyssal">Aurea <span class="font-serif italic font-medium text-slate">Legal</span></span>
-  </div>
-
-  <nav class="hidden md:flex items-center space-x-8">
-    <a href="#hallazgo" class="text-sm font-medium text-slate hover:text-abyssal transition-colors duration-300">Investigación</a>
-    <a href="#productos" class="text-sm font-medium text-slate hover:text-abyssal transition-colors duration-300">Proyectos</a>
-    <a href="#arquitectura" class="text-sm font-medium text-slate hover:text-abyssal transition-colors duration-300">Arquitectura</a>
-    <a href="#agente" class="text-sm font-medium text-slate hover:text-abyssal transition-colors duration-300">Preguntas</a>
-    <a href="#equipo" class="text-sm font-medium text-slate hover:text-abyssal transition-colors duration-300">Equipo</a>
-    <a href="/recursos" class="text-sm font-medium text-slate hover:text-abyssal transition-colors duration-300">Recursos</a>
-    <a href="#consulta" class="inline-flex items-center justify-center px-5 py-2 text-sm font-medium text-abyssal bg-soft-luminous/60 backdrop-blur-sm border border-slate/30 rounded-full hover:bg-white hover:border-slate/50 transition-all duration-300 shadow-sm">
-      Agenda consultoría
-    </a>
+<!-- NAV -->
+<header class="nav" id="mainNav">
+  <a href="#" class="brand"><span class="brand-mark">A</span>Aurea Legal</a>
+  <nav class="nav-links">
+    <a href="#hallazgo">Investigación</a>
+    <a href="#productos">Proyectos</a>
+    <a href="#arquitectura">Arquitectura</a>
+    <a href="#equipo">Equipo</a>
+    <a href="/recursos">Recursos</a>
   </nav>
-
-  <!-- Mobile menu button -->
-  <button class="md:hidden text-slate hover:text-abyssal focus:outline-none" onclick="document.getElementById('mobileMenu').classList.toggle('hidden')">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
-    </svg>
+  <a href="#consulta" class="btn btn-ice">Agenda consultoría</a>
+  <button class="menu-btn" aria-label="Abrir menú" aria-expanded="false" onclick="toggleMenu(this)">
+    <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
   </button>
 </header>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#hallazgo">Investigación</a>
+  <a href="#productos">Proyectos</a>
+  <a href="#arquitectura">Arquitectura</a>
+  <a href="#equipo">Equipo</a>
+  <a href="/recursos">Recursos</a>
+  <a href="#consulta" class="btn btn-ice" style="margin-top:8px">Agenda consultoría</a>
+</div>
 
-<!-- Mobile menu -->
-<div id="mobileMenu" class="hidden md:hidden relative z-20 px-6 pb-6">
-  <div class="glass-card-strong rounded-2xl p-6 flex flex-col space-y-4">
-    <a href="#hallazgo" class="text-sm font-medium text-slate hover:text-abyssal transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Investigación</a>
-    <a href="#productos" class="text-sm font-medium text-slate hover:text-abyssal transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Proyectos</a>
-    <a href="#arquitectura" class="text-sm font-medium text-slate hover:text-abyssal transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Arquitectura</a>
-    <a href="#agente" class="text-sm font-medium text-slate hover:text-abyssal transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Preguntas</a>
-    <a href="#equipo" class="text-sm font-medium text-slate hover:text-abyssal transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Equipo</a>
-    <a href="/recursos" class="text-sm font-medium text-slate hover:text-abyssal transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Recursos</a>
-    <a href="#consulta" class="text-sm font-medium text-brand-blue hover:text-abyssal transition-colors" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Agenda consultoría</a>
+<main>
+
+<!-- HERO: balanza 3D. La IA (cubo de luz) y el criterio humano (pesa) en equilibrio -->
+<section class="hero hero-balanza" id="hero" aria-labelledby="hero-title">
+  <h1 id="hero-title" class="hb-title"><em>Certeza</em> trazable<br><small>en cada proceso</small> <em class="hb-accent">crítico.</em></h1>
+
+  <canvas class="hb-scene" aria-hidden="true"></canvas>
+
+  <span class="hb-sparkle" style="--x:1; --y:1" aria-hidden="true"></span>
+  <span class="hb-sparkle d-only" style="--x:3; --y:1" aria-hidden="true"></span>
+  <span class="hb-sparkle d-only" style="--x:2; --y:4" aria-hidden="true"></span>
+  <span class="hb-sparkle" style="--x:1; --y:4" aria-hidden="true"></span>
+
+  <div class="hb-ctas hero-ctas">
+    <a class="hb-btn hb-btn-primary" href="#consulta" data-analitica="hero-agenda-consultoria">
+      Agenda una consultoría
+      <svg class="hb-arrow" width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><path d="M0 7h38M32 1l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <a class="hb-btn hb-btn-ghost" href="/recursos" data-analitica="hero-recursos">Recursos</a>
+  </div>
+</section>
+
+<!-- ALIANZAS -->
+<div class="alianzas">
+  <p>Alianzas que potencian el ecosistema</p>
+  <div class="marquee">
+    <div class="marquee-track">
+      <img src="assets/logos/atomo-salud.png" alt="Átomo Salud">
+      <img src="assets/logos/ia-parapymes.png" alt="IA para Pymes">
+      <img src="assets/logos/ia-amiga-lab.png" alt="IA Amiga Lab">
+      <img src="assets/logos/snapwar.png" alt="Snapwar">
+      <img src="assets/logos/transcriptly.png" alt="Transcriptly">
+      <img src="assets/logos/atomo-salud.png" alt="" aria-hidden="true">
+      <img src="assets/logos/ia-parapymes.png" alt="" aria-hidden="true">
+      <img src="assets/logos/ia-amiga-lab.png" alt="" aria-hidden="true">
+      <img src="assets/logos/snapwar.png" alt="" aria-hidden="true">
+      <img src="assets/logos/transcriptly.png" alt="" aria-hidden="true">
+    </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     HERO
-══════════════════════════════════════════ -->
-<main class="flex-grow flex flex-col relative z-10">
-<section class="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pb-20" id="hero">
-  <div class="text-center max-w-4xl mx-auto space-y-10">
-    <h1 class="text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight text-abyssal leading-tight">
-      <span class="block mb-2 reveal-heading" style="animation-delay: 0.2s;">Velocidad <span class="text-brand-blue font-light">artificial.</span></span>
-      <span class="block reveal-heading" style="animation-delay: 0.5s;">Responsabilidad <span class="text-brand-blue font-light">humana.</span></span>
-    </h1>
+<div class="light">
 
-    <p class="text-lg md:text-xl text-slate max-w-2xl mx-auto font-light leading-relaxed reveal-anim delay-3">
-      Automatización con criterio humano. Diseñamos procesos donde la IA analiza, clasifica y propone — pero tu equipo decide, firma y responde. Sin cajas negras.
-    </p>
-
-    <div class="flex flex-col sm:flex-row gap-4 justify-center reveal-anim delay-4">
-      <a href="#consulta" class="inline-flex items-center justify-center px-8 py-3.5 text-base font-medium text-soft-luminous bg-abyssal border-2 border-abyssal rounded-full hover:bg-transparent hover:text-abyssal transition-all duration-300 transform hover:-translate-y-0.5 shadow-md hover:shadow-lg">
-        Agenda una consultoría
-        <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-      </a>
-      <a href="#hallazgo" class="inline-flex items-center justify-center px-8 py-3.5 text-base font-medium text-abyssal bg-transparent border-2 border-slate/30 rounded-full hover:border-abyssal hover:bg-abyssal hover:text-soft-luminous transition-all duration-300">
-        Conoce más
-      </a>
-    </div>
-  </div>
-
-  
-</section>
-
-<!-- ══════════════════════════════════════════
-     ALIANZAS
-══════════════════════════════════════════ -->
-<section class="alianzas-section relative z-10" id="alianzas">
-  <div class="max-w-6xl mx-auto px-6 md:px-12">
-    <p class="alianzas-label reveal-anim">Alianzas que potencian el ecosistema</p>
-    <div class="alianzas-marquee reveal-anim delay-2">
-      <div class="alianzas-track">
-        <div class="alianzas-group">
-          <img class="alianzas-logo" src="assets/logos/atomo-salud.png" alt="Atomo Salud">
-          <img class="alianzas-logo" src="assets/logos/ia-parapymes.png" alt="IA para Pymes">
-          <img class="alianzas-logo" src="assets/logos/ia-amiga-lab.png" alt="IA Amiga Lab">
-          <img class="alianzas-logo" src="assets/logos/snapwar.png" alt="SnapWar">
-          <img class="alianzas-logo" src="assets/logos/transcriptly.png" alt="Transcriptly">
-        </div>
-        <div class="alianzas-group" aria-hidden="true">
-          <img class="alianzas-logo" src="assets/logos/atomo-salud.png" alt="Atomo Salud">
-          <img class="alianzas-logo" src="assets/logos/ia-parapymes.png" alt="IA para Pymes">
-          <img class="alianzas-logo" src="assets/logos/ia-amiga-lab.png" alt="IA Amiga Lab">
-          <img class="alianzas-logo" src="assets/logos/snapwar.png" alt="SnapWar">
-          <img class="alianzas-logo" src="assets/logos/transcriptly.png" alt="Transcriptly">
-        </div>
+<!-- CIFRAS (panel blanco sobre el hero) -->
+<section class="sheet-top" id="cifras">
+  <div class="wrap">
+    <div class="stats reveal">
+      <div class="stat stat-main">
+        <strong>80%</strong>
+        <div class="stat-foot"><b>del tiempo de un equipo legal</b><small>se va en la primera pasada</small><a class="arrow" href="#hallazgo" aria-label="Ver investigación">&rarr;</a></div>
+      </div>
+      <div class="stat">
+        <strong>100%</strong>
+        <div class="stat-foot"><b>de decisiones con firma humana</b><small>Centinela y Contralitigador</small><a class="arrow" href="#productos" aria-label="Ver proyectos">&rarr;</a></div>
+      </div>
+      <div class="stat">
+        <strong>18</strong>
+        <div class="stat-foot"><b>hallazgos remediados</b><small>con retest y evidencia</small><a class="arrow" href="#casos" aria-label="Ver casos">&rarr;</a></div>
       </div>
     </div>
+    <div class="statement-row reveal">
+      <p class="statement-big">Diseñamos IA con el criterio humano <span class="ink">en el centro,</span> <span class="gray">no al margen. La IA procesa y propone; tu equipo valida, decide y firma.</span></p>
+      <p class="statement-note">Automatización con criterio humano. Sin cajas negras.</p>
+    </div>
+    <div class="center">
+    <div class="duo">
+      <div class="glass ia reveal" style="text-align:left">
+        <h3>La IA</h3>
+        <ul><li>Procesa volúmenes masivos</li><li>Detecta patrones ocultos</li><li>Documenta exhaustivamente</li><li>Traduce complejidad técnica</li></ul>
+      </div>
+      <div class="glass hu reveal" style="text-align:left">
+        <h3>El Humano</h3>
+        <ul><li>Valida el contexto ético</li><li>Decide con empatía</li><li>Firma con responsabilidad</li><li>Defiende el veredicto</li></ul>
+      </div>
+    </div>
+    <div class="verdict reveal">
+      <span class="cap c2">La IA propone.</span>
+      <span class="cap c6">El humano sentencia.</span>
+    </div>
+    </div>
+    <hr class="rule">
+    <p class="rule-note">Haciendo la diferencia</p>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════
-     LO QUE ENCONTRAMOS
-══════════════════════════════════════════ -->
-<section class="py-24 md:py-32 px-6 md:px-12 relative z-10" id="hallazgo">
-  <div class="max-w-5xl mx-auto scroll-reveal">
-    <span class="text-xs tracking-widest uppercase text-brand-blue font-medium mb-4 block">Investigación</span>
-    <h2 class="text-3xl md:text-5xl font-light text-abyssal mb-6 reveal-heading" style="animation-delay: 0.2s;">
-      La información sobra. <span class="font-medium text-brand-blue">El criterio para decidir a tiempo, no.</span>
-    </h2>
-
-    <div class="grid md:grid-cols-2 gap-10 mb-16 mt-12">
-      <div class="space-y-6 text-lg text-slate leading-relaxed">
-        <p>Antes de construir cualquier solución, investigamos dónde se acumula la fricción real en empresas B2B, firmas legales e inmobiliarias. El patrón es consistente — y no es el que venden las herramientas.</p>
-        <p>El resultado no es más seguridad, sino una <strong class="text-abyssal">parálisis operativa</strong> donde el verdadero riesgo se esconde a plena vista entre montañas de ruido irrelevante.</p>
+<!-- INVESTIGACIÓN (bloque de degradado azul) -->
+<section class="sky" id="hallazgo">
+  <div class="wrap">
+    <div class="sky-panel">
+      <span class="eyebrow">Investigación</span>
+      <h2 class="reveal">La información sobra.<br>El criterio para <em>decidir a tiempo</em>, no.</h2>
+      <div class="sky-grid">
+        <div class="bigcard reveal">
+          <strong>80<span>%</span></strong>
+          <p>del tiempo se consume en leer, clasificar, cruzar contra listas y buscar precedentes. Trabajo necesario, repetitivo y que no escala con más personas.</p>
+        </div>
+        <div class="sky-copy reveal">
+          <p>Antes de construir cualquier solución, investigamos dónde se acumula la fricción real en empresas B2B, firmas legales e inmobiliarias. El resultado no es más seguridad, sino una parálisis operativa donde el verdadero riesgo se esconde entre montañas de ruido.</p>
+          <p>Comprar software no lo resuelve. El problema es de proceso: sin un diseño que ponga al humano en las decisiones clave y a la IA en la ejecución masiva, la herramienta se convierte en otro silo.</p>
+          <p>Las empresas que cierran esta brecha no son las que más gastan en tecnología, sino las que rediseñan quién decide qué. <b>La ventaja no está en la herramienta. Está en el criterio.</b></p>
+          <div class="chain">
+            <div><b>Alerta mal priorizada</b><svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M5 12h14m-6-6l6 6-6 6"/></svg>Sanción evitable</div>
+            <div><b>Falso positivo recurrente</b><svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M5 12h14m-6-6l6 6-6 6"/></svg>Desgaste del equipo</div>
+            <div><b>Falta de contexto histórico</b><svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M5 12h14m-6-6l6 6-6 6"/></svg>Decisión errónea</div>
+            <div><b>Reporte tardío</b><svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M5 12h14m-6-6l6 6-6 6"/></svg>Daño reputacional</div>
+          </div>
+        </div>
       </div>
-
-      <div class="glass-card p-8 rounded-2xl space-y-4">
-        <ul class="space-y-4 text-abyssal font-medium">
-          <li class="flex items-start"><span class="text-brand-blue mr-3 mt-0.5">→</span><span>Alerta mal priorizada <span class="text-slate font-normal">→ Sanción evitable</span></span></li>
-          <li class="flex items-start"><span class="text-brand-blue mr-3 mt-0.5">→</span><span>Falso positivo recurrente <span class="text-slate font-normal">→ Desgaste del equipo</span></span></li>
-          <li class="flex items-start"><span class="text-brand-blue mr-3 mt-0.5">→</span><span>Falta de contexto histórico <span class="text-slate font-normal">→ Decisión errónea</span></span></li>
-          <li class="flex items-start"><span class="text-brand-blue mr-3 mt-0.5">→</span><span>Reporte tardío <span class="text-slate font-normal">→ Daño reputacional</span></span></li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- 3 insight cards -->
-    <div class="grid md:grid-cols-3 gap-8 mt-16">
-      <div class="glass-card p-8 rounded-2xl hover-lift">
-        <div class="text-6xl font-black text-brand-blue/10 mb-4">01</div>
-        <p class="text-sm leading-relaxed text-slate">El <strong class="text-abyssal">80% del tiempo</strong> de un equipo legal, de compliance o de ventas consultivas se consume en la primera pasada: leer, clasificar, cruzar contra listas, buscar precedentes. Es trabajo necesario pero repetitivo — y no escala con más personas.</p>
-      </div>
-      <div class="glass-card p-8 rounded-2xl hover-lift">
-        <div class="text-6xl font-black text-brand-blue/10 mb-4">02</div>
-        <p class="text-sm leading-relaxed text-slate"><strong class="text-abyssal">Comprar software no lo resuelve.</strong> El problema es de proceso: sin un diseño que ponga al humano en las decisiones clave y a la IA en la ejecución masiva, la herramienta se convierte en otro silo que nadie usa como se esperaba.</p>
-      </div>
-      <div class="glass-card p-8 rounded-2xl hover-lift">
-        <div class="text-6xl font-black text-brand-blue/10 mb-4">03</div>
-        <p class="text-sm leading-relaxed text-slate">Las empresas que cierran esta brecha <strong class="text-abyssal">no son las que más gastan en tecnología</strong> — son las que rediseñan quién decide qué. La ventaja no está en la herramienta. Está en el criterio.</p>
-      </div>
-    </div>
-
-    <div class="text-center mt-14">
-      <p class="text-lg text-abyssal font-medium">Esto no es una hipótesis. <span class="text-brand-blue">Ya lo estamos resolviendo.</span></p>
+      <p class="statement reveal">Esto no es una hipótesis. Ya lo estamos resolviendo.</p>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════
-     FILOSOFÍA: IA + HUMANO
-══════════════════════════════════════════ -->
-<section class="py-24 md:py-32 px-6 md:px-12 relative z-10">
-  <div class="max-w-6xl mx-auto scroll-reveal">
-    <h2 class="text-3xl md:text-4xl font-light text-abyssal mb-16 text-center max-w-3xl mx-auto reveal-heading" style="animation-delay: 0.2s;">
-      Diseñamos IA con el criterio humano en el centro, <span class="font-serif italic">no al margen.</span>
-    </h2>
-
-    <div class="grid md:grid-cols-2 gap-8 md:gap-16 mb-20 relative">
-      <div class="absolute left-1/2 top-0 bottom-0 w-px bg-brand-blue/20 hidden md:block"></div>
-
-      <div class="text-right space-y-6 pr-0 md:pr-8">
-        <h3 class="text-xl font-semibold text-brand-blue tracking-widest uppercase">La IA</h3>
-        <ul class="space-y-4 text-slate text-lg">
-          <li>Procesa volúmenes masivos</li>
-          <li>Detecta patrones ocultos</li>
-          <li>Documenta exhaustivamente</li>
-          <li>Traduce complejidad técnica</li>
-        </ul>
-      </div>
-
-      <div class="text-left space-y-6 pl-0 md:pl-8">
-        <h3 class="text-xl font-semibold text-abyssal tracking-widest uppercase">El Humano</h3>
-        <ul class="space-y-4 text-slate text-lg">
-          <li>Valida el contexto ético</li>
-          <li>Decide con empatía</li>
-          <li>Firma con responsabilidad</li>
-          <li>Defiende el veredicto</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="text-center">
-      <p class="text-4xl md:text-6xl font-light tracking-tight text-abyssal reveal-heading" style="animation-delay: 0.2s;">
-        La IA propone.<br>
-        <span class="font-semibold mt-2 inline-block">El humano sentencia.</span>
-      </p>
+<!-- CÓMO FUNCIONA -->
+<section id="proceso">
+  <div class="wrap">
+    <div class="center reveal"><span class="eyebrow">Proceso</span><h2>Cómo funciona</h2></div>
+    <div class="steps">
+      <div class="step reveal"><div class="cap c2">01</div><h3>Diagnóstico</h3><p>Análisis profundo de tus flujos de información y cuellos de botella críticos. No automatizamos sin antes entender tu operación real.</p></div>
+      <div class="step reveal"><div class="cap c3">02</div><h3>Mapa de exposición</h3><p>Identificación precisa de las áreas de mayor riesgo donde la intervención es prioritaria. Mapeamos cada punto de decisión.</p></div>
+      <div class="step reveal"><div class="cap c4">03</div><h3>Implementación</h3><p>Despliegue ágil de modelos ajustados a tu vocabulario y normativas. Sobre tu stack, no el nuestro.</p></div>
+      <div class="step reveal"><div class="cap c5">04</div><h3>Acompañamiento</h3><p>Monitoreo continuo y refinamiento con la retroalimentación de tus expertos. Transferencia de conocimiento incluida.</p></div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════
-     CÓMO FUNCIONA
-══════════════════════════════════════════ -->
-<section class="py-24 md:py-32 px-6 md:px-12 relative z-10">
-  <div class="max-w-6xl mx-auto scroll-reveal">
-    <span class="text-xs tracking-widest uppercase text-brand-blue font-medium mb-4 block text-center">Proceso</span>
-    <h2 class="text-3xl font-light text-abyssal mb-16 text-center reveal-heading" style="animation-delay: 0.2s;">Cómo Funciona</h2>
+<!-- PROYECTOS -->
+<section id="productos">
+  <div class="wrap">
+    <div class="reveal"><span class="eyebrow">Proyectos implementados</span><h2>Diseñamos el proceso, <em>construimos</em> el software, tu equipo decide.</h2></div>
 
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-      <div class="glass-card p-8 rounded-2xl relative overflow-hidden group hover:-translate-y-2 transition-transform duration-300">
-        <div class="text-6xl font-black text-brand-blue/8 absolute -right-2 -top-4 group-hover:text-brand-blue/15 transition-colors">01</div>
-        <h3 class="text-xl font-medium text-abyssal mb-4 relative z-10">Diagnóstico</h3>
-        <p class="text-slate text-sm relative z-10 leading-relaxed">Análisis profundo de sus flujos de información actuales y cuellos de botella críticos. No automatizamos sin antes entender tu operación real.</p>
+    <div class="project">
+      <div class="reveal">
+        <span class="eyebrow">Compliance · Centinela</span>
+        <h3>Debida diligencia automatizada</h3>
+        <p>Centinela cruza cada expediente contra matriz de riesgo, listas PEP y sanciones internacionales. El agente ejecuta la primera pasada: clasificar, verificar, alertar. Cada expediente queda en Pendiente de Aprobación o Bloqueado hasta que el Oficial de Cumplimiento decide. Nunca se autoaprueba.</p>
+        <div class="metric"><strong>100%</strong><span>de vinculaciones con aprobación humana registrada</span></div>
+        <div class="chips"><span>AML / KYC</span><span>Listas PEP</span><span>Sanciones OFAC</span><span>Trazabilidad</span></div>
+        <a href="#consulta" class="btn btn-glass">Agenda una consultoría</a>
       </div>
-      <div class="glass-card p-8 rounded-2xl relative overflow-hidden group hover:-translate-y-2 transition-transform duration-300">
-        <div class="text-6xl font-black text-brand-blue/8 absolute -right-2 -top-4 group-hover:text-brand-blue/15 transition-colors">02</div>
-        <h3 class="text-xl font-medium text-abyssal mb-4 relative z-10">Mapa de exposición</h3>
-        <p class="text-slate text-sm relative z-10 leading-relaxed">Identificación precisa de las áreas de mayor riesgo donde la intervención es prioritaria. Mapeamos cada punto de decisión.</p>
-      </div>
-      <div class="glass-card p-8 rounded-2xl relative overflow-hidden group hover:-translate-y-2 transition-transform duration-300">
-        <div class="text-6xl font-black text-brand-blue/8 absolute -right-2 -top-4 group-hover:text-brand-blue/15 transition-colors">03</div>
-        <h3 class="text-xl font-medium text-abyssal mb-4 relative z-10">Implementación</h3>
-        <p class="text-slate text-sm relative z-10 leading-relaxed">Despliegue ágil de nuestros modelos ajustados a tu vocabulario y normativas específicas. Sobre tu stack, no el nuestro.</p>
-      </div>
-      <div class="glass-card p-8 rounded-2xl relative overflow-hidden group hover:-translate-y-2 transition-transform duration-300">
-        <div class="text-6xl font-black text-brand-blue/8 absolute -right-2 -top-4 group-hover:text-brand-blue/15 transition-colors">04</div>
-        <h3 class="text-xl font-medium text-abyssal mb-4 relative z-10">Acompañamiento</h3>
-        <p class="text-slate text-sm relative z-10 leading-relaxed">Monitoreo continuo y refinamiento del modelo basado en la retroalimentación de tus expertos. Transferencia de conocimiento incluida.</p>
+      <div class="project-media glass reveal">
+        <img src="centinela-1.png" alt="Panel de Centinela" loading="lazy">
+        <div class="thumbs">
+          <figure><img src="centinela-3.png" alt="" loading="lazy">Alta de persona natural</figure>
+          <figure><img src="centinela-4.png" alt="" loading="lazy">Alta de persona jurídica</figure>
+        </div>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- ══════════════════════════════════════════
-     PROYECTOS: CENTINELA
-══════════════════════════════════════════ -->
-<section class="py-24 md:py-32 px-6 md:px-12 relative z-10" id="productos">
-  <div class="max-w-6xl mx-auto scroll-reveal">
-    <span class="text-xs tracking-widest uppercase text-brand-blue font-medium mb-4 block">Proyecto Implementado · Compliance</span>
-    <h2 class="text-3xl md:text-4xl font-light text-abyssal mb-4 reveal-heading" style="animation-delay: 0.2s;">Debida diligencia automatizada</h2>
-    <p class="text-lg text-slate mb-16 max-w-2xl">Centinela cruza cada expediente contra matriz de riesgo, listas PEP y sanciones internacionales. El agente ejecuta la primera pasada. El Oficial de Cumplimiento decide.</p>
-
-    <div class="grid md:grid-cols-2 gap-12 items-start">
-      <!-- Screenshots -->
-      <div class="space-y-0">
-        <div class="glass-card rounded-2xl overflow-hidden p-1.5">
-          <img src="centinela-1.png" alt="Dashboard de análisis de riesgo Centinela" class="w-full rounded-xl" loading="lazy">
-        </div>
-        <!-- Overlay card -->
-        <div class="shot-overlay">
-          <div class="shot-overlay-inner">
-            <div class="shot-overlay-img"><img src="centinela-2.png" alt="Formulario de nuevo expediente" loading="lazy"></div>
-            <div class="shot-overlay-text">
-              <h4>Control de Aprobación</h4>
-              <p>Cada expediente queda en Pendiente de Aprobación o Bloqueado hasta que el Oficial decide. Nunca se autoaprueba.</p>
-            </div>
-            <div class="shot-overlay-arrow"><svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></div>
-          </div>
-        </div>
-        <!-- Labeled feature screenshots -->
-        <div class="grid grid-cols-2 gap-4 mt-6">
-          <div class="shot-feat-card">
-            <div class="shot-feat-img">
-              <img src="centinela-3.png" alt="Alta de persona natural" loading="lazy">
-              <div class="shot-feat-arrow"><svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></div>
-            </div>
-            <span class="shot-feat-label">Alta de Persona Natural</span>
-          </div>
-          <div class="shot-feat-card">
-            <div class="shot-feat-img">
-              <img src="centinela-4.png" alt="Alta de persona jurídica" loading="lazy">
-              <div class="shot-feat-arrow"><svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></div>
-            </div>
-            <span class="shot-feat-label">Alta de Persona Jurídica</span>
-          </div>
-        </div>
+    <div class="project flip" id="contralitigador">
+      <div class="reveal">
+        <span class="eyebrow">Estrategia legal · Contralitigador</span>
+        <h3>Análisis de precedentes automatizado</h3>
+        <p>Contralitigador cruza los hechos de cada caso contra precedentes relevantes y criterios internos del despacho, y propone líneas de argumentación con fuentes citadas. Ninguna estrategia se ejecuta sin el sign-off del abogado.</p>
+        <div class="metric"><strong>100%</strong><span>de estrategias con sign-off humano</span></div>
+        <div class="chips"><span>Jurisprudencia</span><span>Argumentación</span><span>Precedentes</span><span>Trazabilidad</span></div>
+        <a href="#consulta" class="btn btn-glass">Agenda una consultoría</a>
       </div>
-
-      <!-- Content -->
-      <div class="space-y-8">
-        <div class="glass-card-strong p-8 rounded-2xl space-y-6">
-          <h3 class="text-2xl font-medium text-abyssal leading-snug">Diseñamos el proceso, <span class="font-serif italic">construimos</span> el software, tu equipo decide</h3>
-          <p class="text-slate leading-relaxed">Implementamos un sistema de compliance que cruza cada expediente contra matriz de riesgo, listas PEP y sanciones internacionales. El agente ejecuta la primera pasada — clasificar, verificar, alertar. El Oficial de Cumplimiento aprueba o bloquea. Todo queda registrado con trazabilidad auditable.</p>
-
-          <div class="flex items-center gap-6 pt-2">
-            <div>
-              <div class="text-4xl font-bold text-brand-blue">100%</div>
-              <div class="text-xs text-slate mt-1">de vinculaciones con<br>aprobación humana registrada</div>
-            </div>
-          </div>
-
-          <div class="flex flex-wrap gap-3 pt-2">
-            <a href="#consulta" class="inline-flex items-center px-6 py-2.5 text-sm font-medium text-soft-luminous bg-abyssal rounded-full hover:bg-abyssal/90 transition-all hover:-translate-y-0.5">
-              Agenda una consultoría
-            </a>
-            <a href="#consulta" class="inline-flex items-center px-6 py-2.5 text-sm font-medium text-abyssal bg-transparent border border-slate/30 rounded-full hover:border-abyssal hover:bg-abyssal/5 transition-all">
-              Más información
-            </a>
-          </div>
-        </div>
-
-        <div class="flex flex-wrap gap-2">
-          <span class="px-3 py-1 text-xs font-medium text-brand-blue bg-brand-blue/8 rounded-full">AML / KYC</span>
-          <span class="px-3 py-1 text-xs font-medium text-slate bg-slate/8 rounded-full">Listas PEP</span>
-          <span class="px-3 py-1 text-xs font-medium text-slate bg-slate/8 rounded-full">Sanciones OFAC</span>
-          <span class="px-3 py-1 text-xs font-medium text-slate bg-slate/8 rounded-full">Trazabilidad</span>
+      <div class="project-media glass reveal">
+        <img src="contralitigador-main.png" alt="Panel de Contralitigador" loading="lazy">
+        <div class="thumbs">
+          <figure><img src="contralitigador-1.png" alt="" loading="lazy">Registro de expediente</figure>
+          <figure><img src="contralitigador-2.png" alt="" loading="lazy">Control de plazos</figure>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════
-     PROYECTOS: CONTRALITIGADOR
-══════════════════════════════════════════ -->
-<section class="py-24 md:py-32 px-6 md:px-12 relative z-10" id="contralitigador">
-  <div class="max-w-6xl mx-auto scroll-reveal">
-    <span class="text-xs tracking-widest uppercase text-brand-blue font-medium mb-4 block">Proyecto Implementado · Estrategia Legal</span>
-    <h2 class="text-3xl md:text-4xl font-light text-abyssal mb-4 reveal-heading" style="animation-delay: 0.2s;">Análisis de precedentes automatizado</h2>
-    <p class="text-lg text-slate mb-16 max-w-2xl">Contralitigador cruza jurisprudencia contra los hechos de cada caso y propone líneas de argumentación con fuentes citadas. El abogado define la estrategia.</p>
+<!-- CASOS -->
+<section id="casos">
+  <div class="wrap">
+    <div class="center reveal"><span class="eyebrow">Casos de éxito</span><h2>Riesgo detectado <em>a tiempo.</em></h2><p class="lead" style="margin-top:18px">Vulnerabilidades que cerramos antes de que fueran una crisis. Cultura de IA que ya opera en el día a día.</p></div>
+    <div class="cases">
+      <article class="glass case reveal">
+        <img src="assets/logos/transcriptly.png" alt="Transcriptly">
+        <small>Pentesting · Pre-lanzamiento</small>
+        <h3>El panel de administración estaba abierto a internet.</h3>
+        <p>Dos hallazgos críticos antes de salir al mercado: backoffice sin control de acceso y entorno dev expuesto junto a producción.</p>
+        <div class="metric"><strong>2</strong><span>críticos cerrados pre-lanzamiento</span></div>
+      </article>
+      <article class="glass case reveal">
+        <img src="assets/logos/ia-amiga-lab.png" alt="IA Amiga Lab">
+        <small>Pentesting + Remediación</small>
+        <h3>Una puerta abierta hacia los datos de un cliente B2B.</h3>
+        <p>Acceso no autorizado con un correo falso a la información de un piloto empresarial. Cerrado con matriz re-ejecutable y retest con evidencia.</p>
+        <div class="metric"><strong>18</strong><span>hallazgos, 1 crítico, remediados con retest</span></div>
+      </article>
+      <article class="glass case reveal">
+        <img src="assets/logos/ia-parapymes.png" alt="IA para Pymes">
+        <small>Consultoría · Cultura de IA</small>
+        <h3>La IA como método de trabajo, no como un proyecto aislado.</h3>
+        <p>Herramientas integradas al flujo real: procesos más eficaces, decisiones con criterio humano y tecnología al servicio del equipo.</p>
+        <div class="metric"><strong>100%</strong><span>adopción en el día a día del equipo</span></div>
+      </article>
+    </div>
+  </div>
+</section>
 
-    <div class="grid md:grid-cols-2 gap-12 items-start">
-      <!-- Content (left on this one) -->
-      <div class="space-y-8 md:order-1 order-2">
-        <div class="glass-card-strong p-8 rounded-2xl space-y-6">
-          <h3 class="text-2xl font-medium text-abyssal leading-snug">La IA cruza jurisprudencia, <span class="font-serif italic">el abogado</span> define la estrategia</h3>
-          <p class="text-slate leading-relaxed">Construimos un sistema que cruza los hechos de cada caso contra precedentes relevantes y criterios internos del despacho. El agente propone líneas de argumentación con fuentes citadas. Ninguna estrategia se ejecuta sin el sign-off del abogado. Mismo esqueleto de control humano y trazabilidad.</p>
+<!-- PILARES -->
+<section id="arquitectura">
+  <div class="wrap">
+    <div class="center reveal"><span class="eyebrow">Cómo funciona realmente</span><h2>Los 7 pilares de nuestra <em>implementación</em></h2><p class="lead" style="margin-top:18px">Ninguna decisión se ejecuta sin la firma de un humano autorizado. La IA analiza. El equipo decide. Siempre.</p></div>
+    <div class="pillars">
+      <div class="glass reveal"><div class="num cap c1">01</div><h3>Diagnóstico de proceso</h3><p>No automatizamos sin antes entender tu operación real. La IA no reemplaza el análisis: lo potencia.</p></div>
+      <div class="glass reveal"><div class="num cap c2">02</div><h3>Human-in-the-Loop</h3><p>Ninguna decisión se ejecuta sin firma humana. La IA clasifica y propone; tu equipo decide.</p></div>
+      <div class="glass reveal"><div class="num cap c3">03</div><h3>Trazabilidad auditable</h3><p>Cada acción del agente queda registrada con hash criptográfico. El rastro resiste una auditoría.</p></div>
+      <div class="glass reveal"><div class="num cap c3">04</div><h3>Implementación a medida</h3><p>No vendemos software que instalas. Diseñamos el proceso contigo y construimos sobre tu stack.</p></div>
+      <div class="glass reveal"><div class="num cap c4">05</div><h3>Validación contra fuentes</h3><p>El agente no opina: cita la fuente exacta (norma, precedente, sanción, lista PEP). Sin alucinaciones.</p></div>
+      <div class="glass reveal"><div class="num cap c5">06</div><h3>Escalabilidad sin fricción</h3><p>Procesa cientos de expedientes en paralelo sin añadir headcount. Crece con tu operación.</p></div>
+      <div class="glass reveal"><div class="num cap c6">07</div><h3>Transferencia de conocimiento</h3><p>No te atamos a nosotros. Documentamos, capacitamos a tu equipo y te dejamos el control del sistema.</p></div>
+    </div>
+  </div>
+</section>
 
-          <div class="flex items-center gap-6 pt-2">
-            <div>
-              <div class="text-4xl font-bold text-brand-blue">100%</div>
-              <div class="text-xs text-slate mt-1">de estrategias con<br>sign-off humano</div>
-            </div>
-          </div>
-
-          <div class="flex flex-wrap gap-3 pt-2">
-            <a href="#consulta" class="inline-flex items-center px-6 py-2.5 text-sm font-medium text-soft-luminous bg-abyssal rounded-full hover:bg-abyssal/90 transition-all hover:-translate-y-0.5">
-              Agenda una consultoría
-            </a>
-            <a href="#consulta" class="inline-flex items-center px-6 py-2.5 text-sm font-medium text-abyssal bg-transparent border border-slate/30 rounded-full hover:border-abyssal hover:bg-abyssal/5 transition-all">
-              Más información
-            </a>
-          </div>
-        </div>
-
-        <div class="flex flex-wrap gap-2">
-          <span class="px-3 py-1 text-xs font-medium text-brand-blue bg-brand-blue/8 rounded-full">Jurisprudencia</span>
-          <span class="px-3 py-1 text-xs font-medium text-slate bg-slate/8 rounded-full">Argumentación</span>
-          <span class="px-3 py-1 text-xs font-medium text-slate bg-slate/8 rounded-full">Precedentes</span>
-          <span class="px-3 py-1 text-xs font-medium text-slate bg-slate/8 rounded-full">Trazabilidad</span>
-        </div>
+<!-- PREGUNTAS FRECUENTES (respuestas locales: no hay un agente detrás y no se finge que lo hay) -->
+<section id="preguntas">
+  <div class="wrap faq">
+    <div class="faq-side reveal">
+      <span class="eyebrow">Respuestas rápidas</span>
+      <h2>Lo que más nos <em>preguntan.</em></h2>
+      <p class="faq-intro">Elige un tema o escribe una palabra clave. Para tu caso puntual, te responde una persona del equipo.</p>
+      <div class="faq-topics">
+        <button type="button" data-pregunta="¿Cómo funciona Centinela para AML y KYC?"><b>Centinela</b><span>Debida diligencia</span></button>
+        <button type="button" data-pregunta="¿Cómo apoya Contralitigador al equipo legal?"><b>Contralitigador</b><span>Estrategia legal</span></button>
+        <button type="button" data-pregunta="¿Cómo evita alucinar el agente al clasificar un riesgo?"><b>Arquitectura</b><span>Human-in-the-loop</span></button>
       </div>
+    </div>
+    <div class="faq-chat glass reveal">
+      <div class="faq-head"><span class="brand-mark">A</span><div>Aurea Legal<small>Preguntas frecuentes</small></div></div>
+      <div class="faq-msgs" id="chatMsgs" aria-live="polite">
+        <div class="faq-msg bot">Hola. Aquí tienes respuestas directas sobre Centinela, Contralitigador y la arquitectura human-in-the-loop.</div>
+      </div>
+      <div class="faq-chips">
+        <button type="button" data-pregunta="¿Cómo evita alucinar el agente?">¿Cómo evita alucinar?</button>
+        <button type="button" data-pregunta="¿Qué pasa si el agente detecta un cliente de alto riesgo?">¿Riesgo alto?</button>
+        <button type="button" data-pregunta="¿Qué queda registrado para una auditoría?">¿Qué se registra?</button>
+      </div>
+      <form class="faq-input" id="chatForm">
+        <input id="chatInput" type="text" placeholder="Busca un tema: Centinela, riesgo, auditoría…" aria-label="Escribe tu pregunta" autocomplete="off">
+        <button type="submit" aria-label="Enviar"><svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12l-7.5 7.5M21 12H3"/></svg></button>
+      </form>
+    </div>
+  </div>
+</section>
 
-      <!-- Screenshots (right) -->
-      <div class="space-y-0 md:order-2 order-1">
-        <div class="glass-card rounded-2xl overflow-hidden p-1.5">
-          <img src="contralitigador-main.png" alt="Dashboard Contralitigador" class="w-full rounded-xl" loading="lazy">
-        </div>
-        <!-- Labeled feature screenshots -->
-        <div class="grid grid-cols-2 gap-4 mt-6">
-          <div class="shot-feat-card">
-            <div class="shot-feat-img">
-              <img src="contralitigador-1.png" alt="Registro de expediente" loading="lazy">
-              <div class="shot-feat-arrow"><svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></div>
-            </div>
-            <span class="shot-feat-label">Registro de Expediente</span>
-          </div>
-          <div class="shot-feat-card">
-            <div class="shot-feat-img">
-              <img src="contralitigador-2.png" alt="Control de plazos" loading="lazy">
-              <div class="shot-feat-arrow"><svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></div>
-            </div>
-            <span class="shot-feat-label">Control de Plazos</span>
-          </div>
-        </div>
+<!-- EQUIPO -->
+<section id="equipo">
+  <div class="wrap">
+    <div class="center reveal"><span class="eyebrow">Quién construye esto</span><h2>Una empresa <em>AI-native</em>, no un equipo de 40</h2></div>
+    <div class="team">
+      <div class="glass member reveal">
+        <img src="david_montejo.png" alt="David Montejo">
+        <div><h3>David Montejo</h3><small>CEO & Fundador</small><p>Dirijo Aurea Legal como una empresa AI-native: la ingeniería, el diseño y el producto los lidero yo, y el equipo lo completan los agentes que construyo. Centinela y Contralitigador son la prueba, no el argumento de venta. Menos capas, mismo rigor.</p></div>
+      </div>
+      <div class="glass member reveal">
+        <img src="MiguelAriza.jpeg" alt="Miguel Angel Ariza">
+        <div><h3>Miguel Angel Ariza</h3><small>CPO · Director de Producto</small><p>Lidera la visión de producto de Aurea Legal: define qué construimos y por qué, a partir de lo que viven abogados y departamentos jurídicos en su día a día. Convierte esas necesidades en la hoja de ruta de Centinela y Contralitigador y cuida que cada función resuelva un problema real con una experiencia clara.</p></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════
-     CASOS DE ÉXITO
-══════════════════════════════════════════ -->
-<section class="py-24 md:py-32 px-6 md:px-12 relative z-10" id="casos">
-  <div class="max-w-6xl mx-auto scroll-reveal">
-    <span class="text-xs tracking-widest uppercase text-brand-blue font-medium mb-4 block text-center">Casos de éxito</span>
-    <h2 class="text-3xl md:text-4xl font-light text-abyssal mb-6 text-center reveal-heading" style="animation-delay: 0.2s;">
-      Riesgo detectado <span class="font-serif italic">a tiempo.</span>
-    </h2>
-    <p class="text-center text-slate max-w-2xl mx-auto mb-14 text-lg">
-      Vulnerabilidades que cerramos antes de que fueran una crisis. Cultura de IA que ya opera en el día a día.
-    </p>
+</div>
 
-    <div class="grid md:grid-cols-3 gap-8 mt-16">
-      <!-- Caso 1: Transcriptly -->
-      <div class="glass-card rounded-2xl p-8 hover-lift caso-card">
-        <img class="caso-logo" src="assets/logos/transcriptly.png" alt="Transcriptly.ai">
-        <span class="caso-tag">Pentesting · Pre-lanzamiento</span>
-        <h3 class="caso-title">El panel de administración estaba abierto a internet.</h3>
-        <p class="caso-text">Dos hallazgos críticos antes de salir al mercado: backoffice sin control de acceso y entorno dev expuesto junto a producción.</p>
-        <div class="caso-stat">
-          <span class="caso-stat-num">2</span>
-          <span class="caso-stat-label">críticos cerrados<br>pre-lanzamiento</span>
-        </div>
-      </div>
+<!-- CONSULTA -->
+<section id="consulta">
+  <div class="wrap">
+    <div class="glass cta-panel reveal">
+      <span class="eyebrow">Empieza ahora</span>
+      <h2>Recupera el control<br>de tus <em>decisiones.</em></h2>
+      <p class="lead">Agenda un diagnóstico de 30 minutos con nuestro equipo de especialistas. Sin compromisos, puro valor estratégico.</p>
 
-      <!-- Caso 2: IA Amiga Lab -->
-      <div class="glass-card rounded-2xl p-8 hover-lift caso-card">
-        <img class="caso-logo" src="assets/logos/ia-amiga-lab.png" alt="IA Amiga Lab">
-        <span class="caso-tag">Pentesting + Remediación</span>
-        <h3 class="caso-title">Una puerta abierta hacia los datos de un cliente B2B.</h3>
-        <p class="caso-text">Acceso no autorizado con un correo falso a la información de un piloto empresarial. Cerrado con matriz re-ejecutable y retest con evidencia.</p>
-        <div class="caso-stat">
-          <span class="caso-stat-num">18</span>
-          <span class="caso-stat-label">hallazgos · 1 crítico<br>remediados + retest</span>
+      <form id="demoForm" onsubmit="return handleFormSubmit(event)" novalidate>
+        <div class="row">
+          <input class="field" type="text" name="nombre" placeholder="Nombre completo" autocomplete="name" required>
+          <input class="field" type="email" name="email" placeholder="Email corporativo" autocomplete="email" required>
         </div>
-      </div>
-
-      <!-- Caso 3: IA para Pymes -->
-      <div class="glass-card rounded-2xl p-8 hover-lift caso-card">
-        <img class="caso-logo" src="assets/logos/ia-parapymes.png" alt="IA para Pymes">
-        <span class="caso-tag">Consultoría · Cultura de IA</span>
-        <h3 class="caso-title">La IA como método de trabajo, no como un proyecto aislado.</h3>
-        <p class="caso-text">Herramientas integradas al flujo real: procesos más eficaces, decisiones con criterio humano y tecnología al servicio del equipo.</p>
-        <div class="caso-stat">
-          <span class="caso-stat-num">100%</span>
-          <span class="caso-stat-label">adopción en el<br>día a día del equipo</span>
+        <div class="row">
+          <input class="field" type="text" name="empresa" placeholder="Empresa o bufete" autocomplete="organization">
+          <select class="field" name="interes" required>
+            <option value="" disabled selected>¿Dónde está tu cuello de botella?</option>
+            <option value="En la primera pasada: leer, clasificar, verificar y cruzar datos">En la primera pasada: leer, clasificar, verificar y cruzar datos</option>
+            <option value="Tengo herramientas pero el proceso no escala — necesito rediseño">Tengo herramientas pero el proceso no escala, necesito rediseño</option>
+            <option value="Quiero que la IA ejecute y mi equipo decida">Quiero que la IA ejecute y mi equipo decida</option>
+            <option value="No lo sé — necesito un diagnóstico">No lo sé, necesito un diagnóstico</option>
+          </select>
         </div>
-      </div>
+        <!-- Honeypot antispam: oculto, si tiene valor es un bot. NUNCA va al payload -->
+        <input class="hp" type="text" name="empresa_web" id="hpField" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <!-- Ley 1581 de 2012: autorización previa y expresa. El backend rechaza el lead sin ella -->
+        <label class="consent">
+          <input type="checkbox" name="consentimiento" required>
+          <span>Autorizo a Aurea Legal a tratar mis datos para responder esta solicitud, según la <a href="/privacidad" target="_blank" rel="noopener">Política de Privacidad</a>.</span>
+        </label>
+        <button type="submit" class="btn btn-ice">Agenda una consultoría
+          <svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12l-7.5 7.5M21 12H3"/></svg>
+        </button>
+        <div id="demoMsg" role="status" aria-live="polite"></div>
+      </form>
     </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════
-     7 PILARES
-══════════════════════════════════════════ -->
-<section class="py-24 md:py-32 px-6 md:px-12 relative z-10" id="arquitectura">
-  <div class="max-w-6xl mx-auto scroll-reveal">
-    <span class="text-xs tracking-widest uppercase text-brand-blue font-medium mb-4 block text-center">Cómo funciona realmente</span>
-    <h2 class="text-3xl md:text-4xl font-light text-abyssal mb-6 text-center reveal-heading" style="animation-delay: 0.2s;">
-      Los 7 pilares <span class="font-serif italic">de nuestra implementación</span>
-    </h2>
-
-    <div class="text-center mb-14 mt-8 max-w-2xl mx-auto">
-      <p class="text-lg text-abyssal font-medium">Ninguna decisión se ejecuta sin la firma de un humano autorizado.</p>
-      <p class="text-slate mt-1">La IA analiza. El equipo decide. <span class="font-serif italic font-medium text-abyssal">Siempre.</span></p>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div class="glass-card p-6 rounded-2xl hover-lift">
-        <div class="text-3xl font-black text-brand-blue/15 mb-3">01</div>
-        <h3 class="text-base font-semibold text-abyssal mb-2">Diagnóstico de proceso</h3>
-        <p class="text-slate text-sm leading-relaxed">No automatizamos sin antes entender tu operación real. La IA no reemplaza el análisis: lo potencia.</p>
-      </div>
-      <div class="glass-card p-6 rounded-2xl hover-lift border-brand-blue/30 bg-brand-blue/[0.03]">
-        <div class="text-3xl font-black text-brand-blue/15 mb-3">02</div>
-        <h3 class="text-base font-semibold text-abyssal mb-2">Human-in-the-Loop</h3>
-        <p class="text-slate text-sm leading-relaxed">Ninguna decisión se ejecuta sin firma humana. La IA clasifica y propone; tu equipo decide.</p>
-      </div>
-      <div class="glass-card p-6 rounded-2xl hover-lift">
-        <div class="text-3xl font-black text-brand-blue/15 mb-3">03</div>
-        <h3 class="text-base font-semibold text-abyssal mb-2">Trazabilidad auditable</h3>
-        <p class="text-slate text-sm leading-relaxed">Cada acción del agente queda registrada con hash criptográfico. El rastro resiste una auditoría.</p>
-      </div>
-      <div class="glass-card p-6 rounded-2xl hover-lift">
-        <div class="text-3xl font-black text-brand-blue/15 mb-3">04</div>
-        <h3 class="text-base font-semibold text-abyssal mb-2">Implementación a medida</h3>
-        <p class="text-slate text-sm leading-relaxed">No vendemos software que instalas. Diseñamos el proceso contigo, construimos sobre tu stack.</p>
-      </div>
-      <div class="glass-card p-6 rounded-2xl hover-lift">
-        <div class="text-3xl font-black text-brand-blue/15 mb-3">05</div>
-        <h3 class="text-base font-semibold text-abyssal mb-2">Validación contra fuentes</h3>
-        <p class="text-slate text-sm leading-relaxed">El agente no opina: cita la fuente exacta — norma, precedente, sanción, lista PEP. Sin alucinaciones.</p>
-      </div>
-      <div class="glass-card p-6 rounded-2xl hover-lift">
-        <div class="text-3xl font-black text-brand-blue/15 mb-3">06</div>
-        <h3 class="text-base font-semibold text-abyssal mb-2">Escalabilidad sin fricción</h3>
-        <p class="text-slate text-sm leading-relaxed">Procesa cientos de expedientes en paralelo sin añadir headcount. Crece con tu operación.</p>
-      </div>
-      <div class="glass-card p-6 rounded-2xl hover-lift">
-        <div class="text-3xl font-black text-brand-blue/15 mb-3">07</div>
-        <h3 class="text-base font-semibold text-abyssal mb-2">Transferencia de conocimiento</h3>
-        <p class="text-slate text-sm leading-relaxed">No te atamos a nosotros. Documentamos, capacitamos a tu equipo y te dejamos el control del sistema.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════
-     CHAT AGENTE
-══════════════════════════════════════════ -->
-<section class="py-24 md:py-32 px-6 md:px-12 relative z-10" id="agente">
-  <div class="scroll-reveal">
-    <span class="text-xs tracking-widest uppercase text-brand-blue font-medium mb-4 block text-center">Respuestas rápidas</span>
-    <h2 class="text-3xl md:text-4xl font-light text-abyssal mb-12 text-center reveal-heading" style="animation-delay: 0.2s;">
-      Lo que más nos preguntan <span class="font-serif italic">sobre Aurea</span>
-    </h2>
-
-    <div class="chat-dashboard" id="chatBox">
-      <!-- Sidebar -->
-      <aside class="chat-sidebar">
-        <div>
-          <div class="chat-logo">
-            <div class="chat-logo-icon">A</div>
-            <div class="chat-logo-name">Aurea <i>Legal</i></div>
-          </div>
-          <div class="chat-quick-label">Preguntas frecuentes</div>
-          <div class="chat-quick-item" onclick="chatSend('¿Cómo funciona Centinela para AML y KYC?')">
-            <div class="chat-quick-icon blue">AML</div>
-            <div>
-              <div class="chat-quick-text-top">Centinela</div>
-              <div class="chat-quick-text-main">Debida diligencia</div>
-            </div>
-          </div>
-          <div class="chat-quick-item" onclick="chatSend('¿Cómo apoya Contralitigador al equipo legal?')">
-            <div class="chat-quick-icon blue" style="background:rgba(75,143,234,.06);font-size:15px;">⚖</div>
-            <div>
-              <div class="chat-quick-text-top">Contralitigador</div>
-              <div class="chat-quick-text-main">Estrategia legal</div>
-            </div>
-          </div>
-          <div class="chat-quick-item" onclick="chatSend('¿Cómo evita alucinar el agente al clasificar un riesgo?')">
-            <div class="chat-quick-icon blue" style="background:rgba(16,185,129,.08);color:#10b981;">✓</div>
-            <div>
-              <div class="chat-quick-text-top">Arquitectura</div>
-              <div class="chat-quick-text-main">Human-in-the-loop</div>
-            </div>
-          </div>
-        </div>
-        <div class="chat-user-foot">
-          <div class="chat-user-avatar">DM</div>
-          <div>
-            <div class="chat-user-name">David Montejo</div>
-            <div class="chat-user-role">Fundador · Aurea Legal</div>
-          </div>
-        </div>
-      </aside>
-
-      <!-- Main chat -->
-      <div class="chat-main">
-        <div class="chat-main-header">
-          <span class="chat-main-title">Preguntas frecuentes</span>
-        </div>
-        <div class="chat-messages" id="chatMsgs">
-          <div class="chat-msg bot">Hola. Aquí tienes respuestas directas sobre Centinela, Contralitigador y la arquitectura human-in-the-loop. Elige un tema o escribe una palabra clave. Para tu caso puntual, agenda una consultoría y te responde una persona del equipo.</div>
-        </div>
-        <div class="chat-chips">
-          <button class="chat-chip" onclick="chatSend('¿Cómo evita alucinar el agente?')">¿Cómo evita alucinar?</button>
-          <button class="chat-chip" onclick="chatSend('¿Qué pasa si el agente detecta un cliente de alto riesgo?')">¿Riesgo alto?</button>
-          <button class="chat-chip" onclick="chatSend('¿Qué queda registrado para una auditoría?')">¿Qué se registra?</button>
-        </div>
-        <div class="chat-input-row">
-          <input class="chat-input" id="chatInput" type="text" placeholder="Busca un tema: Centinela, riesgo, auditoría…" onkeydown="if(event.key==='Enter')chatSend(this.value)">
-          <button class="chat-send-btn" id="chatSendBtn" onclick="chatSend(document.getElementById('chatInput').value)">
-            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════
-     EQUIPO
-══════════════════════════════════════════ -->
-<section class="py-24 md:py-32 px-6 md:px-12 relative z-10" id="equipo">
-  <div class="max-w-4xl mx-auto scroll-reveal">
-    <span class="text-xs tracking-widest uppercase text-brand-blue font-medium mb-4 block text-center">Quién construye esto</span>
-    <h2 class="text-3xl md:text-4xl font-light text-abyssal mb-6 text-center reveal-heading" style="animation-delay: 0.2s;">
-      Una empresa AI-native,<br><span class="font-serif italic">no un equipo de 40</span>
-    </h2>
-
-    <div class="space-y-6 mt-14">
-      <!-- David -->
-      <div class="glass-card-strong p-8 rounded-2xl flex flex-col sm:flex-row gap-6 items-start">
-        <img src="david_montejo.png" alt="David Montejo" class="w-20 h-20 rounded-full object-cover flex-shrink-0 border-2 border-white/60" loading="lazy">
-        <div>
-          <h3 class="text-xl font-semibold text-abyssal">David Montejo</h3>
-          <div class="text-sm text-brand-blue font-medium mb-3">CEO & Fundador</div>
-          <p class="text-slate leading-relaxed text-sm">Dirijo Aurea Legal como una empresa AI-native: la ingeniería, el diseño y el producto los lidero yo, y el equipo lo completan los propios agentes que construyo — Centinela y Contralitigador son la prueba, no el argumento de venta. Menos capas, mismo rigor.</p>
-        </div>
-      </div>
-
-      <!-- Giancarlo -->
-      <div class="glass-card-strong p-8 rounded-2xl flex flex-col sm:flex-row gap-6 items-start">
-        <img src="Giancarlo.jpeg" alt="Giancarlo Vilcapoma" class="w-20 h-20 rounded-full object-cover flex-shrink-0 border-2 border-white/60" loading="lazy">
-        <div>
-          <h3 class="text-xl font-semibold text-abyssal">Giancarlo Vilcapoma</h3>
-          <div class="text-sm text-brand-blue font-medium mb-3">CTO · Arquitecto de Sistemas AI</div>
-          <p class="text-slate leading-relaxed text-sm">Ingeniero de software con dominio profundo de arquitecturas distribuidas, agentes autónomos y pipelines de machine learning en producción. Lidera el stack tecnológico que potencia a Centinela y Contralitigador, asegurando que cada agente opere con precisión, escala y resiliencia enterprise.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════════
-     CTA FINAL + FORM
-══════════════════════════════════════════ -->
-<section class="py-32 px-6 md:px-12 relative z-10 overflow-hidden" id="consulta">
-  <div class="max-w-3xl mx-auto text-center relative z-10 scroll-reveal">
-    <span class="text-xs tracking-widest uppercase text-brand-blue font-medium mb-4 block">Empieza ahora</span>
-    <h2 class="text-4xl md:text-5xl font-light text-abyssal mb-4 reveal-heading" style="animation-delay: 0.2s;">
-      Recupere el control<br>de sus decisiones.
-    </h2>
-    <p class="text-xl text-slate mb-12 font-light">Agende un diagnóstico de 30 minutos con nuestro equipo de especialistas. Sin compromisos, puro valor estratégico.</p>
-
-    <!-- Form -->
-    <form class="max-w-xl mx-auto space-y-4" id="demoForm" onsubmit="return handleFormSubmit(event)">
-      <div class="grid sm:grid-cols-2 gap-4">
-        <input type="text" name="nombre" placeholder="Nombre completo" required
-               class="w-full px-5 py-3.5 bg-white/50 backdrop-blur-sm border border-slate/20 rounded-xl text-abyssal placeholder:text-slate/50 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/10 transition-all text-sm">
-        <input type="email" name="email" placeholder="Email corporativo" required
-               class="w-full px-5 py-3.5 bg-white/50 backdrop-blur-sm border border-slate/20 rounded-xl text-abyssal placeholder:text-slate/50 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/10 transition-all text-sm">
-      </div>
-      <div class="grid sm:grid-cols-2 gap-4">
-        <input type="text" name="empresa" placeholder="Empresa o bufete"
-               class="w-full px-5 py-3.5 bg-white/50 backdrop-blur-sm border border-slate/20 rounded-xl text-abyssal placeholder:text-slate/50 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/10 transition-all text-sm">
-        <select name="interes"
-                class="w-full px-5 py-3.5 bg-white/50 backdrop-blur-sm border border-slate/20 rounded-xl text-abyssal text-sm focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/10 transition-all">
-          <option value="">¿Dónde está tu cuello de botella?</option>
-          <option value="En la primera pasada: leer, clasificar, verificar y cruzar datos">En la primera pasada: leer, clasificar, verificar y cruzar datos</option>
-          <option value="Tengo herramientas pero el proceso no escala — necesito rediseño">Tengo herramientas pero el proceso no escala — necesito rediseño</option>
-          <option value="Quiero que la IA ejecute y mi equipo decida">Quiero que la IA ejecute y mi equipo decida</option>
-          <option value="No lo sé — necesito un diagnóstico">No lo sé — necesito un diagnóstico</option>
-        </select>
-      </div>
-      <!-- Honeypot antispam: oculto, si tiene valor es un bot. NUNCA va al payload -->
-      <input type="text" name="empresa_web" id="hpField" tabindex="-1" autocomplete="off"
-             aria-hidden="true"
-             style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
-      <!-- Ley 1581 de 2012: autorizacion previa y expresa. El backend rechaza el lead sin ella -->
-      <label class="flex items-start gap-3 text-left text-xs text-slate" style="cursor:pointer">
-        <input type="checkbox" name="consentimiento" required
-               class="mt-0.5 w-4 h-4 shrink-0" style="accent-color:#0B1320;cursor:pointer">
-        <span>Autorizo a Aurea Legal a tratar mis datos para responder esta solicitud, según la
-          <a href="/privacidad" target="_blank" rel="noopener" class="underline hover:text-abyssal">Política de Privacidad</a>.</span>
-      </label>
-      <button type="submit"
-              class="w-full sm:w-auto inline-flex items-center justify-center px-10 py-4 text-base font-medium text-soft-luminous bg-abyssal border-2 border-abyssal rounded-full hover:bg-transparent hover:text-abyssal transition-all duration-300 transform hover:-translate-y-0.5 shadow-md hover:shadow-lg">
-        Agenda una consultoría
-        <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-      </button>
-      <div id="demoMsg" class="text-sm mt-3 hidden"></div>
-    </form>
   </div>
 </section>
 
 </main>
 
-<!-- ══════════════════════════════════════════
-     FOOTER
-══════════════════════════════════════════ -->
-<footer class="bg-abyssal text-soft-luminous py-16 px-6 md:px-12 border-t border-slate/20 relative z-10">
-  <div class="max-w-6xl mx-auto">
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-10">
-
-      <!-- Brand + Social -->
-      <div class="col-span-2 md:col-span-1 space-y-5">
-        <div class="flex items-center gap-2">
-          <div class="w-7 h-7 rounded-md bg-brand-blue/20 flex items-center justify-center font-bold text-brand-blue text-xs">AL</div>
-          <span class="text-base font-semibold tracking-tight">Aurea <span class="font-serif italic font-normal text-slate/60">Legal</span></span>
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a href="#" class="brand"><span class="brand-mark">A</span>Aurea Legal</a>
+        <p>Agentes de IA con arquitectura human-in-the-loop para equipos jurídicos y de compliance en Latinoamérica.</p>
+        <div class="social">
+          <a href="https://www.instagram.com/montlined/" target="_blank" rel="noopener" aria-label="Instagram"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor"/></svg></a>
+          <a href="https://www.linkedin.com/in/david-montejo5/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.84-2.05 3.78-2.05C20.6 8.65 21 11.2 21 14.5V21h-4v-5.8c0-1.4-.03-3.2-1.95-3.2-1.95 0-2.25 1.52-2.25 3.1V21H9z"/></svg></a>
+          <a href="https://www.youtube.com/@Montlined" target="_blank" rel="noopener" aria-label="YouTube"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M23 7.2a3 3 0 00-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 001 7.2 31 31 0 00.5 12 31 31 0 001 16.8a3 3 0 002.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 002.1-2.1 31 31 0 00.5-4.8 31 31 0 00-.5-4.8zM9.8 15.1V8.9L15.2 12z"/></svg></a>
+          <a href="mailto:admin@aurea.legal" aria-label="Email"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a>
         </div>
-        <div class="flex gap-3">
-          <a href="https://www.instagram.com/montlined/" target="_blank" rel="noopener" aria-label="Instagram" class="w-8 h-8 rounded-full bg-soft-luminous/8 flex items-center justify-center hover:bg-soft-luminous/15 transition-colors">
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5"/></svg>
-          </a>
-          <a href="https://www.linkedin.com/in/david-montejo5/" target="_blank" rel="noopener" aria-label="LinkedIn" class="w-8 h-8 rounded-full bg-soft-luminous/8 flex items-center justify-center hover:bg-soft-luminous/15 transition-colors">
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-          </a>
-          <a href="https://www.youtube.com/@Montlined" target="_blank" rel="noopener" aria-label="YouTube" class="w-8 h-8 rounded-full bg-soft-luminous/8 flex items-center justify-center hover:bg-soft-luminous/15 transition-colors">
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 00-1.94-1.95C18.88 4 12 4 12 4s-6.88 0-8.6.47A2.78 2.78 0 001.46 6.42C1 8.14 1 12 1 12s0 3.86.46 5.58a2.78 2.78 0 001.94 1.95C5.12 20 12 20 12 20s6.88 0 8.6-.47a2.78 2.78 0 001.94-1.95C23 15.86 23 12 23 12s0-3.86-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
-          </a>
-          <a href="mailto:admin@aurea.legal" aria-label="Email" class="w-8 h-8 rounded-full bg-soft-luminous/8 flex items-center justify-center hover:bg-soft-luminous/15 transition-colors">
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 6l10 7 10-7"/></svg>
-          </a>
-        </div>
-        <p class="text-slate/40 text-xs">© 2026. Todos los derechos reservados.</p>
       </div>
-
-      <!-- Proyectos -->
-      <div>
-        <h3 class="text-xs font-semibold tracking-widest uppercase text-slate/50 mb-4">Proyectos</h3>
-        <ul class="space-y-2.5">
-          <li><a href="#productos" class="text-sm text-slate/70 hover:text-soft-luminous transition-colors">Centinela AI</a></li>
-          <li><a href="#contralitigador" class="text-sm text-slate/70 hover:text-soft-luminous transition-colors">Contralitigador AI</a></li>
-          <li><a href="#agente" class="text-sm text-slate/70 hover:text-soft-luminous transition-colors">Preguntas frecuentes</a></li>
-        </ul>
-      </div>
-
-      <!-- Recursos -->
-      <div>
-        <h3 class="text-xs font-semibold tracking-widest uppercase text-slate/50 mb-4">Recursos</h3>
-        <ul class="space-y-2.5">
-          <li><a href="/recursos" class="text-sm text-slate/70 hover:text-soft-luminous transition-colors">Casos de Uso</a></li>
-          <li><a href="playbooks/Guia-LegalTech.html" class="text-sm text-slate/70 hover:text-soft-luminous transition-colors">Guía LegalTech</a></li>
-        </ul>
-      </div>
-
-      <!-- Sectores -->
-      <div>
-        <h3 class="text-xs font-semibold tracking-widest uppercase text-slate/50 mb-4">Sectores</h3>
-        <ul class="space-y-2.5">
-          <li><a href="#consulta" class="text-sm text-slate/70 hover:text-soft-luminous transition-colors">Banca & Fintech</a></li>
-          <li><a href="#consulta" class="text-sm text-slate/70 hover:text-soft-luminous transition-colors">Seguros</a></li>
-          <li><a href="#consulta" class="text-sm text-slate/70 hover:text-soft-luminous transition-colors">Bufetes Corporativos</a></li>
-          <li><a href="#consulta" class="text-sm text-slate/70 hover:text-soft-luminous transition-colors">Compliance</a></li>
-        </ul>
-      </div>
-
-      <!-- Legal -->
-      <div>
-        <h3 class="text-xs font-semibold tracking-widest uppercase text-slate/50 mb-4">Legal</h3>
-        <ul class="space-y-2.5">
-          <li><a href="privacidad.html" class="text-sm text-slate/70 hover:text-soft-luminous transition-colors">Política de Privacidad</a></li>
-          <li><a href="terminos.html" class="text-sm text-slate/70 hover:text-soft-luminous transition-colors">Términos y Condiciones</a></li>
-        </ul>
-      </div>
-
+      <div><h4>Proyectos</h4><ul><li><a href="#productos">Centinela AI</a></li><li><a href="#contralitigador">Contralitigador AI</a></li></ul></div>
+      <div><h4>Recursos</h4><ul><li><a href="/recursos">Casos de uso</a></li><li><a href="playbooks/Guia-LegalTech.html">Guía LegalTech</a></li></ul></div>
+      <div><h4>Sectores</h4><ul><li><a href="#consulta">Banca & Fintech</a></li><li><a href="#consulta">Seguros</a></li><li><a href="#consulta">Bufetes corporativos</a></li><li><a href="#consulta">Compliance</a></li></ul></div>
+      <div><h4>Legal</h4><ul><li><a href="privacidad.html">Política de Privacidad</a></li><li><a href="terminos.html">Términos y Condiciones</a></li></ul></div>
     </div>
-
-    <!-- Bottom bar -->
-    <div class="mt-12 pt-6 border-t border-slate/10 text-center">
-      <p class="text-slate/40 text-xs">Velocidad <span class="text-brand-blue/60">artificial.</span> Responsabilidad <span class="text-brand-blue/60">humana.</span></p>
-    </div>
+    <div class="copy"><span>© 2026 Aurea Legal. Todos los derechos reservados.</span><span>La IA propone. El humano decide.</span></div>
   </div>
 </footer>
 
-<!-- ══════════════════════════════════════════
-     SCRIPTS
-══════════════════════════════════════════ -->
 <script>
-  // Scroll reveal options (scope global: usado por el observer de abajo)
-  const observerOptions = {
-    root: null,
-    rootMargin: '0px 0px 80px 0px',
-    threshold: 0.05
-  };
+  /* Menú móvil */
+  function toggleMenu(btn) {
+    const m = document.getElementById('mobileMenu');
+    const open = m.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open);
+  }
+  document.querySelectorAll('#mobileMenu a').forEach(a => a.addEventListener('click', () => {
+    document.getElementById('mobileMenu').classList.remove('open');
+  }));
 
-  // Mouse parallax
-  document.addEventListener('DOMContentLoaded', () => {
-    document.body.addEventListener('mousemove', (e) => {
-      const { clientX, clientY } = e;
-      const { innerWidth, innerHeight } = window;
-      const x = clientX - innerWidth / 2;
-      const y = clientY - innerHeight / 2;
-      document.body.style.setProperty('--mouse-x', `${x}px`);
-      document.body.style.setProperty('--mouse-y', `${y}px`);
+  /* Nav clara cuando pasa sobre el panel blanco */
+  const nav = document.getElementById('mainNav');
+  const lightZone = document.querySelector('.light');
+  function navTone() {
+    const r = lightZone.getBoundingClientRect(), y = nav.getBoundingClientRect().bottom - 20;
+    nav.classList.toggle('on-light', r.top < y && r.bottom > y);
+  }
+  addEventListener('scroll', navTone, { passive: true }); addEventListener('resize', navTone); navTone();
+
+  /* ── Animaciones de entrada ─────────────────────────────
+     Cada componente recibe un efecto según su tipo; los hermanos
+     de una misma fila entran escalonados. */
+  (function () {
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // En el mapa de calor del panel la página se ve entera y quieta.
+    if (reduce || /[?&]mapa-de-calor=1/.test(location.search) || !('IntersectionObserver' in window)) return;
+    const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+    const tagged = new Set();
+    const tag = (el, cls, delay = 0) => {
+      if (tagged.has(el)) return;
+      tagged.add(el); el.style.transition = 'none'; el.classList.add(cls);
+      if (delay) el.style.setProperty('--d', delay + 's');
+    };
+
+    // Parte un titular en palabras sin perder <em>, <br> ni <span>
+    function splitWords(el) {
+      let i = 0;
+      (function walk(node) {
+        [...node.childNodes].forEach(n => {
+          if (n.nodeType === 3) {
+            const frag = document.createDocumentFragment();
+            n.textContent.split(/(\s+)/).forEach(part => {
+              if (!part) return;
+              if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+              const w = document.createElement('span'); w.className = 'w';
+              const wi = document.createElement('span'); wi.className = 'wi';
+              wi.textContent = part; wi.style.setProperty('--d', (i++ * 0.055).toFixed(3) + 's');
+              w.appendChild(wi); frag.appendChild(w);
+            });
+            n.replaceWith(frag);
+          } else if (n.nodeType === 1 && n.tagName !== 'BR') walk(n);
+        });
+      })(el);
+    }
+
+    // Hero: titular con barrido; el resto entra en cascada
+    tag(document.querySelector('.hero h1'), 'm-sweep', .15);
+    tag(document.querySelector('.hb-ctas'), 'm-fade', .4);
+    tag(document.querySelector('.alianzas'), 'm-fade');
+
+    // Panel blanco
+    tag(document.querySelector('.light'), 'm-sheet');
+
+    // Titulares grandes: palabras que suben
+    $$('main h2, .statement-big').forEach(el => { if (el.closest('.hero')) return; splitWords(el); tag(el, 'm-words'); });
+
+    // Imágenes y paneles: cortina
+    $$('.project-media, .bigcard').forEach(el => tag(el, 'm-wipe'));
+    $$('.member img').forEach(el => { el.style.setProperty('--r', '50%'); tag(el, 'm-wipe', .15); });
+
+    // Componentes: desvanecido con máscara, escalonado por fila
+    const groups = [
+      '.stats > .stat', '.duo > .glass', '.verdict > .cap', '.chain > div', '.findings > .glass',
+      '.steps > .step', '.cases > .case', '.pillars > .glass', '.team > .member', '.chips > span',
+      '.sky-copy > p'
+    ];
+    groups.forEach(sel => $$(sel).forEach(el => {
+      const idx = [...el.parentElement.children].indexOf(el);
+      tag(el, 'm-fade', Math.min(idx, 7) * 0.12);
+    }));
+    $$('main .eyebrow, main .lead, main h3, main p, main .metric, main .btn, .statement-note, .rule, .rule-note, .cta-panel form, footer .foot > div, footer .copy')
+      .forEach(el => { if (!el.closest('.m-fade, .m-words, .m-wipe, .m-sweep')) tag(el, 'm-fade', .08); });
+
+    // Cifras que cuentan hacia arriba cuando aparecen
+    function countUp(el) {
+      const node = [...el.childNodes].find(n => n.nodeType === 3 && /\d/.test(n.textContent));
+      if (!node) return;
+      const m = node.textContent.match(/(\d+)(.*)/); if (!m) return;
+      const target = +m[1], rest = m[2], t0 = performance.now(), dur = 2200;
+      (function step(t) {
+        const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(2, -10 * k);
+        node.textContent = Math.round(target * (k === 1 ? 1 : e)) + rest;
+        if (k < 1) requestAnimationFrame(step);
+      })(t0);
+    }
+
+    // El estado inicial se aplica sin transición (si no, lo ya pintado se desvanecería y volvería)
+    document.body.offsetWidth;
+    tagged.forEach(el => el.style.removeProperty('transition'));
+
+    // Un elemento con recorte (cortina) mide 0 px visibles: se observa a su contenedor
+    const targetsOf = new Map();
+    tagged.forEach(el => {
+      const trigger = el.classList.contains('m-wipe') ? el.parentElement : el;
+      if (!targetsOf.has(trigger)) targetsOf.set(trigger, []);
+      targetsOf.get(trigger).push(el);
     });
-  });
-
-/* ── NAV SCROLL ── */
-if (typeof ScrollTrigger !== 'undefined') {
-  ScrollTrigger.create({ start: 'top -50', onEnter: () => document.getElementById('mainNav').classList.add('scrolled'), onLeaveBack: () => document.getElementById('mainNav').classList.remove('scrolled') });
-}
-
-/* ── CURSOR GLOW ── */
-const glow = document.getElementById('cursorGlow');
-const darkEls = [document.querySelector('.hero'), document.querySelector('.architecture'), document.querySelector('.demo')];
-let glowOn = false;
-document.addEventListener('mousemove', e => {
-  if (!glow) return;
-  const onDark = darkEls.some(s => { if (!s) return false; const r = s.getBoundingClientRect(); return e.clientY >= r.top && e.clientY <= r.bottom; });
-  if (onDark && !glowOn) { glow.style.display = 'block'; glowOn = true; }
-  if (!onDark && glowOn) { glow.style.display = 'none'; glowOn = false; }
-  if (glowOn && typeof gsap !== 'undefined') gsap.to(glow, { x: e.clientX, y: e.clientY, duration: 0.55, ease: 'power2.out' });
-});
-
-/* ── MAGNETIC ── */
-if (typeof gsap !== 'undefined') {
-  document.querySelectorAll('.mag-btn').forEach(btn => {
-    btn.addEventListener('mousemove', e => { const r = btn.getBoundingClientRect(); gsap.to(btn, { x: (e.clientX - r.left - r.width/2)*0.28, y: (e.clientY - r.top - r.height/2)*0.28, duration: 0.35, ease: 'power2.out' }); });
-    btn.addEventListener('mouseleave', () => { gsap.to(btn, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.5)' }); });
-  });
-}
-
-/* ── MAIN ── */
-window.addEventListener('DOMContentLoaded', () => {
-
-  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-  const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
-  tl.from('#mainNav', { y: -28, autoAlpha: 0, duration: 0.7 })
-    .from('.hero-title .line-inner', { y: '110%', duration: 1, stagger: 0.14, ease: 'power4.out' }, '-=0.3')
-    .from('.hero-desc', { autoAlpha: 0, duration: 0.7 }, '-=0.35')
-    .from('.hero-cta', { autoAlpha: 0, y: 18, duration: 0.6 }, '-=0.4');
-
-  gsap.utils.toArray('.section-heading').forEach(el => {
-    gsap.from(el, { autoAlpha: 0, y: 48, duration: 1, ease: 'power4.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
-  });
-
-  const centinelaGrid = document.querySelector('.centinela-grid:not(.invert)');
-  if (centinelaGrid) {
-    gsap.from(centinelaGrid.querySelector('.centinela-images'), { autoAlpha: 0, x: -40, duration: 1, ease: 'power4.out', scrollTrigger: { trigger: centinelaGrid, start: 'top 82%', once: true } });
-    gsap.from(centinelaGrid.querySelector('.centinela-content'), { autoAlpha: 0, x: 40, duration: 1, ease: 'power4.out', scrollTrigger: { trigger: centinelaGrid, start: 'top 82%', once: true } });
-    gsap.from(centinelaGrid.querySelector('.centinela-overlay'), { autoAlpha: 0, y: 30, duration: .8, delay: .4, ease: 'power4.out', scrollTrigger: { trigger: centinelaGrid, start: 'top 82%', once: true } });
-  }
-
-  /* ── Real Estate AI section ── */
-  const reGrid = document.querySelector('.centinela-grid.re-grid');
-  if (reGrid) {
-    gsap.from(reGrid.querySelector('.centinela-images'), { autoAlpha: 0, x: -40, duration: 1, ease: 'power4.out', scrollTrigger: { trigger: reGrid, start: 'top 82%', once: true } });
-    gsap.from(reGrid.querySelector('.centinela-content'), { autoAlpha: 0, x: 40, duration: 1, ease: 'power4.out', scrollTrigger: { trigger: reGrid, start: 'top 82%', once: true } });
-  }
-
-  const contraGrid = document.querySelector('.centinela-grid.invert');
-  if (contraGrid) {
-    gsap.from(contraGrid.querySelector('.cl-dashboard-wrapper'), { autoAlpha: 0, x: 50, duration: 1.2, ease: 'power4.out', scrollTrigger: { trigger: contraGrid, start: 'top 80%', once: true } });
-    gsap.from(contraGrid.querySelector('.centinela-content'), { autoAlpha: 0, x: -50, duration: 1.2, ease: 'power4.out', scrollTrigger: { trigger: contraGrid, start: 'top 80%', once: true } });
-  }
-
-  document.querySelectorAll('.centinela-stat-num[data-to]').forEach(el => {
-    const target = parseInt(el.dataset.to), suffix = el.dataset.suffix || '', obj = { val: 0 };
-    gsap.set(el, { textContent: '0' + suffix });
-    ScrollTrigger.create({ trigger: el, start: 'top 88%', once: true, onEnter: () => { gsap.to(obj, { val: target, duration: 2.2, ease: 'power3.inOut', onUpdate: () => { el.textContent = Math.round(obj.val) + suffix; } }); } });
-  });
-  }
-
-  /* ── ARCHITECTURE: statement fade-in ── */
-  const archStmt = document.querySelector('.arch-statement');
-  if (archStmt) {
-    archStmt.style.opacity = '0';
-    archStmt.style.transform = 'translateY(24px)';
-    archStmt.style.transition = 'opacity .7s ease, transform .7s ease';
-    const stmtObs = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          obs.unobserve(entry.target);
-        }
+    const show = el => {
+        el.classList.add('in');
+        $$('.stat strong, .bigcard strong, .metric strong', el).concat(el.matches('.metric') ? [el.querySelector('strong')] : [])
+          .forEach(n => n && !n.dataset.counted && (n.dataset.counted = 1, countUp(n)));
+        const d = parseFloat(getComputedStyle(el).getPropertyValue('--d')) || 0;
+        setTimeout(() => el.classList.add('m-done'), (d + 2.8) * 1000);
+    };
+    // Umbral 0: entra cuando su borde superior pasa el 90% de la pantalla (sirve también para el panel blanco, que es muy alto)
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        io.unobserve(e.target);
+        targetsOf.get(e.target).forEach(show);
       });
-    }, observerOptions);
-    stmtObs.observe(archStmt);
-  }
+    }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
+    // Doble frame: el estado inicial se pinta antes de empezar, si no el hero aparecería de golpe
+    // Lo del hero entra al cargar aunque quede en el borde inferior de la pantalla
+    requestAnimationFrame(() => requestAnimationFrame(() => targetsOf.forEach((els, trigger) =>
+      trigger.closest('.hero') ? els.forEach(show) : io.observe(trigger))));
+    // Al llegar al final de la página, lo que quede pendiente (el pie) aparece igual
+    addEventListener('scroll', function atEnd() {
+      if (innerHeight + scrollY < document.documentElement.scrollHeight - 4) return;
+      removeEventListener('scroll', atEnd);
+      targetsOf.forEach((els, trigger) => { io.unobserve(trigger); els.forEach(el => el.classList.contains('in') || show(el)); });
+    }, { passive: true });
+  })();
 
-  /* ── SCROLL REVEAL (scroll-reveal) ── */
-  const observer = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          obs.unobserve(entry.target);
-        }
-      });
-    }, observerOptions);
+  /* Preguntas frecuentes: respuestas locales a propósito. El texto del visitante se escapa
+     ANTES de dar formato, así que nunca entra como HTML. */
+  (function () {
+    const R = {
+      centinela: 'Centinela es nuestro sistema de debida diligencia automatizada para compliance AML/KYC. Cruza cada expediente contra matriz de riesgo, listas PEP y sanciones internacionales (OFAC, ONU, UE). El agente clasifica, verifica y alerta, pero **nunca autoaprueba**. Cada vinculación queda en "Pendiente de Aprobación" hasta que el Oficial de Cumplimiento decide. Todo queda registrado con trazabilidad auditable y hash criptográfico.',
+      contralitigador: 'Contralitigador es nuestro sistema de análisis de precedentes para equipos legales. Cruza los hechos de cada caso contra jurisprudencia relevante y criterios internos del despacho. El agente propone líneas de argumentación con fuentes citadas, pero **ninguna estrategia se ejecuta sin el sign-off del abogado**. La IA analiza, el humano sentencia.',
+      alucinar: 'El agente no opina: **cita la fuente exacta** (norma, precedente, sanción, lista PEP). Cada afirmación va con su referencia. Si no encuentra fuente, lo declara en lugar de inventar. Y el humano siempre revisa antes de ejecutar: sin cajas negras.',
+      riesgo: 'Cuando el agente detecta un cliente de alto riesgo (PEP, sanciones, jurisdicción de riesgo), **bloquea el expediente y escala al Oficial de Cumplimiento** con un informe detallado. El Oficial revisa, decide y firma. El agente nunca desbloquea por su cuenta.',
+      auditoria: 'Cada acción del agente queda registrada con **hash criptográfico y timestamp**: quién inició el expediente, qué verificaciones ejecutó el agente, qué fuentes citó, qué decidió el humano y quién firmó. Es un rastro que resiste una auditoría de compliance.',
+      otra: 'No tengo una respuesta preparada para eso. Puedo contarte sobre:\n• **Centinela**: debida diligencia AML/KYC automatizada\n• **Contralitigador**: análisis de precedentes legales\n• **Arquitectura human-in-the-loop**: cómo la IA nunca decide sola\nSi tu pregunta es sobre tu caso, mejor que te responda una persona del equipo.'
+    };
+    const msgs = document.getElementById('chatMsgs'), input = document.getElementById('chatInput');
+    if (!msgs) return;
+    const escapar = t => t.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    function agregar(quien, texto, conCta) {
+      const div = document.createElement('div');
+      div.className = 'faq-msg ' + quien;
+      div.innerHTML = escapar(texto).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+      if (conCta) div.insertAdjacentHTML('beforeend', '<br><br><a href="#consulta">Agenda una consultoría &rarr;</a>');
+      msgs.appendChild(div);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+    function responder(t) {
+      const q = t.toLowerCase();
+      if (/centinela|aml|kyc/.test(q)) return R.centinela;
+      if (/contralitigador|precedente|jurisprudencia/.test(q)) return R.contralitigador;
+      if (/alucina|fuente|cita/.test(q)) return R.alucinar;
+      if (/riesgo|detecta/.test(q)) return R.riesgo;
+      if (/auditor|registr|trazabilidad/.test(q)) return R.auditoria;
+      return R.otra;
+    }
+    function preguntar(t) {
+      t = (t || '').trim().slice(0, 300);
+      if (!t) return;
+      agregar('user', t);
+      input.value = '';
+      const r = responder(t);
+      setTimeout(() => agregar('bot', r, r === R.otra), 380);
+    }
+    document.querySelectorAll('[data-pregunta]').forEach(b => b.addEventListener('click', () => preguntar(b.dataset.pregunta)));
+    document.getElementById('chatForm').addEventListener('submit', e => { e.preventDefault(); preguntar(input.value); });
+  })();
 
-    document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
-
-    // Fallback: reveal all after 2s if observer hasn't fired
-    setTimeout(() => {
-      document.querySelectorAll('.scroll-reveal:not(.is-visible)').forEach(el => {
-        el.classList.add('is-visible');
-      });
-    }, 2000);
-  });
-
-  // Form handler — con fallback real: error visible + Reintentar + WhatsApp
+  /* Formulario — mismo contrato que index.html: POST /api/demo-request,
+     error visible + Reintentar + WhatsApp para que el lead nunca se pierda */
   const WHATSAPP_NUMBER = '573013188696';
   let lastLead = null;
+
+  function showMsg(kind, html) {
+    const msg = document.getElementById('demoMsg');
+    msg.className = kind;
+    msg.innerHTML = html;
+  }
 
   function buildWhatsAppUrl(data) {
     const texto = `Hola Aurea Legal, soy ${data.nombre}${data.empresa ? ' de ' + data.empresa : ''}. Me interesa: ${data.interes || 'un diagnóstico'}. Email: ${data.email}.`;
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(texto)}`;
   }
 
-  async function submitLead(data, msg, btn, originalHtml) {
+  async function submitLead(data, btn, originalHtml) {
     try {
       const res = await fetch('/api/demo-request', {
         method: 'POST',
@@ -1282,21 +1268,17 @@ window.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify(data)
       });
       if (!res.ok) throw new Error('HTTP ' + res.status);
-      msg.className = 'text-sm mt-3 text-emerald-600';
-      msg.textContent = '¡Gracias! Te contactaremos en las próximas 24 horas.';
-      msg.classList.remove('hidden');
-      const form = document.getElementById('demoForm');
-      form.reset();
+      showMsg('ok', '¡Gracias! Te contactaremos en las próximas 24 horas.');
+      document.dispatchEvent(new CustomEvent('aurea:lead', { detail: { ok: true } }));
+      document.getElementById('demoForm').reset();
       lastLead = null;
       return true;
     } catch (err) {
-      // Error real: no se pierde el lead en silencio
-      msg.className = 'text-sm mt-3 text-red-600';
-      msg.innerHTML =
+      document.dispatchEvent(new CustomEvent('aurea:lead', { detail: { ok: false } }));
+      showMsg('err',
         'No pudimos enviar tu solicitud. ' +
-        '<button type="button" onclick="retryLead()" class="underline font-medium">Reintentar</button> ' +
-        'o <a href="' + buildWhatsAppUrl(data) + '" target="_blank" rel="noopener" class="underline font-medium">escríbenos por WhatsApp</a>.';
-      msg.classList.remove('hidden');
+        '<button type="button" onclick="retryLead()">Reintentar</button> o ' +
+        '<a href="' + buildWhatsAppUrl(data) + '" target="_blank" rel="noopener">escríbenos por WhatsApp</a>.');
       return false;
     } finally {
       if (btn) { btn.disabled = false; btn.innerHTML = originalHtml; }
@@ -1304,18 +1286,15 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   function retryLead() {
-    const msg = document.getElementById('demoMsg');
-    const btn = document.querySelector('#demoForm button[type="submit"]');
     if (!lastLead) return;
-    msg.className = 'text-sm mt-3 text-slate';
-    msg.textContent = 'Reintentando…';
-    submitLead(lastLead, msg, btn, btn ? btn.innerHTML : '');
+    const btn = document.querySelector('#demoForm button[type="submit"]');
+    showMsg('', 'Reintentando…');
+    submitLead(lastLead, btn, btn.innerHTML);
   }
 
   async function handleFormSubmit(e) {
     e.preventDefault();
     const form = e.target;
-    const msg = document.getElementById('demoMsg');
     const btn = form.querySelector('button[type="submit"]');
     const originalHtml = btn.innerHTML;
 
@@ -1332,88 +1311,28 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     if (!data.nombre || !data.email) {
-      msg.className = 'text-sm mt-3 text-red-500';
-      msg.textContent = 'Por favor complete nombre y email.';
-      msg.classList.remove('hidden');
+      showMsg('err', 'Por favor completa nombre y email.');
+      (data.nombre ? form.email : form.nombre).focus();
       return false;
     }
-
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+      showMsg('err', 'Revisa el email: parece incompleto.');
+      form.email.focus();
+      return false;
+    }
     if (!data.consentimiento) {
-      msg.className = 'text-sm mt-3 text-red-500';
-      msg.textContent = 'Para enviarte una respuesta necesitamos tu autorización de tratamiento de datos.';
-      msg.classList.remove('hidden');
+      showMsg('err', 'Para enviarte una respuesta necesitamos tu autorización de tratamiento de datos.');
       return false;
     }
 
     btn.disabled = true;
-    btn.textContent = 'Enviando...';
+    btn.textContent = 'Enviando…';
     lastLead = data;
-    await submitLead(data, msg, btn, originalHtml);
+    await submitLead(data, btn, originalHtml);
     return false;
   }
-
-  /* ══════════════════════════════════════════
-     CHAT AGENT
-  ══════════════════════════════════════════ */
-  let chatSending = false;
-  const chatResponses = {
-    centinela: 'Centinela es nuestro sistema de debida diligencia automatizada para compliance AML/KYC. Cruza cada expediente contra matriz de riesgo, listas PEP y sanciones internacionales (OFAC, ONU, UE). El agente clasifica, verifica y alerta — pero **nunca autoaprueba**. Cada vinculación queda en "Pendiente de Aprobación" hasta que el Oficial de Cumplimiento decide. Todo queda registrado con trazabilidad auditable y hash criptográfico.',
-    contralitigador: 'Contralitigador es nuestro sistema de análisis de precedentes para equipos legales. Cruza los hechos de cada caso contra jurisprudencia relevante y criterios internos del despacho. El agente propone líneas de argumentación con fuentes citadas — pero **ninguna estrategia se ejecuta sin el sign-off del abogado**. Mismo esqueleto de control humano: la IA analiza, el humano sentencia.',
-    alucinar: 'El agente no opina: **cita la fuente exacta** — norma, precedente, sanción, lista PEP. Cada afirmación va acompañada de su referencia. Si no encuentra fuente, lo declara explícitamente en lugar de inventar. Además, el humano siempre revisa antes de ejecutar. Esa es la arquitectura human-in-the-loop: sin cajas negras.',
-    riesgo: 'Cuando el agente detecta un cliente de alto riesgo (PEP, sanciones, jurisdicción de riesgo), **bloquea el expediente y escala al Oficial de Cumplimiento** con un informe detallado. El Oficial revisa, decide y firma. El agente nunca desbloquea por su cuenta. Todo queda registrado para auditoría.',
-    auditoria: 'Cada acción del agente queda registrada con **hash criptográfico y timestamp**. El rastro incluye: quién inició el expediente, qué verificaciones ejecutó el agente, qué fuentes citó, qué decisión tomó el humano, y quién firmó. Es un rastro que resiste cualquier auditoría de compliance.',
-    default: 'No tengo una respuesta preparada para eso. Puedo contarte sobre:\n\n• **Centinela** — debida diligencia AML/KYC automatizada\n• **Contralitigador** — análisis de precedentes legales\n• **Arquitectura human-in-the-loop** — cómo aseguramos que la IA nunca decida sola\n\nSi tu pregunta es sobre tu caso, mejor que te responda una persona del equipo.'
-  };
-
-  // Respuestas frecuentes, locales a proposito: no hay un agente detras y no se finge que lo hay.
-  // El texto del usuario se escapa ANTES de aplicar el formato: nunca entra como HTML.
-  function chatEscape(s) {
-    return s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  }
-
-  function chatAddMsg(role, text, conCta) {
-    const msgs = document.getElementById('chatMsgs');
-    const div = document.createElement('div');
-    div.className = 'chat-msg ' + role;
-    div.innerHTML = chatEscape(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-    if (conCta) {
-      const cta = document.createElement('a');
-      cta.href = '#consulta';
-      cta.className = 'underline font-medium';
-      cta.textContent = 'Agenda una consultoría →';
-      div.appendChild(document.createElement('br'));
-      div.appendChild(document.createElement('br'));
-      div.appendChild(cta);
-    }
-    msgs.appendChild(div);
-    msgs.scrollTop = msgs.scrollHeight;
-  }
-
-  function chatReply(t) {
-    const q = t.toLowerCase();
-    if (q.includes('centinela') || q.includes('aml') || q.includes('kyc')) return chatResponses.centinela;
-    if (q.includes('contralitigador') || q.includes('precedente') || q.includes('jurisprudencia')) return chatResponses.contralitigador;
-    if (q.includes('alucina') || q.includes('fuente') || q.includes('cita')) return chatResponses.alucinar;
-    if (q.includes('riesgo') || q.includes('detecta')) return chatResponses.riesgo;
-    if (q.includes('auditor') || q.includes('registr') || q.includes('trazabilidad')) return chatResponses.auditoria;
-    return chatResponses.default;
-  }
-
-  function chatSend(text) {
-    const t = (text || '').trim();
-    if (!t || chatSending) return;
-    chatSending = true;
-    const input = document.getElementById('chatInput');
-    const btn = document.getElementById('chatSendBtn');
-    btn.disabled = true;
-    chatAddMsg('user', t);
-    input.value = '';
-
-    const reply = chatReply(t);
-    chatAddMsg('bot', reply, reply === chatResponses.default);
-    setTimeout(() => { chatSending = false; btn.disabled = false; }, 600);
-  }
 </script>
-
+<script src="js/hero-balanza.js?v=2026-10-18" defer onerror="document.documentElement.classList.remove('webgl')"></script>
+<script src="analitica.js" defer></script>
 </body>
 </html>
