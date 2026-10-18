@@ -281,14 +281,6 @@ h2 em, h1 em { font-family: var(--serif); font-style: italic; font-weight: 500; 
 .case .metric { margin: auto 0 0; }
 .case .metric strong { font-size: 44px; }
 
-/* Pilares */
-.pillars { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 56px; }
-.pillars .glass { padding: 28px; }
-.pillars h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-.pillars p { font-size: 14px; color: var(--muted); }
-.pillars .num { width: 38px; height: 38px; font-size: 12px; margin-bottom: 18px; }
-.pillars .num.c5, .pillars .num.c6 { color: var(--b1); }
-
 /* Equipo */
 .team { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 56px; }
 .member { display: flex; gap: 24px; align-items: flex-start; }
@@ -719,7 +711,6 @@ footer { padding: 72px 0 40px; border-top: 1px solid var(--line); margin-top: 40
   <nav class="nav-links">
     <a href="#hallazgo">Investigación</a>
     <a href="#productos">Proyectos</a>
-    <a href="#arquitectura">Arquitectura</a>
     <a href="#equipo">Equipo</a>
     <a href="/recursos">Recursos</a>
   </nav>
@@ -731,7 +722,6 @@ footer { padding: 72px 0 40px; border-top: 1px solid var(--line); margin-top: 40
 <div class="mobile-menu" id="mobileMenu">
   <a href="#hallazgo">Investigación</a>
   <a href="#productos">Proyectos</a>
-  <a href="#arquitectura">Arquitectura</a>
   <a href="#equipo">Equipo</a>
   <a href="/recursos">Recursos</a>
   <a href="#consulta" class="btn btn-ice" style="margin-top:8px">Agenda consultoría</a>
@@ -936,22 +926,6 @@ footer { padding: 72px 0 40px; border-top: 1px solid var(--line); margin-top: 40
   </div>
 </section>
 
-<!-- PILARES -->
-<section id="arquitectura">
-  <div class="wrap">
-    <div class="center reveal"><span class="eyebrow">Cómo funciona realmente</span><h2>Los 7 pilares de nuestra <em>implementación</em></h2><p class="lead" style="margin-top:18px">Ninguna decisión se ejecuta sin la firma de un humano autorizado. La IA analiza. El equipo decide. Siempre.</p></div>
-    <div class="pillars">
-      <div class="glass reveal"><div class="num cap c1">01</div><h3>Diagnóstico de proceso</h3><p>No automatizamos sin antes entender tu operación real. La IA no reemplaza el análisis: lo potencia.</p></div>
-      <div class="glass reveal"><div class="num cap c2">02</div><h3>Human-in-the-Loop</h3><p>Ninguna decisión se ejecuta sin firma humana. La IA clasifica y propone; tu equipo decide.</p></div>
-      <div class="glass reveal"><div class="num cap c3">03</div><h3>Trazabilidad auditable</h3><p>Cada acción del agente queda registrada con hash criptográfico. El rastro resiste una auditoría.</p></div>
-      <div class="glass reveal"><div class="num cap c3">04</div><h3>Implementación a medida</h3><p>No vendemos software que instalas. Diseñamos el proceso contigo y construimos sobre tu stack.</p></div>
-      <div class="glass reveal"><div class="num cap c4">05</div><h3>Validación contra fuentes</h3><p>El agente no opina: cita la fuente exacta (norma, precedente, sanción, lista PEP). Sin alucinaciones.</p></div>
-      <div class="glass reveal"><div class="num cap c5">06</div><h3>Escalabilidad sin fricción</h3><p>Procesa cientos de expedientes en paralelo sin añadir headcount. Crece con tu operación.</p></div>
-      <div class="glass reveal"><div class="num cap c6">07</div><h3>Transferencia de conocimiento</h3><p>No te atamos a nosotros. Documentamos, capacitamos a tu equipo y te dejamos el control del sistema.</p></div>
-    </div>
-  </div>
-</section>
-
 <!-- PREGUNTAS FRECUENTES (respuestas locales: no hay un agente detrás y no se finge que lo hay) -->
 <section id="preguntas">
   <div class="wrap faq">
@@ -1140,7 +1114,7 @@ footer { padding: 72px 0 40px; border-top: 1px solid var(--line); margin-top: 40
     // Componentes: desvanecido con máscara, escalonado por fila
     const groups = [
       '.stats > .stat', '.duo > .glass', '.verdict > .cap', '.chain > div', '.findings > .glass',
-      '.steps > .step', '.cases > .case', '.pillars > .glass', '.team > .member', '.chips > span',
+      '.steps > .step', '.cases > .case', '.team > .member', '.chips > span',
       '.sky-copy > p'
     ];
     groups.forEach(sel => $$(sel).forEach(el => {
