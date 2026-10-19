@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Analítica · Aurea Legal</title>
+<style>
+:root {
+  --b1: #03195b; --b2: #0b2cb1; --b3: #1951fc; --b4: #3781fc; --b5: #79bafd; --b6: #cbe9fd;
+  --ink: #0a1330; --muted: rgba(10, 19, 48, .6); --faint: rgba(10, 19, 48, .38); --line: rgba(10, 19, 48, .1);
+  --bg: #f4f7fc; --card: #fff;
+  --font: 'Inter', -apple-system, 'SF Pro Display', 'Segoe UI', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font); background: var(--bg); color: var(--ink); -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 24px 64px; }
+header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 28px 0; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 18px; }
+.brand-mark { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; color: var(--b6);
+  font: italic 600 18px Georgia, serif; background: radial-gradient(circle at 30% 20%, var(--b4), var(--b1) 70%); }
+.brand small { display: block; font-weight: 400; font-size: 12px; color: var(--faint); }
+.range { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: #fff; box-shadow: inset 0 0 0 1px var(--line); }
+.range button { border: 0; background: none; font: 500 13px var(--font); color: var(--muted); padding: 8px 16px; border-radius: 999px; cursor: pointer; }
+.range button.on { background: var(--b3); color: #fff; }
+.kpis { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+.card { background: var(--card); border-radius: 22px; padding: 22px; box-shadow: inset 0 0 0 1px var(--line), 0 18px 40px -30px rgba(11, 44, 177, .3); }
+.kpi small { font-size: 12px; color: var(--muted); }
+.kpi strong { display: block; font-size: 34px; font-weight: 300; letter-spacing: -.03em; margin-top: 6px; }
+.kpi em { font-style: normal; font-size: 12px; color: var(--faint); }
+.grid { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-top: 14px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
+h2 { font-size: 15px; font-weight: 600; margin-bottom: 16px; }
+h2 span { font-weight: 400; color: var(--faint); font-size: 13px; margin-left: 6px; }
+svg text { font: 11px var(--font); fill: var(--faint); }
+.bars { display: grid; gap: 10px; }
+.bar { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; font-size: 13px; }
+.bar .track { grid-column: 1 / -1; height: 8px; border-radius: 99px; background: #eef2f9; overflow: hidden; }
+.bar .fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--b2), var(--b4)); }
+.bar b { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar span { color: var(--muted); font-variant-numeric: tabular-nums; }
+.empty { color: var(--faint); font-size: 13px; padding: 12px 0; }
+.heat-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.heat-head h2 { margin: 0; }
+.heat-head select { font: 13px var(--font); padding: 8px 12px; border-radius: 10px; border: 1px solid var(--line); background: #fff; }
+.heat { position: relative; overflow: hidden; border-radius: 16px; background: #02040b; }
+.heat-inner { position: relative; transform-origin: 0 0; }
+.heat iframe { border: 0; display: block; }
+.legend { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); margin-top: 12px; }
+.legend i { width: 160px; height: 8px; border-radius: 99px; background: linear-gradient(90deg, rgba(25,81,252,.5), #00e0ff, #ffe600, #ff3b3b); }
+.note { font-size: 12px; color: var(--faint); margin-top: 28px; }
+table.leads { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.leads th { text-align: left; font-weight: 500; color: var(--faint); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+table.leads td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.leads td.email { color: var(--b3); }
+table.leads tr:last-child td { border-bottom: 0; }
+table.leads .dup { color: var(--faint); font-size: 11px; }
+@media (max-width: 1000px) { .kpis { grid-template-columns: repeat(3, 1fr); } .grid, .grid3 { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .kpis { grid-template-columns: 1fr 1fr; } .wrap { padding: 0 14px 48px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><span class="brand-mark">A</span><div>Analítica<small>aurea.legal · sin cookies ni terceros</small></div></div>
+    <div class="range" id="range">
+      <button data-d="1">Hoy</button><button data-d="7">7 días</button><button data-d="30" class="on">30 días</button><button data-d="90">90 días</button>
+    </div>
+  </header>
+
+  <section class="kpis" id="kpis"></section>
+
+  <div class="grid">
+    <div class="card"><h2>Visitantes por día</h2><div id="serie"></div></div>
+    <div class="card"><h2>Hasta dónde llegan <span>% de visitas que ven cada sección</span></h2><div class="bars" id="secciones"></div></div>
+  </div>
+
+  <div class="grid3">
+    <div class="card"><h2>De dónde vienen</h2><div class="bars" id="procedencia"></div></div>
+    <div class="card"><h2>Dispositivos</h2><div class="bars" id="dispositivos"></div></div>
+    <div class="card"><h2>Lo más clicado</h2><div class="bars" id="clics"></div></div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="heat-head">
+      <h2>Mapa de calor de clics <span id="heatCount"></span></h2>
+      <div>
+        <select id="heatPage"></select>
+        <select id="heatDisp"><option value="escritorio">Escritorio</option><option value="movil">Celular</option><option value="tablet">Tablet</option></select>
+      </div>
+    </div>
+    <div class="heat" id="heat"><div class="heat-inner" id="heatInner"><iframe id="heatFrame" title="Página con mapa de calor"></iframe></div></div>
+    <div class="legend">Pocos clics <i></i> Muchos clics</div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <h2>Leads del formulario <span id="leadsCount"></span></h2>
+    <div style="overflow-x:auto">
+      <table class="leads">
+        <thead><tr><th>Fecha</th><th>Nombre</th><th>Email</th><th>Empresa</th><th>Interés</th><th>Avisos</th></tr></thead>
+        <tbody id="leadsBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <p class="note">Visitantes = personas distintas por día (sin cookies, el reconocimiento se reinicia cada día). Los datos se guardan en el servidor de Aurea Legal y se borran solos pasado un año.</p>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const fmt = n => (n || 0).toLocaleString('es-CO');
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const NOMBRES_SECCION = { hero: 'Portada', cifras: 'Cifras e IA + humano', hallazgo: 'Investigación', proceso: 'Cómo funciona',
+  productos: 'Centinela', contralitigador: 'Contralitigador', casos: 'Casos de éxito', arquitectura: '7 pilares',
+  equipo: 'Equipo', consulta: 'Formulario' };
+const NOMBRES_DISP = { escritorio: 'Escritorio', movil: 'Celular', tablet: 'Tablet' };
+let dias = 30;
+
+async function api(path) {
+  const r = await fetch(path, { credentials: 'same-origin' });
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+
+function bars(el, filas, etiqueta = f => f.nombre, valor = f => f.n, texto = f => fmt(f.n)) {
+  if (!filas.length) { el.innerHTML = '<p class="empty">Todavía no hay datos.</p>'; return; }
+  const max = Math.max(...filas.map(valor)) || 1;
+  el.innerHTML = filas.map(f => `<div class="bar"><b title="${esc(etiqueta(f))}">${esc(etiqueta(f))}</b><span>${texto(f)}</span>
+    <div class="track"><div class="fill" style="width:${Math.max(2, 100 * valor(f) / max)}%"></div></div></div>`).join('');
+}
+
+function serie(el, puntos) {
+  const W = 760, H = 220, P = { l: 34, r: 10, t: 12, b: 26 };
+  const max = Math.max(4, ...puntos.map(p => p.visitantes));
+  const x = i => P.l + (puntos.length < 2 ? 0 : i * (W - P.l - P.r) / (puntos.length - 1));
+  const y = v => H - P.b - v * (H - P.t - P.b) / max;
+  const linea = puntos.map((p, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(p.visitantes).toFixed(1)}`).join('');
+  const area = `${linea}L${x(puntos.length - 1)},${H - P.b}L${x(0)},${H - P.b}Z`;
+  const marcas = [0, .5, 1].map(k => Math.round(max * k));
+  const cada = Math.ceil(puntos.length / 6);
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Visitantes por día">
+    <defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1951fc" stop-opacity=".25"/><stop offset="1" stop-color="#1951fc" stop-opacity="0"/></linearGradient></defs>
+    ${marcas.map(m => `<line x1="${P.l}" x2="${W - P.r}" y1="${y(m)}" y2="${y(m)}" stroke="rgba(10,19,48,.08)"/><text x="${P.l - 8}" y="${y(m) + 4}" text-anchor="end">${m}</text>`).join('')}
+    <path d="${area}" fill="url(#ga)"/><path d="${linea}" fill="none" stroke="#1951fc" stroke-width="2.2" stroke-linejoin="round"/>
+    ${puntos.map((p, i) => `<circle cx="${x(i)}" cy="${y(p.visitantes)}" r="${puntos.length > 40 ? 0 : 3}" fill="#1951fc"><title>${p.dia}: ${p.visitantes} visitantes, ${p.vistas} vistas</title></circle>`).join('')}
+    ${puntos.map((p, i) => i % cada === 0 || i === puntos.length - 1 ? `<text x="${x(i)}" y="${H - 6}" text-anchor="middle">${p.dia.slice(5)}</text>` : '').join('')}
+  </svg>`;
+}
+
+async function cargar() {
+  const r = await api(`/analitica/api/resumen?dias=${dias}`);
+  const c = r.cifras;
+  const kpis = [
+    ['Visitantes', fmt(c.visitantes), 'personas por día, sumadas'],
+    ['Páginas vistas', fmt(c.vistas), ''],
+    ['Scroll promedio', c.scroll_promedio + '%', 'de la página'],
+    ['Tiempo promedio', c.tiempo_promedio + ' s', 'mirando secciones'],
+    ['Solicitudes', fmt(c.solicitudes), fmt(c.formularios_iniciados) + ' empezaron el formulario'],
+    ['Conversión', c.conversion + '%', 'visitantes que envían'],
+  ];
+  $('kpis').innerHTML = kpis.map(([t, v, e]) => `<div class="card kpi"><small>${t}</small><strong>${v}</strong><em>${e}</em></div>`).join('');
+  serie($('serie'), r.serie);
+  const orden = Object.keys(NOMBRES_SECCION);
+  r.secciones.sort((a, b) => (orden.indexOf(a.nombre) + 1 || 99) - (orden.indexOf(b.nombre) + 1 || 99));
+  bars($('secciones'), r.secciones, f => NOMBRES_SECCION[f.nombre] || f.nombre, f => f.porcentaje, f => `${f.porcentaje}% · ${f.segundos}s`);
+  bars($('procedencia'), r.procedencia.concat(r.campanas.map(k => ({ nombre: 'Campaña: ' + k.nombre, n: k.n }))));
+  bars($('dispositivos'), r.dispositivos, f => NOMBRES_DISP[f.nombre] || f.nombre);
+  bars($('clics'), r.clics);
+  const sel = $('heatPage'), actual = sel.value || '/';
+  const paginas = r.paginas.length ? r.paginas.map(p => p.nombre) : ['/'];
+  sel.innerHTML = paginas.map(p => `<option ${p === actual ? 'selected' : ''}>${esc(p)}</option>`).join('');
+  pintarMapa();
+}
+
+/* ── Mapa de calor: la página real en un iframe del mismo dominio, del tamaño de una pantalla
+   (así los 100vh miden lo mismo que para el visitante), con el canvas dentro de su documento
+   para que se desplace junto con la página. ── */
+const ANCHOS = { escritorio: 1440, tablet: 900, movil: 390 };
+const ALTOS = { escritorio: 900, tablet: 1200, movil: 844 };
+let token = 0;
+async function pintarMapa() {
+  const mio = ++token;
+  const disp = $('heatDisp').value;
+  let ruta = $('heatPage').value || '/';
+  if (!/^\/(?![\/\\])[\w\-.\/~%]*$/.test(ruta)) ruta = '/';   // nunca otra web dentro del mapa
+  const ancho = ANCHOS[disp];
+  const alto = ALTOS[disp];
+  const frame = $('heatFrame'), inner = $('heatInner'), box = $('heat');
+  const { puntos } = await api(`/analitica/api/clics?dias=${dias}&disp=${disp}&ruta=${encodeURIComponent(ruta)}`);
+  if (mio !== token) return;
+  $('heatCount').textContent = `· ${fmt(puntos.length)} clics`;
+  frame.style.width = ancho + 'px'; frame.style.height = alto + 'px';
+  const escala = Math.min(1, box.clientWidth / ancho);
+  inner.style.width = ancho + 'px'; inner.style.height = alto + 'px'; inner.style.transform = `scale(${escala})`;
+  box.style.height = Math.round(alto * escala) + 'px';
+  await new Promise(ok => { frame.onload = ok; frame.src = ruta + (ruta.includes('?') ? '&' : '?') + 'mapa-de-calor=1'; });
+  await new Promise(ok => setTimeout(ok, 1200));   // deja terminar fuentes e imágenes
+  if (mio !== token) return;
+  const doc = frame.contentDocument, raiz = doc.documentElement;
+  const largo = raiz.scrollHeight, anchoDoc = raiz.scrollWidth;
+  const canvas = doc.createElement('canvas');
+  canvas.width = anchoDoc; canvas.height = largo;
+  // Encima de todo; recibe los clics para que no se navegue desde el mapa, y deja pasar la rueda.
+  canvas.style.cssText = `position:absolute;left:0;top:0;width:${anchoDoc}px;height:${largo}px;z-index:2147483647;cursor:default`;
+  raiz.appendChild(canvas);
+  dibujarCalor(canvas, puntos.map(([x, y, h]) => [x * anchoDoc, y * (largo / h)]));
+}
+
+function dibujarCalor(canvas, puntos) {
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (!puntos.length) return;
+  const R = 34;
+  // 1) intensidad en escala de grises (alfa acumulado)
+  const sombra = document.createElement('canvas'); sombra.width = canvas.width; sombra.height = canvas.height;
+  const s = sombra.getContext('2d');
+  const sello = document.createElement('canvas'); sello.width = sello.height = R * 2;
+  const g = sello.getContext('2d'), grad = g.createRadialGradient(R, R, 0, R, R, R);
+  grad.addColorStop(0, 'rgba(0,0,0,1)'); grad.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = grad; g.fillRect(0, 0, R * 2, R * 2);
+  const alfa = Math.min(.6, Math.max(.06, 8 / Math.sqrt(puntos.length)));
+  s.globalAlpha = alfa;
+  puntos.forEach(([x, y]) => s.drawImage(sello, x - R, y - R));
+  // 2) colorear: azul → cian → amarillo → rojo
+  const paleta = document.createElement('canvas'); paleta.width = 256; paleta.height = 1;
+  const p = paleta.getContext('2d'), pg = p.createLinearGradient(0, 0, 256, 0);
+  pg.addColorStop(0, 'rgba(25,81,252,0)'); pg.addColorStop(.25, 'rgba(25,81,252,.65)'); pg.addColorStop(.5, '#00e0ff');
+  pg.addColorStop(.75, '#ffe600'); pg.addColorStop(1, '#ff3b3b');
+  p.fillStyle = pg; p.fillRect(0, 0, 256, 1);
+  const colores = p.getImageData(0, 0, 256, 1).data;
+  const img = s.getImageData(0, 0, sombra.width, sombra.height), d = img.data;
+  for (let i = 0; i < d.length; i += 4) {
+    const a = d[i + 3]; if (!a) continue;
+    const k = a * 4;
+    d[i] = colores[k]; d[i + 1] = colores[k + 1]; d[i + 2] = colores[k + 2]; d[i + 3] = Math.min(230, colores[k + 3] * (a / 255) * 1.6 + 40);
+  }
+  ctx.putImageData(img, 0, 0);
+}
+
+$('range').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  [...$('range').children].forEach(x => x.classList.toggle('on', x === b));
+  dias = +b.dataset.d; cargar();
+});
+$('heatDisp').addEventListener('change', pintarMapa);
+$('heatPage').addEventListener('change', pintarMapa);
+let tRes; addEventListener('resize', () => { clearTimeout(tRes); tRes = setTimeout(pintarMapa, 300); });
+
+function fechaLeads(ts) {
+  try { return new Date(ts * 1000).toLocaleString('es-CO', { timeZone: 'America/Bogota', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }); }
+  catch { return ''; }
+}
+async function cargarLeads() {
+  const r = await api('/analitica/api/leads?limite=50');
+  const leads = r.leads || [];
+  $('leadsCount').textContent = `· ${leads.length} registradas`;
+  if (!leads.length) { $('leadsBody').innerHTML = '<tr><td colspan="6" class="empty">Todavía no hay leads.</td></tr>'; return; }
+  $('leadsBody').innerHTML = leads.map(l => `<tr>
+    <td>${fechaLeads(l.creado_en)}</td>
+    <td>${esc(l.nombre)}${l.duplicado ? ' <span class="dup">dup</span>' : ''}</td>
+    <td class="email">${esc(l.email)}</td>
+    <td>${esc(l.empresa || '—')}</td>
+    <td>${esc(l.interes || '—')}</td>
+    <td>${esc(l.avisos || '—')}</td>
+  </tr>`).join('');
+}
+cargarLeads().catch(() => {});
+cargar().catch(e => { document.querySelector('.wrap').insertAdjacentHTML('afterbegin', `<p class="empty">No se pudo cargar (${esc(e.message)}).</p>`); });
+</script>
+</body>
+</html>
