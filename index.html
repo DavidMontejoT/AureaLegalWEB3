@@ -230,6 +230,24 @@ h2 em, h1 em { font-family: var(--serif); font-style: italic; font-weight: 500; 
 .findings p { color: var(--muted); font-size: 15px; }
 .statement { margin-top: 64px; text-align: center; font-family: var(--serif); font-style: italic; font-size: clamp(22px, 2.6vw, 30px); color: var(--b6); }
 
+/* Proyectos en marcha (PSSA + peritaje) */
+.showcase { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 56px; }
+.showcard {
+  display: flex; flex-direction: column; overflow: hidden; text-decoration: none;
+  border-radius: 24px; background: #fff; color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--line), 0 24px 60px -36px rgba(11, 44, 177, .35);
+  transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s;
+}
+.showcard:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px var(--line), 0 32px 72px -36px rgba(11, 44, 177, .5); }
+.showcard figure { margin: 0; overflow: hidden; border-bottom: 1px solid var(--line); }
+.showcard img { width: 100%; aspect-ratio: 16/10; object-fit: cover; object-position: top; display: block; transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+.showcard:hover img { transform: scale(1.04); }
+.showcard .body { padding: 22px 24px 24px; display: grid; gap: 10px; }
+.showcard h3 { font-size: 21px; font-weight: 500; letter-spacing: -.01em; }
+.showcard p { color: var(--muted); font-size: 14.5px; margin: 0; }
+.showcard .go { font-size: 14px; font-weight: 500; color: var(--b3); }
+@media (max-width: 860px) { .showcase { grid-template-columns: 1fr; } }
+
 /* Cómo funciona: escalera de cápsulas */
 .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 56px; }
 .step .cap { height: 64px; display: flex; align-items: center; padding: 0 26px; font-weight: 600; font-size: 14px; margin-bottom: 22px; }
@@ -773,6 +791,29 @@ footer { padding: 72px 0 40px; border-top: 1px solid var(--line); margin-top: 40
       <p class="statement-big">Diseñamos IA con el criterio humano <span class="ink">en el centro,</span> <span class="gray">no al margen. La IA procesa y propone; tu equipo valida, decide y firma.</span></p>
       <p class="statement-note">Automatización con criterio humano. Sin cajas negras.</p>
     </div>
+
+    <!-- PROYECTOS EN MARCHA -->
+    <div class="showcase">
+      <a class="showcard reveal" href="/pssa-consultoria">
+        <figure><img src="assets/capturas/pssa-panel.png" alt="Panel central de la plataforma PSSA" loading="lazy"></figure>
+        <div class="body">
+          <span class="eyebrow">Gestión de sistemas · PSSA Consultores</span>
+          <h3>Plataforma multiempresa de sistemas de gestión</h3>
+          <p>Plataforma propia de PSSA para administrar los sistemas de gestión de sus empresas cliente (20–50 organizaciones): matriz de riesgos, tareas por responsable, análisis de causas con IA y trazabilidad de cada aprobación. La IA redacta; el profesional firma.</p>
+          <span class="go">Ver piloto →</span>
+        </div>
+      </a>
+      <a class="showcard reveal" href="/peritaje">
+        <figure><img src="assets/capturas/peritaje-chat.webp" alt="Agente documental de peritajes" loading="lazy"></figure>
+        <div class="body">
+          <span class="eyebrow">Peritajes · Máxima Peritajes Claims</span>
+          <h3>Agente documental para peritajes</h3>
+          <p>Un panel que trae el expediente desde la nube del cliente, lo lee entero y lo indexa para responder cada pregunta con la cita exacta de dónde sale cada dato. El perito revisa y firma; el panel le ahorra la búsqueda.</p>
+          <span class="go">Ver panel →</span>
+        </div>
+      </a>
+    </div>
+
     <hr class="rule">
     <p class="rule-note">Haciendo la diferencia</p>
   </div>
@@ -1080,7 +1121,7 @@ footer { padding: 72px 0 40px; border-top: 1px solid var(--line); margin-top: 40
     // Componentes: desvanecido con máscara, escalonado por fila
     const groups = [
       '.stats > .stat', '.chain > div', '.findings > .glass',
-      '.steps > .step', '.cases > .case', '.team > .member', '.chips > span',
+      '.steps > .step', '.cases > .case', '.team > .member', '.chips > span', '.showcase > .showcard',
       '.sky-copy > p'
     ];
     groups.forEach(sel => $$(sel).forEach(el => {
